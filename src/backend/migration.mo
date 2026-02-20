@@ -1,7 +1,4 @@
 module {
   type Actor = {};
-
-  public func run(old : Actor) : Actor {
-    old;
-  };
+  public func run(_ : Actor) : Actor { {} };
 };

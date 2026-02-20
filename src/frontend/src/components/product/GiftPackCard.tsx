@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { ShoppingCart } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -14,14 +15,29 @@ interface GiftPackCardProps {
 export default function GiftPackCard({ pack }: GiftPackCardProps) {
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    addItem({
-      packId: pack.id,
-      quantity: BigInt(1),
-    });
-    toast.success(`${pack.title} added to cart!`);
+    
+    if (!pack || !pack.id) {
+      toast.error('Invalid gift pack');
+      return;
+    }
+
+    try {
+      setIsAdding(true);
+      addItem({
+        packId: pack.id,
+        quantity: BigInt(1),
+      });
+      toast.success(`${pack.title} added to cart!`);
+    } catch (error) {
+      console.error('Failed to add item to cart:', error);
+      toast.error('Failed to add item to cart');
+    } finally {
+      setIsAdding(false);
+    }
   };
 
   const categoryColors: Record<string, string> = {
@@ -29,6 +45,8 @@ export default function GiftPackCard({ pack }: GiftPackCardProps) {
     anniversary: 'bg-sage/10 text-sage',
     corporate: 'bg-blue-500/10 text-blue-600',
     festive: 'bg-purple-500/10 text-purple-600',
+    sympathy: 'bg-rose-500/10 text-rose-600',
+    wellness: 'bg-emerald-500/10 text-emerald-600',
     custom: 'bg-amber-500/10 text-amber-600',
   };
 
@@ -56,9 +74,13 @@ export default function GiftPackCard({ pack }: GiftPackCardProps) {
         </p>
       </CardContent>
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full" onClick={handleAddToCart}>
+        <Button 
+          className="w-full" 
+          onClick={handleAddToCart}
+          disabled={isAdding}
+        >
           <ShoppingCart className="mr-2 h-4 w-4" />
-          Add to Cart
+          {isAdding ? 'Adding...' : 'Add to Cart'}
         </Button>
       </CardFooter>
     </Card>

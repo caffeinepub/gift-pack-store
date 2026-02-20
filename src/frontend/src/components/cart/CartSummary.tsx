@@ -3,10 +3,31 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/useCart';
+import { useGiftPacks } from '@/hooks/useGiftPacks';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function CartSummary() {
   const navigate = useNavigate();
-  const { subtotal, tax, total } = useCart();
+  const { items, calculateTotals } = useCart();
+  const { data: giftPacks, isLoading } = useGiftPacks();
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-serif">Order Summary</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Separator />
+          <Skeleton className="h-8 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const { subtotal, tax, total } = calculateTotals(giftPacks || []);
 
   return (
     <Card>
@@ -31,7 +52,12 @@ export default function CartSummary() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" size="lg" onClick={() => navigate({ to: '/checkout' })}>
+        <Button 
+          className="w-full" 
+          size="lg" 
+          onClick={() => navigate({ to: '/checkout' })}
+          disabled={items.length === 0}
+        >
           Proceed to Checkout
         </Button>
       </CardFooter>

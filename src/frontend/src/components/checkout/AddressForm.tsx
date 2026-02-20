@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { DeliveryAddress } from '@/backend';
 import { validatePincode, validatePhone } from '@/utils/validation';
+import { useUserProfile } from '@/hooks/useUserProfile';
 
 interface AddressFormProps {
   onSubmit: (address: DeliveryAddress) => void;
@@ -25,15 +27,31 @@ const indianStates = [
 ];
 
 export default function AddressForm({ onSubmit, isSubmitting }: AddressFormProps) {
+  const { data: profile } = useUserProfile();
   const {
     register,
     handleSubmit,
     setValue,
     watch,
+    reset,
     formState: { errors },
   } = useForm<DeliveryAddress>();
 
   const selectedState = watch('state');
+
+  // Pre-fill form with profile data if available
+  useEffect(() => {
+    if (profile?.defaultAddress) {
+      reset({
+        name: profile.defaultAddress.name,
+        phone: profile.defaultAddress.phone,
+        street: profile.defaultAddress.street,
+        city: profile.defaultAddress.city,
+        state: profile.defaultAddress.state,
+        pincode: profile.defaultAddress.pincode,
+      });
+    }
+  }, [profile, reset]);
 
   const handleFormSubmit = (data: DeliveryAddress) => {
     onSubmit({

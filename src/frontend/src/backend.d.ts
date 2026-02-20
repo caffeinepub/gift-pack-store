@@ -14,13 +14,21 @@ export class ExternalBlob {
     static fromBytes(blob: Uint8Array<ArrayBuffer>): ExternalBlob;
     withUploadProgress(onProgress: (percentage: number) => void): ExternalBlob;
 }
-export interface GiftItem {
-    id: string;
+export interface UserProfile {
+    principal: Principal;
     name: string;
-    description: string;
-    category: Category;
-    price: bigint;
-    images: Array<ExternalBlob>;
+    email: string;
+    phone: string;
+    defaultAddress: DeliveryAddress;
+}
+export interface CatalogFilters {
+    outOfStock?: boolean;
+    priceRange?: {
+        max: bigint;
+        min: bigint;
+    };
+    searchTerm?: string;
+    category?: Category;
 }
 export type Time = bigint;
 export interface Order {
@@ -62,14 +70,21 @@ export interface CartItem {
     quantity: bigint;
     packId: string;
 }
-export interface CatalogFilters {
-    outOfStock?: boolean;
-    priceRange?: {
-        max: bigint;
-        min: bigint;
-    };
-    searchTerm?: string;
-    category?: Category;
+export interface Cart {
+    basketType: BasketType;
+    userId: string;
+    packingType: PackType;
+    size: Size;
+    messageCard?: string;
+    items: Array<CartItem>;
+}
+export interface GiftItem {
+    id: string;
+    name: string;
+    description: string;
+    category: Category;
+    price: bigint;
+    images: Array<ExternalBlob>;
 }
 export enum BasketType {
     woodenCrate = "woodenCrate",
@@ -81,6 +96,8 @@ export enum Category {
     custom = "custom",
     festive = "festive",
     birthday = "birthday",
+    wellness = "wellness",
+    sympathy = "sympathy",
     corporate = "corporate"
 }
 export enum OrderStatus {
@@ -102,10 +119,17 @@ export enum Size {
     medium = "medium"
 }
 export interface backendInterface {
+    clearCart(): Promise<void>;
+    createOrUpdateUserProfile(name: string, email: string, phone: string, address: DeliveryAddress): Promise<UserProfile>;
     createOrder(userId: string, items: Array<CartItem>, deliveryAddress: DeliveryAddress, totalAmount: bigint, basketType: BasketType, size: Size, packingType: PackType, messageCard: string | null): Promise<Order>;
     filterGiftPacks(filters: CatalogFilters): Promise<Array<GiftPack>>;
     getAllGiftPacks(): Promise<Array<GiftPack>>;
+    getCart(): Promise<Cart | null>;
     getGiftPackById(id: string): Promise<GiftPack | null>;
+    getOrderHistory(): Promise<Array<Order>>;
+    getOrderHistoryForPrincipal(principal: Principal): Promise<Array<Order>>;
+    getUserProfile(): Promise<UserProfile | null>;
     initialize(): Promise<void>;
+    saveCart(cart: Cart): Promise<void>;
     searchGiftPacks(searchTerm: string): Promise<Array<GiftPack>>;
 }

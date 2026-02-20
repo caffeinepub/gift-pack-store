@@ -1,5 +1,6 @@
 import { RouterProvider, createRouter, createRoute, createRootRoute } from '@tanstack/react-router';
 import { ThemeProvider } from 'next-themes';
+import { useEffect, useRef } from 'react';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import CatalogPage from './pages/CatalogPage';
@@ -7,7 +8,12 @@ import CustomPackPage from './pages/CustomPackPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import ProfilePage from './pages/ProfilePage';
 import { Toaster } from '@/components/ui/sonner';
+import { useInitializeData } from './hooks/useQueries';
+import { useActor } from './hooks/useActor';
+import { useInternetIdentity } from './hooks/useInternetIdentity';
+import { useCart } from './hooks/useCart';
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -49,6 +55,12 @@ const orderConfirmationRoute = createRoute({
   component: OrderConfirmationPage,
 });
 
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/profile',
+  component: ProfilePage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   catalogRoute,
@@ -56,6 +68,7 @@ const routeTree = rootRoute.addChildren([
   cartRoute,
   checkoutRoute,
   orderConfirmationRoute,
+  profileRoute,
 ]);
 
 const router = createRouter({ routeTree });
@@ -66,11 +79,53 @@ declare module '@tanstack/react-router' {
   }
 }
 
+function AppContent() {
+  const { actor, isFetching } = useActor();
+  const { mutate: initialize } = useInitializeData();
+  const { identity } = useInternetIdentity();
+  const { syncCartFromBackend, clearCartCompletely } = useCart();
+  
+  // Track previous authentication state
+  const prevIdentityRef = useRef<typeof identity>(undefined);
+
+  useEffect(() => {
+    if (actor && !isFetching) {
+      initialize();
+    }
+  }, [actor, isFetching, initialize]);
+
+  // Handle login/logout events
+  useEffect(() => {
+    const prevIdentity = prevIdentityRef.current;
+    const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
+    const wasAuthenticated = !!prevIdentity && !prevIdentity.getPrincipal().isAnonymous();
+
+    // User just logged in
+    if (isAuthenticated && !wasAuthenticated && actor && !isFetching) {
+      syncCartFromBackend();
+    }
+
+    // User just logged out
+    if (!isAuthenticated && wasAuthenticated) {
+      clearCartCompletely();
+    }
+
+    // Update the ref for next comparison
+    prevIdentityRef.current = identity;
+  }, [identity, actor, isFetching, syncCartFromBackend, clearCartCompletely]);
+
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
+  );
+}
+
 function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <RouterProvider router={router} />
-      <Toaster />
+      <AppContent />
     </ThemeProvider>
   );
 }

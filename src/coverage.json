@@ -1,15 +1,42 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T11:22:15.172Z",
+  "generatedAt": "2026-02-20T14:17:24.060Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 0,
-    "implemented": 0,
-    "items": []
+    "total": 2,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-2",
+        "summary": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useCart.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useCart.ts",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "When a user logs out, clear the cart state completely",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useCart.ts",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useCart.ts",
+          "frontend/src/App.tsx"
+        ]
+      }
+    ]
   },
   "changedFiles": [
     "backend/main.mo",
@@ -18,11 +45,12 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useGiftPacks.ts",
+    "frontend/src/hooks/useCart.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

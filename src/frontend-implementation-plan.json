@@ -1,6 +1,49 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Redeploy application",
-  "requirements": []
+  "title": "Fetch cart on login and clear cart on logout",
+  "requirements": [
+    {
+      "id": "REQ-2",
+      "summary": "Automatically fetch and sync cart from backend when user logs in via Internet Identity",
+      "acceptanceCriteria": [
+        "Cart data is fetched from backend immediately after successful login",
+        "Fetched cart items replace any local cart state",
+        "Cart icon badge updates to show correct item count after login"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCart.ts",
+          "operation": "modify",
+          "description": "Add a syncCartFromBackend function that fetches cart data from the backend using the getCart() method and updates local state. This function should handle BigInt serialization for quantities, merge backend cart items with the existing cart structure, update localStorage, and return the synced cart. The function will be called from App.tsx after successful login."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add logic to detect when a user successfully logs in (when identity becomes available and isAuthenticated changes from false to true). When login is detected, call the syncCartFromBackend function from useCart hook to fetch and sync cart data from the backend. Ensure this happens after the actor is ready and before any route navigation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Clear cart state completely when user logs out",
+      "acceptanceCriteria": [
+        "Cart is emptied when user logs out",
+        "Cart icon badge shows 0 items after logout",
+        "localStorage cart data is cleared on logout"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCart.ts",
+          "operation": "modify",
+          "description": "Add a clearCartCompletely function that resets the cart state to an empty array, removes all cart data from localStorage (including any BigInt-serialized data), and ensures the cart count returns to 0. This function should be exported from the hook for use during logout."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add logic to detect when a user logs out (when identity becomes null and isAuthenticated changes from true to false). When logout is detected, call the clearCartCompletely function from useCart hook to remove all cart items and clear localStorage. Ensure the Header component's cart badge reflects 0 items after logout."
+        }
+      ]
+    }
+  ]
 }

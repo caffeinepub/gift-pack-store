@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Gift, Menu, ShoppingCart, User, X } from 'lucide-react';
+import { Gift, Menu, Search, ShoppingCart, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -51,16 +51,25 @@ export default function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          {/* Auth Button */}
-          {identity ? (
-            <Button variant="ghost" size="sm" onClick={clear}>
-              <User className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
-          ) : (
-            <Button variant="ghost" size="sm" onClick={login} disabled={isLoggingIn}>
-              <User className="mr-2 h-4 w-4" />
-              {isLoggingIn ? 'Logging in...' : 'Login'}
+          {/* Search Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => handleNavigation('/catalog')}
+            title="Search"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+
+          {/* Profile Button (only when authenticated) */}
+          {identity && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleNavigation('/profile')}
+              title="My Profile"
+            >
+              <User className="h-5 w-5" />
             </Button>
           )}
 
@@ -82,6 +91,17 @@ export default function Header() {
             )}
           </Button>
 
+          {/* Auth Button */}
+          {identity ? (
+            <Button variant="ghost" size="sm" onClick={clear} className="hidden sm:flex">
+              Logout
+            </Button>
+          ) : (
+            <Button variant="ghost" size="sm" onClick={login} disabled={isLoggingIn}>
+              {isLoggingIn ? 'Logging in...' : 'Login'}
+            </Button>
+          )}
+
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild className="md:hidden">
@@ -100,6 +120,31 @@ export default function Header() {
                     {item.label}
                   </button>
                 ))}
+                <button
+                  onClick={() => handleNavigation('/catalog')}
+                  className="text-left text-lg font-medium transition-colors hover:text-terracotta"
+                >
+                  Search
+                </button>
+                {identity && (
+                  <>
+                    <button
+                      onClick={() => handleNavigation('/profile')}
+                      className="text-left text-lg font-medium transition-colors hover:text-terracotta"
+                    >
+                      My Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        clear();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="text-left text-lg font-medium transition-colors hover:text-terracotta"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
               </div>
             </SheetContent>
           </Sheet>

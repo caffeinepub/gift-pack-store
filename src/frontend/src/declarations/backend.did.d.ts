@@ -13,6 +13,14 @@ import type { Principal } from '@icp-sdk/core/principal';
 export type BasketType = { 'woodenCrate' : null } |
   { 'wickerBasket' : null } |
   { 'giftBox' : null };
+export interface Cart {
+  'basketType' : BasketType,
+  'userId' : string,
+  'packingType' : PackType,
+  'size' : Size,
+  'messageCard' : [] | [string],
+  'items' : Array<CartItem>,
+}
 export interface CartItem {
   'wrappingOption' : [] | [string],
   'customMessage' : [] | [string],
@@ -29,6 +37,8 @@ export type Category = { 'anniversary' : null } |
   { 'custom' : null } |
   { 'festive' : null } |
   { 'birthday' : null } |
+  { 'wellness' : null } |
+  { 'sympathy' : null } |
   { 'corporate' : null };
 export interface DeliveryAddress {
   'id' : string,
@@ -85,6 +95,13 @@ export type Size = { 'large' : null } |
   { 'small' : null } |
   { 'medium' : null };
 export type Time = bigint;
+export interface UserProfile {
+  'principal' : Principal,
+  'name' : string,
+  'email' : string,
+  'phone' : string,
+  'defaultAddress' : DeliveryAddress,
+}
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -112,6 +129,11 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  'clearCart' : ActorMethod<[], undefined>,
+  'createOrUpdateUserProfile' : ActorMethod<
+    [string, string, string, DeliveryAddress],
+    UserProfile
+  >,
   'createOrder' : ActorMethod<
     [
       string,
@@ -127,8 +149,13 @@ export interface _SERVICE {
   >,
   'filterGiftPacks' : ActorMethod<[CatalogFilters], Array<GiftPack>>,
   'getAllGiftPacks' : ActorMethod<[], Array<GiftPack>>,
+  'getCart' : ActorMethod<[], [] | [Cart]>,
   'getGiftPackById' : ActorMethod<[string], [] | [GiftPack]>,
+  'getOrderHistory' : ActorMethod<[], Array<Order>>,
+  'getOrderHistoryForPrincipal' : ActorMethod<[Principal], Array<Order>>,
+  'getUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'initialize' : ActorMethod<[], undefined>,
+  'saveCart' : ActorMethod<[Cart], undefined>,
   'searchGiftPacks' : ActorMethod<[string], Array<GiftPack>>,
 }
 export declare const idlService: IDL.ServiceClass;

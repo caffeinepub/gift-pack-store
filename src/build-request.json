@@ -1,10 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Redeploy application",
+  "title": "Fetch cart on login and clear cart on logout",
   "priority": "normal",
-  "requirements": [],
-  "constraints": [],
-  "nonGoals": [],
+  "requirements": [
+    {
+      "id": "REQ-2",
+      "text": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ],
+        "quotes": [
+          "on login, cart status should be fetched"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Cart data is fetched from backend immediately after successful login",
+        "Fetched cart items replace any local cart state",
+        "Cart icon badge updates to show correct item count after login"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "When a user logs out, clear the cart state completely",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ],
+        "quotes": [
+          "while logout cart should be cleared"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Cart is emptied when user logs out",
+        "Cart icon badge shows 0 items after logout",
+        "localStorage cart data is cleared on logout"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts",
+    "Maintain existing localStorage persistence pattern from useCart hook",
+    "Preserve current cart data structure with BigInt serialization"
+  ],
+  "nonGoals": [
+    "Syncing cart to backend during browsing (only on login)",
+    "Implementing cart persistence across sessions for anonymous users",
+    "Adding server-side cart merge logic for multiple devices"
+  ],
   "imageRequirements": {
     "required": [],
     "edits": []

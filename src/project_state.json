@@ -1,161 +1,24 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
-  "summary": "Mobile-friendly e-commerce website for selling gift packs (predefined and customised) across India",
-  "architectural_notes": [
-    "Mobile-first responsive design approach",
-    "E-commerce platform for gift pack sales",
-    "Support for both predefined and custom gift configurations",
-    "India-focused delivery and payment systems",
-    "Custom gift pack flow: basket type → size → products → packing type → message card",
-    "User authentication system for login/account management",
-    "Payment gateway integration for order processing",
-    "Hierarchical category/subcategory structure for product organization"
-  ],
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-a-responsive-mobile-friendly-homepage-that-displays-featured-gift-packs-with-hero-section-category-navigation-and-promotional-banners",
-      "title": "Create a responsive mobile-friendly homepage that displays featured gift packs with hero section, category navigation, and promotional banners",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-a-product-catalog-page-to-browse-and-filter-predefined-gift-packs-by-category-price-range-and-occasion",
-      "title": "Implement a product catalog page to browse and filter predefined gift packs by category, price range, and occasion",
+      "id": "feature-when-a-user-logs-in-via-internet-identity-automatically-fetch-and-sync-their-cart-status-from-the-backend",
+      "title": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-build-a-gift-pack-customization-interface-allowing-users-to-select-items-add-personal-messages-choose-wrapping-options-and-preview-their-custom-gift-pack",
-      "title": "Build a gift pack customization interface allowing users to select items, add personal messages, choose wrapping options, and preview their custom gift pack",
+      "id": "feature-when-a-user-logs-out-clear-the-cart-state-completely",
+      "title": "When a user logs out, clear the cart state completely",
       "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-shopping-cart-functionality-with-add-to-cart-update-quantities-remove-items-and-view-cart-summary",
-      "title": "Implement shopping cart functionality with add to cart, update quantities, remove items, and view cart summary",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-checkout-flow-with-delivery-address-form-for-india-order-summary-and-order-confirmation",
-      "title": "Create checkout flow with delivery address form for India, order summary, and order confirmation",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-design-a-visually-appealing-and-cohesive-interface-with-a-warm-celebratory-theme-using-earthy-tones-terracotta-sage-green-cream-with-elegant-serif-typography-for-headings-and-clean-sans-serif-for-body-text-ensuring-consistent-styling-across-all-pages-and-components",
-      "title": "Design a visually appealing and cohesive interface with a warm, celebratory theme using earthy tones (terracotta, sage green, cream) with elegant serif typography for headings and clean sans-serif for body text, ensuring consistent styling across all pages and components",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-basket-type-selection-step-as-the-first-step-in-the-custom-gift-pack-creation-flow-allowing-users-to-choose-from-predefined-basket-types-e-g-wicker-basket-wooden-crate-gift-box-before-proceeding-to-other-customization-options",
-      "title": "Add a basket type selection step as the first step in the custom gift pack creation flow, allowing users to choose from predefined basket types (e.g., wicker basket, wooden crate, gift box) before proceeding to other customization options",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-size-selection-step-after-basket-type-selection-in-the-custom-gift-pack-flow-allowing-users-to-choose-the-size-of-their-gift-pack-e-g-small-medium-large-which-may-affect-the-number-of-items-that-can-be-included",
-      "title": "Add a size selection step after basket type selection in the custom gift pack flow, allowing users to choose the size of their gift pack (e.g., small, medium, large) which may affect the number of items that can be included",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-move-the-existing-product-item-selection-to-appear-as-the-third-step-in-the-custom-gift-pack-flow-after-basket-type-and-size-selection-maintaining-the-current-itemselector-component-functionality",
-      "title": "Move the existing product/item selection to appear as the third step in the custom gift pack flow, after basket type and size selection, maintaining the current ItemSelector component functionality",
-      "reqIds": [
-        "REQ-11"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-packing-type-selection-step-after-product-selection-in-the-custom-gift-pack-flow-allowing-users-to-choose-wrapping-or-packaging-options-e-g-gift-wrap-styles-ribbon-colors-packaging-materials",
-      "title": "Add a packing type selection step after product selection in the custom gift pack flow, allowing users to choose wrapping or packaging options (e.g., gift wrap styles, ribbon colors, packaging materials)",
-      "reqIds": [
-        "REQ-12"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-message-card-step-as-the-final-step-in-the-custom-gift-pack-flow-allowing-users-to-add-a-personalized-message-to-be-included-with-their-gift-pack",
-      "title": "Add a message card step as the final step in the custom gift pack flow, allowing users to add a personalized message to be included with their gift pack",
-      "reqIds": [
-        "REQ-13"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-a-step-by-step-navigation-ui-for-the-custom-pack-flow-with-progress-indicators-back-next-buttons-and-visual-feedback-showing-which-step-the-user-is-on-basket-type-size-products-packing-type-message-card",
-      "title": "Implement a step-by-step navigation UI for the custom pack flow with progress indicators, back/next buttons, and visual feedback showing which step the user is on (basket type → size → products → packing type → message card)",
-      "reqIds": [
-        "REQ-14"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-integrate-internet-identity-authentication-system-with-persistent-login-state-displaying-user-login-status-in-the-header-and-restricting-checkout-to-authenticated-users-only",
-      "title": "Integrate Internet Identity authentication system with persistent login state, displaying user login status in the header, and restricting checkout to authenticated users only",
-      "reqIds": [
-        "REQ-16"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-payment-processing-integration-using-stripe-for-checkout-allowing-users-to-enter-card-details-and-complete-payments-for-their-orders",
-      "title": "Implement payment processing integration using Stripe for checkout, allowing users to enter card details and complete payments for their orders",
-      "reqIds": [
-        "REQ-17"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-enhance-shopping-cart-functionality-to-persist-cart-data-for-logged-in-users-in-the-backend-syncing-cart-state-across-devices-and-sessions",
-      "title": "Enhance shopping cart functionality to persist cart data for logged-in users in the backend, syncing cart state across devices and sessions",
-      "reqIds": [
-        "REQ-19"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-the-catalog-page-filter-sidebar-to-support-hierarchical-category-and-subcategory-filtering-showing-subcategories-when-a-category-is-selected",
-      "title": "Update the catalog page filter sidebar to support hierarchical category and subcategory filtering, showing subcategories when a category is selected",
-      "reqIds": [
-        "REQ-21"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-display-category-and-subcategory-badges-on-gift-pack-cards-throughout-the-application-homepage-catalog-cart",
-      "title": "Display category and subcategory badges on gift pack cards throughout the application (homepage, catalog, cart)",
-      "reqIds": [
-        "REQ-22"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-category-navigation-to-the-homepage-hero-section-allowing-users-to-quickly-browse-gift-packs-by-popular-categories",
-      "title": "Add category navigation to the homepage hero section, allowing users to quickly browse gift packs by popular categories",
-      "reqIds": [
-        "REQ-23"
+        "REQ-3"
       ],
       "version": 1
     }
@@ -163,119 +26,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Mobile-friendly responsive website design",
+      "summary": "Fetch cart status on login",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Display and browse predefined gift packs",
+      "summary": "Clear cart on logout",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Customise gift packs functionality",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "E-commerce shopping cart and checkout",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "India-wide delivery support",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-8",
-      "summary": "Create backend data model and functions to store and retrieve predefined gift pack products with details including title, description, price, images, category, and stock status",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-12",
-      "summary": "Implement backend order management system to store orders with customer details, items, delivery address, status tracking, and timestamps",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-13",
-      "summary": "Add basket type selection step in custom gift pack flow",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-14",
-      "summary": "Add size selection step in custom gift pack flow",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-15",
-      "summary": "Add packing type selection step in custom gift pack flow",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-16",
-      "summary": "Add message card step in custom gift pack flow",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-23",
-      "summary": "Update the backend data model to support basket type, size, and packing type for custom gift packs, modifying the Cart and Order types to store these new customization options",
-      "reqIds": [
-        "REQ-15"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-24",
-      "summary": "Implement user login/authentication functionality",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-25",
-      "summary": "Implement payment integration and processing",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-26",
-      "summary": "Add categories and subcategories system for predefined hampers/gift packs",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-29",
-      "summary": "Update backend data model to include payment status and transaction details in the Order type, storing payment confirmation, amount paid, and payment timestamp",
-      "reqIds": [
-        "REQ-18"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-31",
-      "summary": "Add category and subcategory fields to the GiftPack type in the backend, allowing predefined hampers to be organized hierarchically (e.g., Category: 'Festival', Subcategory: 'Diwali')",
-      "reqIds": [
-        "REQ-20"
-      ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Gift Pack Store",
+  "projectName": "Fetch cart on login and clear cart on logout",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

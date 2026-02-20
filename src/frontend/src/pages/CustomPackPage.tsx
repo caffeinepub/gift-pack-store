@@ -87,7 +87,11 @@ export default function CustomPackPage() {
     });
 
     toast.success('Custom pack added to cart!');
-    navigate({ to: '/cart' });
+    
+    // Small delay to ensure state is updated before navigation
+    setTimeout(() => {
+      navigate({ to: '/cart' });
+    }, 100);
   };
 
   return (

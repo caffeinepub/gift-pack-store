@@ -23,3 +23,6 @@ export function useCreateOrder() {
     },
   });
 }
+
+// Export as default for backward compatibility
+export { useCreateOrder as useOrder };

@@ -1,9 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/useCart';
+import { useGiftPacks } from '@/hooks/useGiftPacks';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function OrderSummary() {
-  const { items, subtotal, tax, total } = useCart();
+  const { items, calculateTotals } = useCart();
+  const { data: giftPacks, isLoading } = useGiftPacks();
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-serif">Order Summary</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Skeleton className="h-20 w-full" />
+          <Separator />
+          <Skeleton className="h-16 w-full" />
+          <Separator />
+          <Skeleton className="h-8 w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const { subtotal, tax, total } = calculateTotals(giftPacks || []);
 
   return (
     <Card>
