@@ -1,0 +1,16 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-20T11:22:15.170Z",
+  "summary": "The diff shows a redeployment with minor code changes including a migration module addition and some code refactoring. The BuildRequest contains no specific requirements, and the changes appear to be routine maintenance/redeployment tasks. No missing requirements or hallucinated features detected.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.95,
+  "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/hooks/useGiftPacks.ts",
+    "project_state.json"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "kind": "build_request",
+  "title": "Redeploy application",
+  "priority": "normal",
+  "requirements": [],
+  "constraints": [],
+  "nonGoals": [],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

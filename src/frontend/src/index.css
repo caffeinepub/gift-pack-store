@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.75rem;
+        
+        /* Terracotta - Primary warm tone */
+        --terracotta: 0.62 0.15 35;
+        --terracotta-light: 0.72 0.12 35;
+        --terracotta-dark: 0.52 0.18 35;
+        
+        /* Sage Green - Secondary calming tone */
+        --sage: 0.68 0.08 145;
+        --sage-light: 0.78 0.06 145;
+        --sage-dark: 0.58 0.10 145;
+        
+        /* Cream - Neutral warm base */
+        --cream: 0.96 0.02 85;
+        --cream-dark: 0.88 0.03 85;
+        
+        /* Base colors using warm palette */
+        --background: 0.99 0.01 85;
+        --foreground: 0.20 0.02 35;
+        
+        --card: 1 0 0;
+        --card-foreground: 0.20 0.02 35;
+        
+        --popover: 1 0 0;
+        --popover-foreground: 0.20 0.02 35;
+        
+        --primary: 0.62 0.15 35; /* Terracotta */
+        --primary-foreground: 0.99 0.01 85;
+        
+        --secondary: 0.68 0.08 145; /* Sage */
+        --secondary-foreground: 0.99 0.01 85;
+        
+        --muted: 0.94 0.02 85;
+        --muted-foreground: 0.50 0.03 35;
+        
+        --accent: 0.88 0.03 85; /* Cream dark */
+        --accent-foreground: 0.20 0.02 35;
+        
+        --destructive: 0.55 0.22 25;
+        --destructive-foreground: 0.99 0.01 85;
+        
+        --border: 0.88 0.02 85;
+        --input: 0.88 0.02 85;
+        --ring: 0.62 0.15 35;
+        
+        --chart-1: 0.62 0.15 35;
+        --chart-2: 0.68 0.08 145;
+        --chart-3: 0.72 0.12 55;
+        --chart-4: 0.58 0.18 195;
+        --chart-5: 0.65 0.14 285;
+    }
+
+    .dark {
+        --background: 0.18 0.02 35;
+        --foreground: 0.96 0.01 85;
+        
+        --card: 0.22 0.02 35;
+        --card-foreground: 0.96 0.01 85;
+        
+        --popover: 0.22 0.02 35;
+        --popover-foreground: 0.96 0.01 85;
+        
+        --primary: 0.72 0.12 35; /* Lighter terracotta for dark mode */
+        --primary-foreground: 0.18 0.02 35;
+        
+        --secondary: 0.78 0.06 145; /* Lighter sage for dark mode */
+        --secondary-foreground: 0.18 0.02 35;
+        
+        --muted: 0.28 0.02 35;
+        --muted-foreground: 0.70 0.02 85;
+        
+        --accent: 0.32 0.03 35;
+        --accent-foreground: 0.96 0.01 85;
+        
+        --destructive: 0.65 0.20 25;
+        --destructive-foreground: 0.96 0.01 85;
+        
+        --border: 0.32 0.02 35;
+        --input: 0.32 0.02 35;
+        --ring: 0.72 0.12 35;
+    }
+
+    * {
+        @apply border-border;
+    }
+    
+    body {
+        @apply bg-background text-foreground;
+        font-feature-settings: "rlig" 1, "calt" 1;
+    }
+    
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-serif;
+    }
+}
+
+@layer utilities {
+    .text-terracotta {
+        color: oklch(var(--terracotta));
+    }
+    
+    .bg-terracotta {
+        background-color: oklch(var(--terracotta));
+    }
+    
+    .text-sage {
+        color: oklch(var(--sage));
+    }
+    
+    .bg-sage {
+        background-color: oklch(var(--sage));
+    }
+    
+    .text-cream {
+        color: oklch(var(--cream));
+    }
+    
+    .bg-cream {
+        background-color: oklch(var(--cream));
+    }
+    
+    .bg-cream-dark {
+        background-color: oklch(var(--cream-dark));
+    }
+}
