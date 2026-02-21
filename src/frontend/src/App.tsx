@@ -11,11 +11,14 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import ProfilePage from './pages/ProfilePage';
 import ContactPage from './pages/ContactPage';
 import AdminPage from './pages/AdminPage';
+import AdminLoginPage from './pages/AdminLoginPage';
+import ProtectedAdminRoute from './components/auth/ProtectedAdminRoute';
 import { Toaster } from '@/components/ui/sonner';
 import { useInitializeData } from './hooks/useQueries';
 import { useActor } from './hooks/useActor';
 import { useInternetIdentity } from './hooks/useInternetIdentity';
 import { useCart } from './hooks/useCart';
+import { AdminAuthProvider } from './hooks/useAdminAuth';
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -69,10 +72,20 @@ const contactRoute = createRoute({
   component: ContactPage,
 });
 
+const adminLoginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/login',
+  component: AdminLoginPage,
+});
+
 const adminRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/admin',
-  component: AdminPage,
+  component: () => (
+    <ProtectedAdminRoute>
+      <AdminPage />
+    </ProtectedAdminRoute>
+  ),
 });
 
 const routeTree = rootRoute.addChildren([
@@ -84,6 +97,7 @@ const routeTree = rootRoute.addChildren([
   orderConfirmationRoute,
   profileRoute,
   contactRoute,
+  adminLoginRoute,
   adminRoute,
 ]);
 
@@ -141,7 +155,9 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <AppContent />
+      <AdminAuthProvider>
+        <AppContent />
+      </AdminAuthProvider>
     </ThemeProvider>
   );
 }

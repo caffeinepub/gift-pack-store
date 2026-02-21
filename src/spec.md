@@ -1,14 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Enable multiple image support for products and gift packs.
+**Goal:** Add username and password authentication to protect the admin dashboard.
 
 **Planned changes:**
-- Replace single `imageUrl` field with `images` array in Product and GiftPack types
-- Update ProductForm and GiftPackForm to allow adding, removing, and managing multiple image URLs
-- Display first image as thumbnail in product and gift pack lists
-- Add image carousel to GiftPackCard component for navigating multiple images
-- Update CartItemRow to display first image from images array
-- Include migration logic to convert existing single imageUrl to single-element arrays
+- Create backend authentication system with secure credential storage and validation
+- Build admin login page at /admin/login with username and password fields
+- Protect /admin route to require authentication before access
+- Hide admin navigation link from non-authenticated users
 
-**User-visible outcome:** Users can add multiple images to products and gift packs, view image carousels on gift pack cards, and see the first image as thumbnails throughout the application.
+**User-visible outcome:** The admin dashboard is now protected behind a login page. Only users with valid admin credentials can access the dashboard, while regular users cannot see or access admin features.

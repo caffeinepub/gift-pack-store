@@ -19,6 +19,11 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
 export const Category = IDL.Record({
   'name' : IDL.Text,
   'description' : IDL.Text,
@@ -186,6 +191,8 @@ export const idlService = IDL.Service({
       [],
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'clearCart' : IDL.Func([], [], []),
   'createCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
   'createCoupon' : IDL.Func(
@@ -235,7 +242,6 @@ export const idlService = IDL.Service({
       [Product],
       [],
     ),
-  'decrementCouponQuantity' : IDL.Func([IDL.Text], [IDL.Nat], []),
   'deleteGiftPack' : IDL.Func([IDL.Text], [], []),
   'filterGiftPacks' : IDL.Func(
       [CatalogFilters],
@@ -245,6 +251,8 @@ export const idlService = IDL.Service({
   'getAllCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
   'getAllGiftPacks' : IDL.Func([], [IDL.Vec(GiftPack)], ['query']),
   'getAllProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+  'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getCart' : IDL.Func([], [IDL.Opt(Cart)], ['query']),
   'getContactSubmissions' : IDL.Func(
       [],
@@ -259,10 +267,15 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'getProductById' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
-  'getUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+  'getUserProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(UserProfile)],
+      ['query'],
+    ),
   'initialize' : IDL.Func([], [], []),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isPincodeServiceable' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-  'recordCouponUsage' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'saveCart' : IDL.Func([Cart], [], []),
   'searchGiftPacks' : IDL.Func([IDL.Text], [IDL.Vec(GiftPack)], ['query']),
   'storePayment' : IDL.Func(
@@ -313,6 +326,11 @@ export const idlFactory = ({ IDL }) => {
   const _CaffeineStorageRefillResult = IDL.Record({
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
   });
   const Category = IDL.Record({ 'name' : IDL.Text, 'description' : IDL.Text });
   const Time = IDL.Int;
@@ -478,6 +496,8 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'clearCart' : IDL.Func([], [], []),
     'createCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
     'createCoupon' : IDL.Func(
@@ -534,7 +554,6 @@ export const idlFactory = ({ IDL }) => {
         [Product],
         [],
       ),
-    'decrementCouponQuantity' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'deleteGiftPack' : IDL.Func([IDL.Text], [], []),
     'filterGiftPacks' : IDL.Func(
         [CatalogFilters],
@@ -544,6 +563,8 @@ export const idlFactory = ({ IDL }) => {
     'getAllCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
     'getAllGiftPacks' : IDL.Func([], [IDL.Vec(GiftPack)], ['query']),
     'getAllProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+    'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getCart' : IDL.Func([], [IDL.Opt(Cart)], ['query']),
     'getContactSubmissions' : IDL.Func(
         [],
@@ -558,10 +579,15 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'getProductById' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
-    'getUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
+    'getUserProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
     'initialize' : IDL.Func([], [], []),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isPincodeServiceable' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
-    'recordCouponUsage' : IDL.Func([IDL.Text, IDL.Text], [], []),
+    'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'saveCart' : IDL.Func([Cart], [], []),
     'searchGiftPacks' : IDL.Func([IDL.Text], [IDL.Vec(GiftPack)], ['query']),
     'storePayment' : IDL.Func(

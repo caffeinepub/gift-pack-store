@@ -1,121 +1,88 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T12:29:58.713Z",
+  "generatedAt": "2026-02-21T13:20:40.414Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 8,
-    "implemented": 6,
+    "total": 4,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Update the Product type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
+        "summary": "Create a backend authentication system with username and password validation for admin access",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Update the GiftPack type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Create an admin login page at /admin/login with username and password input fields",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/AdminLoginPage.tsx",
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AdminLoginPage.tsx",
+          "frontend/src/App.tsx"
+        ]
       },
       {
         "id": "REQ-3",
-        "summary": "Update ProductForm component in frontend/src/components/admin/ProductForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
+        "summary": "Protect the /admin route to require authentication before displaying the admin dashboard",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/ProductForm.tsx"
+          "frontend/src/hooks/useAdminAuth.ts",
+          "frontend/src/components/auth/AdminAuthProvider.tsx",
+          "frontend/src/components/auth/ProtectedAdminRoute.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/pages/AdminPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/ProductForm.tsx"
+          "frontend/src/components/auth/ProtectedAdminRoute.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/pages/AdminPage.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Update GiftPackForm component in frontend/src/components/admin/GiftPackForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
+        "summary": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/GiftPackForm.tsx"
+          "frontend/src/components/layout/Header.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/GiftPackForm.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Update ProductList component in frontend/src/components/admin/ProductList.tsx to display the first image from the images array as the product thumbnail in the card view.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/ProductList.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/ProductList.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Update GiftPackList component in frontend/src/components/admin/GiftPackList.tsx to display the first image from the images array as the gift pack thumbnail in the card view.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/GiftPackList.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/GiftPackList.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Update GiftPackCard component in frontend/src/components/product/GiftPackCard.tsx to display an image carousel or gallery when a gift pack has multiple images. Allow users to navigate through images using navigation arrows or dots.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/product/GiftPackCard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/product/GiftPackCard.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Update CartItemRow component in frontend/src/components/cart/CartItemRow.tsx to display the first image from the images array for cart items.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/cart/CartItemRow.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/cart/CartItemRow.tsx"
+          "frontend/src/components/layout/Header.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/authorization/MixinAuthorization.mo",
+    "backend/authorization/access-control.mo",
     "backend/main.mo",
     "backend/migration.mo",
     "build-request.json",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/admin/GiftPackForm.tsx",
-    "frontend/src/components/admin/GiftPackList.tsx",
-    "frontend/src/components/admin/GiftPackManagement.tsx",
-    "frontend/src/components/admin/ProductForm.tsx",
-    "frontend/src/components/admin/ProductList.tsx",
-    "frontend/src/components/admin/ProductManagement.tsx",
-    "frontend/src/components/cart/CartItemRow.tsx",
-    "frontend/src/components/product/GiftPackCard.tsx",
-    "frontend/src/components/product/ProductGrid.tsx",
+    "frontend/src/components/auth/ProtectedAdminRoute.tsx",
+    "frontend/src/components/layout/Header.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useGiftPackMutation.ts",
-    "frontend/src/hooks/useProductMutation.ts",
-    "frontend/src/pages/CartPage.tsx",
-    "frontend/src/pages/HomePage.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useAdminAuth.tsx",
+    "frontend/src/hooks/useUserProfile.ts",
+    "frontend/src/pages/AdminLoginPage.tsx",
+    "frontend/src/pages/AdminPage.tsx",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

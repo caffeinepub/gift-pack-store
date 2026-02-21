@@ -1,153 +1,96 @@
 {
   "kind": "build_request",
-  "title": "Add multiple image upload support for products and gift packs",
+  "title": "Add username and password authentication to admin dashboard",
+  "projectName": "Gift Pack Store",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Update the Product type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
+      "text": "Create a backend authentication system with username and password validation for admin access",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-last"
         ],
         "quotes": [
-          "allow multiple images to be uploaded for product and gift packs"
+          "please hide admin dashboard behind username and password"
         ]
       },
       "acceptanceCriteria": [
-        "Product type has an images array field instead of imageUrl",
-        "Existing CRUD operations for products handle the new images array field",
-        "Migration logic preserves existing single imageUrl data by converting it to a single-element array"
+        "Backend stores admin credentials securely",
+        "Backend provides a method to validate username and password combinations",
+        "Backend returns authentication success or failure status"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update the GiftPack type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
-      "target": "backend",
+      "text": "Create an admin login page at /admin/login with username and password input fields",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-last"
         ],
         "quotes": [
-          "allow multiple images to be uploaded for product and gift packs"
+          "please hide admin dashboard behind username and password"
         ]
       },
       "acceptanceCriteria": [
-        "GiftPack type has an images array field instead of imageUrl",
-        "Existing CRUD operations for gift packs handle the new images array field",
-        "Migration logic preserves existing single imageUrl data by converting it to a single-element array"
+        "Login form displays username and password fields",
+        "Form validates that both fields are filled before submission",
+        "Form shows error messages for invalid credentials",
+        "Successful login redirects to /admin dashboard"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update ProductForm component in frontend/src/components/admin/ProductForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
+      "text": "Protect the /admin route to require authentication before displaying the admin dashboard",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-last"
         ],
         "quotes": [
-          "allow multiple images to be uploaded for product and gift packs"
+          "please hide admin dashboard behind username and password"
         ]
       },
       "acceptanceCriteria": [
-        "Form displays a list of image URL inputs",
-        "Users can add new image URL fields using an 'Add Image' button",
-        "Users can remove individual image URLs",
-        "At least one image URL is required",
-        "Form validation ensures all image URL fields are filled before submission"
+        "Unauthenticated users accessing /admin are redirected to /admin/login",
+        "Authenticated admin users can access the dashboard",
+        "Authentication state persists across page refreshes",
+        "Admin can log out and return to login page"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Update GiftPackForm component in frontend/src/components/admin/GiftPackForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
+      "text": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-6"
+          "msg-last"
         ],
         "quotes": [
-          "allow multiple images to be uploaded for product and gift packs"
+          "please hide admin dashboard behind username and password"
         ]
       },
       "acceptanceCriteria": [
-        "Form displays a list of image URL inputs",
-        "Users can add new image URL fields using an 'Add Image' button",
-        "Users can remove individual image URLs",
-        "At least one image URL is required",
-        "Form validation ensures all image URL fields are filled before submission"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Update ProductList component in frontend/src/components/admin/ProductList.tsx to display the first image from the images array as the product thumbnail in the card view.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Product cards display the first image from the images array",
-        "Fallback placeholder is shown if images array is empty"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Update GiftPackList component in frontend/src/components/admin/GiftPackList.tsx to display the first image from the images array as the gift pack thumbnail in the card view.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Gift pack cards display the first image from the images array",
-        "Fallback placeholder is shown if images array is empty"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Update GiftPackCard component in frontend/src/components/product/GiftPackCard.tsx to display an image carousel or gallery when a gift pack has multiple images. Allow users to navigate through images using navigation arrows or dots.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Gift pack cards show an image carousel when multiple images exist",
-        "Users can navigate between images using previous/next controls",
-        "Single image gift packs display without carousel controls",
-        "Carousel indicators show current image position"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Update CartItemRow component in frontend/src/components/cart/CartItemRow.tsx to display the first image from the images array for cart items.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-6"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Cart items display the first image from the images array",
-        "Fallback placeholder is shown if images array is empty"
+        "Admin link only appears in navigation when admin is authenticated",
+        "Regular users do not see admin navigation link",
+        "Admin navigation link functions correctly for authenticated admins"
       ]
     }
   ],
   "constraints": [
-    "Preserve all existing product and gift pack data during migration",
-    "Maintain backward compatibility by converting single imageUrl values to single-element arrays",
-    "Ensure at least one image is always required for products and gift packs"
+    "Maintain single-actor backend architecture in backend/main.mo",
+    "Do not modify immutable frontend paths: useInternetIdentity hooks, useActor.ts, main.tsx, and components/ui directory",
+    "Preserve existing Internet Identity authentication for regular users",
+    "Keep all existing admin functionality in AdminPage.tsx intact"
   ],
   "nonGoals": [
-    "Direct file upload functionality (only URL inputs)",
-    "Image hosting or storage services",
-    "Image editing or cropping features",
-    "Automatic image optimization or resizing"
+    "Multi-user admin system with role-based permissions",
+    "Password reset or recovery functionality",
+    "Admin user registration interface",
+    "Integration with external authentication providers",
+    "Two-factor authentication"
   ],
   "imageRequirements": {
     "required": [],

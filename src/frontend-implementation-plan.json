@@ -1,103 +1,80 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add multiple image upload support for products and gift packs",
+  "title": "Add username and password authentication to admin dashboard",
   "requirements": [
     {
-      "id": "REQ-3",
-      "summary": "Update ProductForm component to support multiple image URLs with add/remove/reorder functionality",
+      "id": "REQ-2",
+      "summary": "Create an admin login page at /admin/login with username and password input fields",
       "acceptanceCriteria": [
-        "Form displays a list of image URL inputs",
-        "Users can add new image URL fields using an 'Add Image' button",
-        "Users can remove individual image URLs",
-        "At least one image URL is required",
-        "Form validation ensures all image URL fields are filled before submission"
+        "Login form displays username and password fields",
+        "Form validates that both fields are filled before submission",
+        "Form shows error messages for invalid credentials",
+        "Successful login redirects to /admin dashboard"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/ProductForm.tsx",
+          "path": "frontend/src/pages/AdminLoginPage.tsx",
+          "operation": "create",
+          "description": "Create a new admin login page component with username and password form fields. Use react-hook-form for form validation ensuring both fields are required. Include error state display for invalid credentials returned from backend authentication. On successful authentication, store admin session state and redirect to /admin route. Style with shadcn/ui form components and Card layout matching the existing design system."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Replace the single imageUrl input field with a dynamic array of image URL inputs. Add state management for the images array using useFieldArray from react-hook-form. Implement 'Add Image' button to append new image URL fields. Add remove buttons for each image URL field (disabled when only one image remains). Update form validation to ensure at least one image URL is present and all fields are filled. Update the form submission to pass the images array to the create/update product mutations."
+          "description": "Add a new route configuration for /admin/login that renders the AdminLoginPage component. Position this route before the protected /admin route in the router configuration to ensure proper route matching precedence."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Protect the /admin route to require authentication before displaying the admin dashboard",
+      "acceptanceCriteria": [
+        "Unauthenticated users accessing /admin are redirected to /admin/login",
+        "Authenticated admin users can access the dashboard",
+        "Authentication state persists across page refreshes",
+        "Admin can log out and return to login page"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useAdminAuth.ts",
+          "operation": "create",
+          "description": "Create a custom hook to manage admin authentication state using React Context. Provide functions for login (calls backend authentication validation), logout (clears session), and checking authentication status. Store admin session in localStorage for persistence across page refreshes. The hook should call the backend authentication validation method when logging in and handle authentication status checks."
+        },
+        {
+          "path": "frontend/src/components/auth/AdminAuthProvider.tsx",
+          "operation": "create",
+          "description": "Create a React Context provider component that wraps the admin authentication logic from useAdminAuth hook. This provider should initialize authentication state from localStorage on mount, provide context values for isAuthenticated, login, and logout functions, and be used to wrap admin-related routes."
+        },
+        {
+          "path": "frontend/src/components/auth/ProtectedAdminRoute.tsx",
+          "operation": "create",
+          "description": "Create a route guard component that checks admin authentication status using the useAdminAuth hook. If the user is not authenticated, redirect to /admin/login using TanStack Router's Navigate component. If authenticated, render the children (admin dashboard). Include loading state while checking authentication to prevent flash of unauthorized content."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap the AdminAuthProvider around the router configuration. Modify the /admin route to use ProtectedAdminRoute as a wrapper, ensuring all admin pages require authentication. Ensure the /admin/login route remains accessible without authentication."
+        },
+        {
+          "path": "frontend/src/pages/AdminPage.tsx",
+          "operation": "modify",
+          "description": "Add a logout button to the admin dashboard header using the useAdminAuth hook. The button should call the logout function and redirect to /admin/login. Position the logout button in the top-right corner of the admin interface for easy access."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Update GiftPackForm component to support multiple image URLs with add/remove/reorder functionality",
+      "summary": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
       "acceptanceCriteria": [
-        "Form displays a list of image URL inputs",
-        "Users can add new image URL fields using an 'Add Image' button",
-        "Users can remove individual image URLs",
-        "At least one image URL is required",
-        "Form validation ensures all image URL fields are filled before submission"
+        "Admin link only appears in navigation when admin is authenticated",
+        "Regular users do not see admin navigation link",
+        "Admin navigation link functions correctly for authenticated admins"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/GiftPackForm.tsx",
+          "path": "frontend/src/components/layout/Header.tsx",
           "operation": "modify",
-          "description": "Replace the single imageUrl input field with a dynamic array of ExternalBlob image inputs. Add state management for the images array using useFieldArray from react-hook-form. Implement 'Add Image' button to append new image URL fields. Add remove buttons for each image URL field (disabled when only one image remains). Update form validation to ensure at least one image URL is present and all fields are filled. Convert image URL strings to ExternalBlob instances using ExternalBlob.fromURL() when submitting. Update the form submission to pass the images array to the create/update gift pack mutations. Verify the blob-storage component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Update ProductList component to display the first image from the images array as product thumbnail",
-      "acceptanceCriteria": [
-        "Product cards display the first image from the images array",
-        "Fallback placeholder is shown if images array is empty"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/ProductList.tsx",
-          "operation": "modify",
-          "description": "Update the product card image rendering to use product.images[0] instead of product.imageUrl. Add conditional logic to display a placeholder image or icon when the images array is empty or undefined. Ensure the image element maintains the same styling and aspect ratio as the current implementation."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Update GiftPackList component to display the first image from the images array as gift pack thumbnail",
-      "acceptanceCriteria": [
-        "Gift pack cards display the first image from the images array",
-        "Fallback placeholder is shown if images array is empty"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/GiftPackList.tsx",
-          "operation": "modify",
-          "description": "Update the gift pack card image rendering to use giftPack.images[0]?.getDirectURL() instead of giftPack.imageUrl. Add conditional logic to display a placeholder image or icon when the images array is empty or undefined. Ensure the ExternalBlob's getDirectURL() method is used for proper image display. Verify the blob-storage component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Update GiftPackCard component to display an image carousel for multiple images with navigation controls",
-      "acceptanceCriteria": [
-        "Gift pack cards show an image carousel when multiple images exist",
-        "Users can navigate between images using previous/next controls",
-        "Single image gift packs display without carousel controls",
-        "Carousel indicators show current image position"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/product/GiftPackCard.tsx",
-          "operation": "modify",
-          "description": "Add state management for tracking the current image index in the carousel. Replace the single image display with a carousel container that shows giftPack.images[currentIndex]?.getDirectURL(). Implement previous/next navigation buttons that increment/decrement the current index with wraparound logic. Add dot indicators at the bottom of the image area showing the total number of images and highlighting the current image. Conditionally render carousel controls only when giftPack.images.length > 1. Add keyboard navigation support for left/right arrow keys. Ensure the ExternalBlob's getDirectURL() method is used for all image URLs. Verify the blob-storage component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Update CartItemRow component to display the first image from the images array for cart items",
-      "acceptanceCriteria": [
-        "Cart items display the first image from the images array",
-        "Fallback placeholder is shown if images array is empty"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/cart/CartItemRow.tsx",
-          "operation": "modify",
-          "description": "Update the cart item image rendering to use pack.images[0]?.getDirectURL() instead of pack.imageUrl. Add conditional logic to display a placeholder image or icon when the images array is empty or undefined. Ensure the ExternalBlob's getDirectURL() method is used for proper image display with streaming and caching. Verify the blob-storage component's usage instructions before implementing."
+          "description": "Import and use the useAdminAuth hook to check admin authentication status. Conditionally render the Admin navigation link only when isAdminAuthenticated returns true. Ensure the check does not interfere with regular user navigation or Internet Identity authentication flows. The admin link should be visually consistent with other navigation items when displayed."
         }
       ]
     }

@@ -20,7 +20,7 @@ export function useUserProfile() {
     queryKey: ['userProfile', identity?.getPrincipal().toString()],
     queryFn: async () => {
       if (!actor) return null;
-      return actor.getUserProfile();
+      return actor.getCallerUserProfile();
     },
     enabled: !!actor && !isFetching && !!identity,
   });

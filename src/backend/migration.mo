@@ -1,9 +1,11 @@
 import Map "mo:core/Map";
-import Set "mo:core/Set";
 import Text "mo:core/Text";
+import Nat "mo:core/Nat";
 import Principal "mo:core/Principal";
-import Time "mo:core/Time";
 import Storage "blob-storage/Storage";
+import Int "mo:core/Int";
+import Iter "mo:core/Iter";
+import Time "mo:core/Time";
 
 module {
   type CategoryType = {
@@ -85,7 +87,7 @@ module {
 
   type RazorpayPayment = {
     paymentId : Text;
-    payer : Principal;
+    payer : Principal.Principal;
     amount : Int;
     status : Text;
   };
@@ -124,7 +126,7 @@ module {
   };
 
   type UserProfile = {
-    principal : Principal;
+    principal : Principal.Principal;
     name : Text;
     email : Text;
     phone : Text;
@@ -155,7 +157,7 @@ module {
     remainingQuantity : Nat;
   };
 
-  type NewProduct = {
+  type Product = {
     id : Text;
     name : Text;
     description : Text;
@@ -164,51 +166,24 @@ module {
     images : [Text];
   };
 
-  type NewActor = {
-    coupons : Map.Map<Text, Coupon>;
-    couponUsage : Map.Map<Text, [Text]>;
-    userProfiles : Map.Map<Principal, UserProfile>;
-    giftPacks : Map.Map<Text, GiftPack>;
-    orders : Map.Map<Text, Order>;
-    payments : Map.Map<Text, RazorpayPayment>;
-    userOrders : Map.Map<Principal, [Order]>;
-    userCarts : Map.Map<Principal, Cart>;
-    contactSubmissions : Map.Map<Text, ContactSubmission>;
-    categories : Map.Map<Text, Category>;
-    products : Map.Map<Text, NewProduct>;
-    deliveryPincodes : Map.Map<Text, Bool>;
-  };
-
-  type OldProduct = {
-    id : Text;
-    name : Text;
-    description : Text;
-    price : Int;
-    category : CategoryType;
-    imageUrl : Text;
-  };
+  type PasswordHash = [Nat8];
 
   type OldActor = {
     coupons : Map.Map<Text, Coupon>;
     couponUsage : Map.Map<Text, [Text]>;
-    userProfiles : Map.Map<Principal, UserProfile>;
+    userProfiles : Map.Map<Principal.Principal, UserProfile>;
     giftPacks : Map.Map<Text, GiftPack>;
     orders : Map.Map<Text, Order>;
     payments : Map.Map<Text, RazorpayPayment>;
-    userOrders : Map.Map<Principal, [Order]>;
-    userCarts : Map.Map<Principal, Cart>;
+    userOrders : Map.Map<Principal.Principal, [Order]>;
+    userCarts : Map.Map<Principal.Principal, Cart>;
     contactSubmissions : Map.Map<Text, ContactSubmission>;
     categories : Map.Map<Text, Category>;
-    products : Map.Map<Text, OldProduct>;
+    products : Map.Map<Text, Product>;
     deliveryPincodes : Map.Map<Text, Bool>;
   };
 
-  public func run(old : OldActor) : NewActor {
-    let newProducts = old.products.map<Text, OldProduct, NewProduct>(
-      func(_id, oldProduct) {
-        { oldProduct with images = [oldProduct.imageUrl] };
-      }
-    );
-    { old with products = newProducts };
-  };
+  type NewActor = OldActor;
+
+  public func run(old : OldActor) : NewActor { old };
 };

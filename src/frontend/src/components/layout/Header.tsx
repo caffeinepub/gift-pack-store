@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Gift, Menu, Search, ShoppingCart, User, MapPin, Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { Gift, Menu, ShoppingCart, User, MapPin, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/useCart';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { validatePincode } from '@/utils/validation';
 import { useActor } from '@/hooks/useActor';
 
@@ -15,18 +16,25 @@ export default function Header() {
   const navigate = useNavigate();
   const { itemCount } = useCart();
   const { identity, login, clear, isLoggingIn } = useInternetIdentity();
+  const { isAuthenticated: isAdminAuthenticated } = useAdminAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pincode, setPincode] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [result, setResult] = useState<{ isServiceable: boolean; checked: boolean } | null>(null);
   const { actor } = useActor();
 
-  const navItems = [
+  const isAuthenticated = !!identity && !identity.getPrincipal().isAnonymous();
+
+  const baseNavItems = [
     { label: 'Home', path: '/' },
     { label: 'Browse', path: '/catalog' },
     { label: 'Custom Pack', path: '/custom' },
-    { label: 'Admin', path: '/admin' },
   ];
+
+  // Add Admin link only for authenticated admin users
+  const navItems = isAdminAuthenticated
+    ? [...baseNavItems, { label: 'Admin', path: '/admin' }]
+    : baseNavItems;
 
   const handleNavigation = (path: string) => {
     navigate({ to: path });
@@ -127,9 +135,8 @@ export default function Header() {
                   />
                   <Button
                     onClick={handleCheckPincode}
-                    disabled={pincode.length !== 6 || isChecking}
+                    disabled={isChecking || pincode.length !== 6}
                     size="sm"
-                    className="bg-terracotta hover:bg-terracotta/90"
                   >
                     {isChecking ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -138,33 +145,28 @@ export default function Header() {
                     )}
                   </Button>
                 </div>
-
                 {result?.checked && (
-                  <div>
-                    {!validatePincode(pincode) ? (
-                      <div className="flex items-start gap-2 rounded-lg bg-destructive/10 p-3 text-sm">
-                        <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
-                        <div>
-                          <p className="font-medium text-destructive">Invalid Pincode</p>
-                          <p className="text-xs text-destructive/80">Enter a valid 6-digit pincode</p>
-                        </div>
-                      </div>
-                    ) : result.isServiceable ? (
-                      <div className="flex items-start gap-2 rounded-lg bg-sage/10 p-3 text-sm">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-sage" />
-                        <div>
-                          <p className="font-medium text-sage">We deliver to your area!</p>
-                          <p className="text-xs text-sage/80">Start browsing our collections</p>
-                        </div>
-                      </div>
+                  <div
+                    className={`flex items-center gap-2 rounded-md p-3 ${
+                      result.isServiceable
+                        ? 'bg-sage/10 text-sage'
+                        : 'bg-destructive/10 text-destructive'
+                    }`}
+                  >
+                    {result.isServiceable ? (
+                      <>
+                        <CheckCircle2 className="h-5 w-5" />
+                        <span className="text-sm font-medium">
+                          Great! We deliver to this area
+                        </span>
+                      </>
                     ) : (
-                      <div className="flex items-start gap-2 rounded-lg bg-destructive/10 p-3 text-sm">
-                        <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
-                        <div>
-                          <p className="font-medium text-destructive">Not available yet</p>
-                          <p className="text-xs text-destructive/80">We're expanding soon!</p>
-                        </div>
-                      </div>
+                      <>
+                        <XCircle className="h-5 w-5" />
+                        <span className="text-sm font-medium">
+                          Sorry, we don't deliver here yet
+                        </span>
+                      </>
                     )}
                   </div>
                 )}
@@ -172,29 +174,7 @@ export default function Header() {
             </PopoverContent>
           </Popover>
 
-          {/* Search Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => handleNavigation('/catalog')}
-            title="Search"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-
-          {/* Profile Button (only when authenticated) */}
-          {identity && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => handleNavigation('/profile')}
-              title="My Profile"
-            >
-              <User className="h-5 w-5" />
-            </Button>
-          )}
-
-          {/* Cart Button */}
+          {/* Cart */}
           <Button
             variant="ghost"
             size="icon"
@@ -205,66 +185,76 @@ export default function Header() {
             {itemCount > 0 && (
               <Badge
                 variant="destructive"
-                className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs"
+                className="absolute -right-1 -top-1 h-5 min-w-5 rounded-full px-1 text-xs"
               >
                 {itemCount}
               </Badge>
             )}
           </Button>
 
-          {/* Auth Button */}
-          {identity ? (
-            <Button variant="ghost" size="sm" onClick={clear} className="hidden sm:flex">
-              Logout
+          {/* Profile / Login */}
+          {isAuthenticated ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleNavigation('/profile')}
+              title="Profile"
+            >
+              <User className="h-5 w-5" />
             </Button>
           ) : (
-            <Button variant="ghost" size="sm" onClick={login} disabled={isLoggingIn}>
-              {isLoggingIn ? 'Logging in...' : 'Login'}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={login}
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                'Login'
+              )}
             </Button>
           )}
 
           {/* Mobile Menu */}
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-64">
-              <div className="flex flex-col gap-4 pt-8">
+              <div className="flex flex-col gap-4 py-4">
+                <div className="font-serif text-lg font-bold text-terracotta">Menu</div>
                 {navItems.map((item) => (
                   <button
                     key={item.path}
                     onClick={() => handleNavigation(item.path)}
-                    className="text-left text-lg font-medium transition-colors hover:text-terracotta"
+                    className="text-left text-sm font-medium transition-colors hover:text-terracotta"
                   >
                     {item.label}
                   </button>
                 ))}
+                <div className="my-2 border-t" />
                 <button
-                  onClick={() => handleNavigation('/catalog')}
-                  className="text-left text-lg font-medium transition-colors hover:text-terracotta"
+                  onClick={() => handleNavigation('/contact')}
+                  className="text-left text-sm font-medium transition-colors hover:text-terracotta"
                 >
-                  Search
+                  Contact Us
                 </button>
-                {identity && (
-                  <>
-                    <button
-                      onClick={() => handleNavigation('/profile')}
-                      className="text-left text-lg font-medium transition-colors hover:text-terracotta"
-                    >
-                      My Profile
-                    </button>
-                    <button
-                      onClick={() => {
-                        clear();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="text-left text-lg font-medium transition-colors hover:text-terracotta"
-                    >
-                      Logout
-                    </button>
-                  </>
+                {isAuthenticated && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      clear();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="mt-2"
+                  >
+                    Logout
+                  </Button>
                 )}
               </div>
             </SheetContent>

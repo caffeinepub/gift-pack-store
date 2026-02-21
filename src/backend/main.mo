@@ -1,15 +1,19 @@
 import Int "mo:core/Int";
 import Map "mo:core/Map";
-import Order "mo:core/Order";
+import Iter "mo:core/Iter";
+import Nat "mo:core/Nat";
+import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
+import Storage "blob-storage/Storage";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
+
 import Array "mo:core/Array";
-import Storage "blob-storage/Storage";
-import Iter "mo:core/Iter";
-import Runtime "mo:core/Runtime";
-import Principal "mo:core/Principal";
-import MixinStorage "blob-storage/Mixin";
+import Order "mo:core/Order";
 import Migration "migration";
+import MixinStorage "blob-storage/Mixin";
+import AccessControl "authorization/access-control";
+import MixinAuthorization "authorization/MixinAuthorization";
 
 (with migration = Migration.run)
 actor {
@@ -138,7 +142,7 @@ actor {
     #cancelled;
   };
 
-  type UserProfile = {
+  public type UserProfile = {
     principal : Principal;
     name : Text;
     email : Text;
@@ -179,6 +183,8 @@ actor {
     images : [Text];
   };
 
+  type PasswordHash = [Nat8];
+
   let coupons = Map.empty<Text, Coupon>();
   let couponUsage = Map.empty<Text, [Text]>();
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -186,7 +192,7 @@ actor {
   let orders = Map.empty<Text, Order>();
   let payments = Map.empty<Text, RazorpayPayment>();
   let userOrders = Map.empty<Principal, [Order]>();
-  var userCarts = Map.empty<Principal, Cart>();
+  let userCarts = Map.empty<Principal, Cart>();
   let contactSubmissions = Map.empty<Text, ContactSubmission>();
   let categories = Map.empty<Text, Category>();
   let products = Map.empty<Text, Product>();
@@ -212,6 +218,9 @@ actor {
       ("700003", true),
     ].values()
   );
+
+  let accessControlState = AccessControl.initState();
+  include MixinAuthorization(accessControlState);
 
   public shared ({ caller }) func initialize() : async () {
     if (giftPacks.size() > 0) { return };
@@ -338,6 +347,10 @@ actor {
     expirationDate : Time.Time,
     totalQuantity : Nat,
   ) : async Coupon {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create coupons");
+    };
+
     let coupon : Coupon = {
       code;
       discountPercentage;
@@ -399,7 +412,7 @@ actor {
     );
   };
 
-  public shared ({ caller }) func decrementCouponQuantity(code : Text) : async Nat {
+  func decrementCouponQuantity(code : Text) : Nat {
     switch (coupons.get(code)) {
       case (null) { 0 };
       case (?coupon) {
@@ -414,7 +427,7 @@ actor {
     };
   };
 
-  public shared ({ caller }) func recordCouponUsage(userId : Text, code : Text) : async () {
+  func recordCouponUsage(userId : Text, code : Text) : () {
     switch (couponUsage.get(userId)) {
       case (null) {
         couponUsage.add(userId, [code]);
@@ -438,13 +451,17 @@ actor {
     paymentId : Text,
     couponCode : ?Text,
   ) : async Order {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create orders");
+    };
+
     let orderId = userId.concat("orderId");
 
     switch (couponCode) {
       case (null) {};
       case (?code) {
-        ignore await decrementCouponQuantity(code);
-        await recordCouponUsage(userId, code);
+        ignore decrementCouponQuantity(code);
+        recordCouponUsage(userId, code);
       };
     };
 
@@ -479,6 +496,10 @@ actor {
   };
 
   public shared ({ caller }) func storePayment(paymentId : Text, amount : Int, status : Text) : async RazorpayPayment {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can store payments");
+    };
+
     let payment : RazorpayPayment = {
       paymentId;
       payer = caller;
@@ -497,6 +518,10 @@ actor {
     address : DeliveryAddress,
     pincode : Text,
   ) : async UserProfile {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create or update profiles");
+    };
+
     let profile : UserProfile = {
       principal = caller;
       name;
@@ -510,8 +535,25 @@ actor {
     profile;
   };
 
-  public query ({ caller }) func getUserProfile() : async ?UserProfile {
+  public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view profiles");
+    };
     userProfiles.get(caller);
+  };
+
+  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Can only view your own profile");
+    };
+    userProfiles.get(user);
+  };
+
+  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can save profiles");
+    };
+    userProfiles.add(caller, profile);
   };
 
   public query ({ caller }) func isPincodeServiceable(pincode : Text) : async Bool {
@@ -529,6 +571,10 @@ actor {
   };
 
   public query ({ caller }) func getOrderHistoryForPrincipal(recipient : Principal) : async [Order] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view other users' order history");
+    };
+
     switch (userOrders.get(recipient)) {
       case (null) { [] };
       case (?orders) { orders };
@@ -536,10 +582,18 @@ actor {
   };
 
   public shared ({ caller }) func saveCart(cart : Cart) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can save carts");
+    };
+
     userCarts.add(caller, cart);
   };
 
   public shared ({ caller }) func updateCartItemQuantity(packId : Text, newQuantity : Nat) : async ?Cart {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can update cart items");
+    };
+
     switch (userCarts.get(caller)) {
       case (null) { null };
       case (?cart) {
@@ -560,10 +614,18 @@ actor {
   };
 
   public shared ({ caller }) func clearCart() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can clear carts");
+    };
+
     userCarts.remove(caller);
   };
 
   public shared ({ caller }) func submitContactForm(name : Text, email : Text, phone : Text, message : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can submit contact forms");
+    };
+
     let submission : ContactSubmission = {
       name;
       email;
@@ -575,10 +637,18 @@ actor {
   };
 
   public query ({ caller }) func getContactSubmissions() : async [ContactSubmission] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view contact submissions");
+    };
+
     contactSubmissions.values().toArray();
   };
 
   public shared ({ caller }) func createCategory(name : Text, description : Text) : async Category {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create categories");
+    };
+
     let category : Category = {
       name;
       description;
@@ -600,6 +670,10 @@ actor {
     category : CategoryType,
     images : [Text],
   ) : async Product {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create products");
+    };
+
     let product : Product = {
       id;
       name;
@@ -621,6 +695,10 @@ actor {
     category : CategoryType,
     images : [Text],
   ) : async Product {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can update products");
+    };
+
     let updatedProduct : Product = {
       id;
       name;
@@ -642,7 +720,6 @@ actor {
     products.values().toArray();
   };
 
-  // New Gift Pack Backend CRUD Endpoints
   public shared ({ caller }) func createGiftPack(
     id : Text,
     title : Text,
@@ -655,6 +732,10 @@ actor {
     basketType : BasketType,
     size : Size,
   ) : async GiftPack {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can create gift packs");
+    };
+
     let pack : GiftPack = {
       id;
       title;
@@ -684,6 +765,10 @@ actor {
     basketType : BasketType,
     size : Size,
   ) : async GiftPack {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can update gift packs");
+    };
+
     let updatedPack : GiftPack = {
       id;
       title;
@@ -702,6 +787,10 @@ actor {
   };
 
   public shared ({ caller }) func deleteGiftPack(id : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can delete gift packs");
+    };
+
     switch (giftPacks.get(id)) {
       case (null) {
         Runtime.trap("Gift pack with id " # id # " does not exist");

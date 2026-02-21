@@ -1,17 +1,35 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 import CategoryManagement from '@/components/admin/CategoryManagement';
 import ProductManagement from '@/components/admin/ProductManagement';
 import CouponManagement from '@/components/admin/CouponManagement';
 import GiftPackManagement from '@/components/admin/GiftPackManagement';
+import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 export default function AdminPage() {
+  const { logout } = useAdminAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate({ to: '/admin/login' });
+  };
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4">
-        <h1 className="mb-8 font-serif text-3xl font-bold tracking-tight md:text-4xl">
-          Admin Dashboard
-        </h1>
+        <div className="mb-8 flex items-center justify-between">
+          <h1 className="font-serif text-3xl font-bold tracking-tight md:text-4xl">
+            Admin Dashboard
+          </h1>
+          <Button variant="outline" onClick={handleLogout}>
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
 
         <div className="space-y-8">
           {/* Product Management for Custom Packages */}

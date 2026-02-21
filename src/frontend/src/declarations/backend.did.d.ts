@@ -136,6 +136,9 @@ export interface UserProfile {
   'pincode' : string,
   'defaultAddress' : DeliveryAddress,
 }
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -163,6 +166,8 @@ export interface _SERVICE {
     _CaffeineStorageRefillResult
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'clearCart' : ActorMethod<[], undefined>,
   'createCategory' : ActorMethod<[string, string], Category>,
   'createCoupon' : ActorMethod<
@@ -207,22 +212,24 @@ export interface _SERVICE {
     [string, string, string, bigint, CategoryType, Array<string>],
     Product
   >,
-  'decrementCouponQuantity' : ActorMethod<[string], bigint>,
   'deleteGiftPack' : ActorMethod<[string], undefined>,
   'filterGiftPacks' : ActorMethod<[CatalogFilters], Array<GiftPack>>,
   'getAllCategories' : ActorMethod<[], Array<Category>>,
   'getAllGiftPacks' : ActorMethod<[], Array<GiftPack>>,
   'getAllProducts' : ActorMethod<[], Array<Product>>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCart' : ActorMethod<[], [] | [Cart]>,
   'getContactSubmissions' : ActorMethod<[], Array<ContactSubmission>>,
   'getGiftPackById' : ActorMethod<[string], [] | [GiftPack]>,
   'getOrderHistory' : ActorMethod<[], Array<Order>>,
   'getOrderHistoryForPrincipal' : ActorMethod<[Principal], Array<Order>>,
   'getProductById' : ActorMethod<[string], [] | [Product]>,
-  'getUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'initialize' : ActorMethod<[], undefined>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
   'isPincodeServiceable' : ActorMethod<[string], boolean>,
-  'recordCouponUsage' : ActorMethod<[string, string], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'saveCart' : ActorMethod<[Cart], undefined>,
   'searchGiftPacks' : ActorMethod<[string], Array<GiftPack>>,
   'storePayment' : ActorMethod<[string, bigint, string], RazorpayPayment>,

@@ -30,12 +30,6 @@ export interface UserProfile {
     pincode: string;
     defaultAddress: DeliveryAddress;
 }
-export interface RazorpayPayment {
-    status: string;
-    paymentId: string;
-    payer: Principal;
-    amount: bigint;
-}
 export type Time = bigint;
 export interface Category {
     name: string;
@@ -115,6 +109,12 @@ export interface CartItem {
     quantity: bigint;
     packId: string;
 }
+export interface RazorpayPayment {
+    status: string;
+    paymentId: string;
+    payer: Principal;
+    amount: bigint;
+}
 export interface Product {
     id: string;
     name: string;
@@ -155,7 +155,13 @@ export enum Size {
     small = "small",
     medium = "medium"
 }
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
 export interface backendInterface {
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     clearCart(): Promise<void>;
     createCategory(name: string, description: string): Promise<Category>;
     createCoupon(code: string, discountPercentage: bigint, minDiscountPercentage: bigint | null, maxDiscountAmount: bigint | null, expirationDate: Time, totalQuantity: bigint): Promise<Coupon>;
@@ -163,22 +169,24 @@ export interface backendInterface {
     createOrUpdateUserProfile(name: string, email: string, phone: string, address: DeliveryAddress, pincode: string): Promise<UserProfile>;
     createOrder(userId: string, items: Array<CartItem>, deliveryAddress: DeliveryAddress, totalAmount: bigint, basketType: BasketType, size: Size, packingType: PackType, messageCard: string | null, paymentId: string, couponCode: string | null): Promise<Order>;
     createProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, images: Array<string>): Promise<Product>;
-    decrementCouponQuantity(code: string): Promise<bigint>;
     deleteGiftPack(id: string): Promise<void>;
     filterGiftPacks(filters: CatalogFilters): Promise<Array<GiftPack>>;
     getAllCategories(): Promise<Array<Category>>;
     getAllGiftPacks(): Promise<Array<GiftPack>>;
     getAllProducts(): Promise<Array<Product>>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserRole(): Promise<UserRole>;
     getCart(): Promise<Cart | null>;
     getContactSubmissions(): Promise<Array<ContactSubmission>>;
     getGiftPackById(id: string): Promise<GiftPack | null>;
     getOrderHistory(): Promise<Array<Order>>;
     getOrderHistoryForPrincipal(recipient: Principal): Promise<Array<Order>>;
     getProductById(id: string): Promise<Product | null>;
-    getUserProfile(): Promise<UserProfile | null>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
     initialize(): Promise<void>;
+    isCallerAdmin(): Promise<boolean>;
     isPincodeServiceable(pincode: string): Promise<boolean>;
-    recordCouponUsage(userId: string, code: string): Promise<void>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
     saveCart(cart: Cart): Promise<void>;
     searchGiftPacks(searchTerm: string): Promise<Array<GiftPack>>;
     storePayment(paymentId: string, amount: bigint, status: string): Promise<RazorpayPayment>;

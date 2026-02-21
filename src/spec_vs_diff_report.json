@@ -1,43 +1,50 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T12:29:58.710Z",
-  "summary": "The implementation successfully adds multiple image upload support for products and gift packs across both backend and frontend. All 8 requirements are implemented with proper data migration, form handling, UI components for multiple images, and backward compatibility.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-21T13:20:40.411Z",
+  "summary": "The implementation introduces a frontend-only admin authentication system using hardcoded credentials and localStorage, which does not meet REQ-1's requirement for backend authentication with secure credential storage. The implementation successfully addresses REQ-2 (admin login page), REQ-3 (route protection with session persistence), and REQ-4 (conditional admin navigation link). However, the lack of backend involvement means credentials are exposed in client-side code, authentication can be easily bypassed, and the system cannot scale or be configured without code changes.",
+  "missing_requirements": [
     {
-      "description": "Migration module in backend/migration.mo",
-      "reason": "The BuildRequest does not specify creating a separate migration module file. While REQ-1 and REQ-2 mention migration logic, they describe it as part of the CRUD operations in backend/main.mo, not as a separate module.",
+      "id": "REQ-1",
+      "requirement": "Backend stores admin credentials securely",
+      "reason": "Admin credentials are hardcoded in frontend code (frontend/src/hooks/useAdminAuth.tsx) as plaintext constants (ADMIN_USERNAME='admin', ADMIN_PASSWORD='admin123'). No backend storage or validation is implemented despite requirement explicitly stating backend authentication system.",
       "evidence": [
-        "backend/migration.mo"
+        "frontend/src/hooks/useAdminAuth.tsx"
       ]
     },
     {
-      "description": "Product delete functionality placeholder",
-      "reason": "The BuildRequest does not mention adding or handling product deletion. The useProductMutation hook includes a deleteMutation with a 'not yet implemented' error, which was not requested.",
+      "id": "REQ-1",
+      "requirement": "Backend provides a method to validate username and password combinations",
+      "reason": "Authentication logic is entirely client-side in useAdminAuth hook. No backend method exists for credential validation. The backend/main.mo file shows no admin authentication methods were added.",
       "evidence": [
-        "frontend/src/hooks/useProductMutation.ts"
+        "frontend/src/hooks/useAdminAuth.tsx",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "Backend returns authentication success or failure status",
+      "reason": "No backend communication occurs during authentication. The login function in useAdminAuth simulates async behavior but performs only local string comparison, returning boolean without backend interaction.",
+      "evidence": [
+        "frontend/src/hooks/useAdminAuth.tsx"
       ]
     }
   ],
+  "hallucinated_features": [],
   "confidence": 0.95,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/admin/GiftPackForm.tsx",
-    "frontend/src/components/admin/GiftPackList.tsx",
-    "frontend/src/components/admin/GiftPackManagement.tsx",
-    "frontend/src/components/admin/ProductForm.tsx",
-    "frontend/src/components/admin/ProductList.tsx",
-    "frontend/src/components/admin/ProductManagement.tsx",
-    "frontend/src/components/cart/CartItemRow.tsx",
-    "frontend/src/components/product/GiftPackCard.tsx",
-    "frontend/src/components/product/ProductGrid.tsx",
-    "frontend/src/hooks/useGiftPackMutation.ts",
-    "frontend/src/hooks/useProductMutation.ts",
-    "frontend/src/pages/CartPage.tsx",
-    "frontend/src/pages/HomePage.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/auth/ProtectedAdminRoute.tsx",
+    "frontend/src/components/layout/Header.tsx",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useAdminAuth.tsx",
+    "frontend/src/hooks/useUserProfile.ts",
+    "frontend/src/pages/AdminLoginPage.tsx",
+    "frontend/src/pages/AdminPage.tsx",
+    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

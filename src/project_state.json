@@ -1,56 +1,35 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "E-commerce platform with product and gift pack management",
-  "architectural_notes": [],
+  "summary": "Web application with admin dashboard requiring authentication",
+  "architectural_notes": [
+    "Admin dashboard accessible on separate URL/route",
+    "Admin authentication required (username/password)"
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-update-productform-component-in-frontend-src-components-admin-productform-tsx-to-allow-adding-multiple-image-urls-replace-the-single-image-url-input-with-a-dynamic-list-where-users-can-add-multiple-urls-remove-individual-urls-and-reorder-them",
-      "title": "Update ProductForm component in frontend/src/components/admin/ProductForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
+      "id": "feature-create-an-admin-login-page-at-admin-login-with-username-and-password-input-fields",
+      "title": "Create an admin login page at /admin/login with username and password input fields",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-protect-the-admin-route-to-require-authentication-before-displaying-the-admin-dashboard",
+      "title": "Protect the /admin route to require authentication before displaying the admin dashboard",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-giftpackform-component-in-frontend-src-components-admin-giftpackform-tsx-to-allow-adding-multiple-image-urls-replace-the-single-image-url-input-with-a-dynamic-list-where-users-can-add-multiple-urls-remove-individual-urls-and-reorder-them",
-      "title": "Update GiftPackForm component in frontend/src/components/admin/GiftPackForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
+      "id": "feature-remove-or-hide-the-admin-navigation-link-from-the-header-component-for-non-authenticated-admin-users",
+      "title": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-productlist-component-in-frontend-src-components-admin-productlist-tsx-to-display-the-first-image-from-the-images-array-as-the-product-thumbnail-in-the-card-view",
-      "title": "Update ProductList component in frontend/src/components/admin/ProductList.tsx to display the first image from the images array as the product thumbnail in the card view.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-giftpacklist-component-in-frontend-src-components-admin-giftpacklist-tsx-to-display-the-first-image-from-the-images-array-as-the-gift-pack-thumbnail-in-the-card-view",
-      "title": "Update GiftPackList component in frontend/src/components/admin/GiftPackList.tsx to display the first image from the images array as the gift pack thumbnail in the card view.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-giftpackcard-component-in-frontend-src-components-product-giftpackcard-tsx-to-display-an-image-carousel-or-gallery-when-a-gift-pack-has-multiple-images-allow-users-to-navigate-through-images-using-navigation-arrows-or-dots",
-      "title": "Update GiftPackCard component in frontend/src/components/product/GiftPackCard.tsx to display an image carousel or gallery when a gift pack has multiple images. Allow users to navigate through images using navigation arrows or dots.",
-      "reqIds": [
-        "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-cartitemrow-component-in-frontend-src-components-cart-cartitemrow-tsx-to-display-the-first-image-from-the-images-array-for-cart-items",
-      "title": "Update CartItemRow component in frontend/src/components/cart/CartItemRow.tsx to display the first image from the images array for cart items.",
-      "reqIds": [
-        "REQ-8"
       ],
       "version": 1
     }
@@ -58,28 +37,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Multiple image upload for products and gift packs",
+      "summary": "Add username and password authentication to admin dashboard",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Update the Product type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
+      "summary": "Create a backend authentication system with username and password validation for admin access",
       "reqIds": [
         "REQ-1"
       ],
       "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Update the GiftPack type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "status": "pending"
     }
   ],
-  "projectName": "Add multiple image upload support for products and gift packs",
+  "projectName": "Gift Pack Store",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }
