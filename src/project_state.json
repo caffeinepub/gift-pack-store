@@ -3,43 +3,39 @@
   "projectStateVersion": 3,
   "summary": "New project",
   "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "known_issues": [
+    "Tiles not loading on browse page"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-add-click-navigation-to-giftpackcard-component-so-that-clicking-anywhere-on-the-card-navigates-to-a-detail-page-for-that-gift-pack",
-      "title": "Add click navigation to GiftPackCard component so that clicking anywhere on the card navigates to a detail page for that gift pack",
+      "id": "feature-debug-and-fix-the-issue-preventing-gift-pack-tiles-from-rendering-on-the-catalog-browse-page-catalogpage-tsx-investigate-data-fetching-filtering-logic-and-component-rendering-to-identify-why-tiles-are-not-displaying",
+      "title": "Debug and fix the issue preventing gift pack tiles from rendering on the catalog/browse page (CatalogPage.tsx). Investigate data fetching, filtering logic, and component rendering to identify why tiles are not displaying.",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-a-new-gift-pack-detail-page-route-that-displays-comprehensive-information-about-a-single-gift-pack-including-all-images-full-description-pricing-details-and-add-to-cart-functionality",
-      "title": "Create a new gift pack detail page route that displays comprehensive information about a single gift pack including all images, full description, pricing details, and add-to-cart functionality",
+      "id": "feature-verify-that-the-usegiftpacks-hook-is-correctly-fetching-gift-pack-data-from-the-backend-and-that-the-filtered-results-are-being-passed-to-the-productgrid-component-on-the-catalogpage",
+      "title": "Verify that the useGiftPacks hook is correctly fetching gift pack data from the backend and that the filtered results are being passed to the ProductGrid component on the CatalogPage.",
       "reqIds": [
         "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-register-the-new-detail-page-route-in-the-router-configuration-with-the-pattern-gift-pack-id-where-id-is-the-gift-pack-identifier",
-      "title": "Register the new detail page route in the router configuration with the pattern '/gift-pack/:id' where :id is the gift pack identifier",
-      "reqIds": [
-        "REQ-3"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-1",
-      "summary": "Make gift pack tiles clickable to open detail page",
-      "reqIds": [],
+      "id": "AR-3",
+      "summary": "Check if the backend main.mo actor is returning gift pack data correctly and that there are gift packs available in the backend storage to display on the browse page.",
+      "reqIds": [
+        "REQ-3"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Make gift pack tiles clickable to open detail page",
+  "projectName": "Fix tiles not loading on browse page",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

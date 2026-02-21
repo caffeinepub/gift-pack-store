@@ -228,46 +228,63 @@ actor {
     if (giftPacks.size() > 0) { return };
 
     let newGiftPacks = [
+      // Birthday Packs
       {
-        id = "1";
+        id = "bday1";
         title = "Birthday Surprise";
         description = "A perfect birthday gift pack";
         price = 1999;
         discount = 0;
         category = #birthday;
-        items = [{
-          id = "item1";
-          name = "Chocolate Box";
-          description = "Delicious assorted chocolates";
-          price = 499;
-          category = #birthday;
-          images = [];
-        }];
+        items = [
+          {
+            id = "bdayItem1";
+            name = "Chocolate Box";
+            description = "Delicious assorted chocolates";
+            price = 499;
+            category = #birthday;
+            images = [];
+          }
+        ];
         images = [];
         basketType = #wickerBasket;
         size = #medium;
       },
       {
-        id = "11";
+        id = "bday2";
+        title = "Birthday Extravaganza";
+        description = "Celebrate big with this exclusive pack";
+        price = 2999;
+        discount = 15;
+        category = #birthday;
+        items = [
+          {
+            id = "bdayItem2";
+            name = "Champagne";
+            description = "Premium sparkling wine";
+            price = 1200;
+            category = #birthday;
+            images = [];
+          },
+        ];
+        images = [];
+        basketType = #giftBox;
+        size = #large;
+      },
+      // Wellness Packs
+      {
+        id = "wellness1";
         title = "Wellness Retreat";
-        description = "Relax and rejuvenate with this soothing wellness gift pack.";
+        description = "Relax and rejuvenate with this soothing pack";
         price = 3499;
         discount = 10;
         category = #wellness;
         items = [
           {
-            id = "item11a";
+            id = "wellItem1";
             name = "Aromatherapy Diffuser";
             description = "Provides relaxation and tranquility";
             price = 1400;
-            category = #wellness;
-            images = [];
-          },
-          {
-            id = "item11b";
-            name = "Natural Bath Bombs";
-            description = "Fizzy delights for relaxing baths";
-            price = 599;
             category = #wellness;
             images = [];
           },
@@ -276,27 +293,20 @@ actor {
         basketType = #woodenCrate;
         size = #large;
       },
+      // Corporate Packs
       {
-        id = "12";
+        id = "corp1";
         title = "Eco-Friendly Corporate Set";
-        description = "Thoughtful and sustainable corporate gifts";
+        description = "Thoughtful sustainable corporate gifts";
         price = 2999;
         discount = 15;
         category = #corporate;
         items = [
           {
-            id = "item12a";
+            id = "corpItem1";
             name = "Bamboo Desk Organizer";
             description = "Stylish eco-friendly office essential";
             price = 1099;
-            category = #corporate;
-            images = [];
-          },
-          {
-            id = "item12b";
-            name = "Seed Paper Stationery";
-            description = "Plantable notepads and pens";
-            price = 799;
             category = #corporate;
             images = [];
           },
@@ -305,8 +315,9 @@ actor {
         basketType = #giftBox;
         size = #medium;
       },
+      // Festive Packs
       {
-        id = "13";
+        id = "festive1";
         title = "Festive Gourmet Basket";
         description = "Delicious delights for festive celebrations";
         price = 2599;
@@ -314,18 +325,10 @@ actor {
         category = #festive;
         items = [
           {
-            id = "item13a";
+            id = "festiveItem1";
             name = "Gourmet Cookie Tin";
             description = "Assorted premium cookies";
             price = 949;
-            category = #festive;
-            images = [];
-          },
-          {
-            id = "item13b";
-            name = "Exotic Dry Fruit Box";
-            description = "Handpicked nuts and dried fruits";
-            price = 1299;
             category = #festive;
             images = [];
           },

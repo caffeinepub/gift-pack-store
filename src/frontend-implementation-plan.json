@@ -1,56 +1,65 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Make gift pack tiles clickable to open detail page",
+  "title": "Fix tiles not loading on browse page",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add click navigation to GiftPackCard component so that clicking anywhere on the card navigates to a detail page for that gift pack",
+      "summary": "Debug and fix the issue preventing gift pack tiles from rendering on the catalog/browse page by investigating data fetching, filtering logic, and component rendering",
       "acceptanceCriteria": [
-        "Clicking on any part of the GiftPackCard navigates to the detail page",
-        "The add-to-cart button remains functional without triggering navigation",
-        "Image carousel navigation controls do not trigger page navigation"
+        "Gift pack tiles render successfully on the browse/catalog page",
+        "All gift packs from the backend are displayed in the product grid",
+        "Filtering and search functionality work correctly with visible tiles",
+        "Loading states display appropriately while data is being fetched",
+        "Error states display if data fetching fails"
       ],
       "file_operations": [
         {
+          "path": "frontend/src/pages/CatalogPage.tsx",
+          "operation": "modify",
+          "description": "Debug and fix the gift pack tiles rendering issue. Verify that the useGiftPacks hook is being called correctly, that the filtered gift packs data is properly passed to ProductGrid, and that loading/error states are handled appropriately. Check for any filtering logic that might be excluding all gift packs. Add console logging to trace data flow from hook to ProductGrid component. Ensure the search term and filter states are correctly applied to the filterGiftPacks query."
+        },
+        {
+          "path": "frontend/src/hooks/useGiftPacks.ts",
+          "operation": "modify",
+          "description": "Debug the useGiftPacks hooks to ensure they are correctly fetching and returning gift pack data. Verify that the useFilteredGiftPacks hook properly calls filterGiftPacks with the correct filters parameter. Add error handling and logging to identify if the actor is available and if the backend calls are succeeding. Check that the query is enabled correctly and that data is being returned in the expected format."
+        },
+        {
+          "path": "frontend/src/components/product/ProductGrid.tsx",
+          "operation": "modify",
+          "description": "Debug the ProductGrid component to ensure it correctly receives and renders the gift packs array. Verify that the giftPacks prop is not undefined or empty when it should contain data. Add console logging to trace the received props. Ensure that the empty state message only shows when there genuinely are no gift packs, not due to a data flow issue. Check that the map function is iterating correctly over the gift packs array."
+        },
+        {
           "path": "frontend/src/components/product/GiftPackCard.tsx",
           "operation": "modify",
-          "description": "Wrap the card content in a clickable container that navigates to the gift pack detail page using useNavigate from @tanstack/react-router. Add stopPropagation handlers to the add-to-cart button and image carousel navigation controls (Previous/Next buttons) to prevent triggering the card click navigation. The entire card should be clickable except for these interactive elements."
+          "description": "Verify that the GiftPackCard component correctly handles the giftPack prop and renders without errors. Check that image rendering works correctly with the ExternalBlob type from the backend. Ensure that all required fields (id, title, price, discount, images) are being accessed correctly and that no runtime errors are preventing card rendering. Add fallback handling for missing or malformed data."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Create a new gift pack detail page route that displays comprehensive information about a single gift pack including all images, full description, pricing details, and add-to-cart functionality",
+      "summary": "Verify that the useGiftPacks hook is correctly fetching gift pack data from the backend and that filtered results are being passed to the ProductGrid component",
       "acceptanceCriteria": [
-        "Detail page is accessible via a route with the gift pack ID as a parameter",
-        "Page displays the gift pack's title, full description, price, discount, and category",
-        "All images from the gift pack are displayed in a carousel or gallery",
-        "Page includes an add-to-cart button that functions correctly",
-        "Page shows loading state while fetching gift pack data",
-        "Page shows appropriate error state if gift pack is not found"
+        "useGiftPacks hook successfully fetches data from backend",
+        "Filtered gift packs array is correctly populated",
+        "ProductGrid component receives the filtered gift packs as props",
+        "Console logs or debugging confirms data flow through the component tree"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/GiftPackDetailPage.tsx",
-          "operation": "create",
-          "description": "Create a new detail page component that fetches a single gift pack by ID using the useGiftPacks hook with getGiftPackById. Extract the gift pack ID from route params using useParams. Display the gift pack's title, full description, price with discount calculation, category badge, and all images in a carousel or gallery component. Include an add-to-cart button that uses the useCart hook to add the pack to cart with toast notification. Show a loading skeleton while data is fetching. Display an error message with navigation back to catalog if the gift pack is not found (null result). Use the existing UI components and styling patterns from the codebase (cards, badges, buttons from shadcn/ui)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Register the new detail page route in the router configuration with the pattern '/gift-pack/:id' where :id is the gift pack identifier",
-      "acceptanceCriteria": [
-        "Route is added to the router configuration in App.tsx",
-        "Route correctly extracts the gift pack ID from the URL parameter",
-        "Navigation to the route works from the GiftPackCard component"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/hooks/useGiftPacks.ts",
           "operation": "modify",
-          "description": "Import the new GiftPackDetailPage component. Add a new Route definition with path '/gift-pack/$id' that renders the GiftPackDetailPage component. Position this route alongside the other main routes (after CatalogPage and before CheckoutPage for logical grouping). Ensure the route is defined within the routeTree structure using createRoute."
+          "description": "Add detailed logging and verification to the useFilteredGiftPacks hook. Log the actor availability, the filters being applied, the query enabled state, and the data returned from the backend. Verify that the filterGiftPacks backend method is being called with the correct CatalogFilters structure. Check that the query key is unique and properly invalidated when dependencies change. Ensure error handling captures any backend call failures."
+        },
+        {
+          "path": "frontend/src/pages/CatalogPage.tsx",
+          "operation": "modify",
+          "description": "Add logging to verify the data flow from useGiftPacks hook to ProductGrid component. Log the loading state, the filteredGiftPacks data, and any errors. Verify that the filters object passed to useFilteredGiftPacks contains the expected searchTerm and category values. Check that the ProductGrid is receiving the correct prop and that it's not being accidentally overridden or transformed before passing."
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Verify that the actor is correctly initialized and that the backend connection is established. Add logging to confirm when the actor is available and ready for queries. Check that the actor invalidation and authentication flow are working correctly. Ensure that queries dependent on the actor are properly enabled only after the actor is ready."
         }
       ]
     }

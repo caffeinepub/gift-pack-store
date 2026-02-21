@@ -1,73 +1,71 @@
 {
   "kind": "build_request",
-  "title": "Make gift pack tiles clickable to open detail page",
-  "priority": "normal",
+  "title": "Fix tiles not loading on browse page",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add click navigation to GiftPackCard component so that clicking anywhere on the card navigates to a detail page for that gift pack",
+      "text": "Debug and fix the issue preventing gift pack tiles from rendering on the catalog/browse page (CatalogPage.tsx). Investigate data fetching, filtering logic, and component rendering to identify why tiles are not displaying.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ],
         "quotes": [
-          "tiles on gift pack page should be clickable and opens a detail page"
+          "tiles are not loading on browse page"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking on any part of the GiftPackCard navigates to the detail page",
-        "The add-to-cart button remains functional without triggering navigation",
-        "Image carousel navigation controls do not trigger page navigation"
+        "Gift pack tiles render successfully on the browse/catalog page",
+        "All gift packs from the backend are displayed in the product grid",
+        "Filtering and search functionality work correctly with visible tiles",
+        "Loading states display appropriately while data is being fetched",
+        "Error states display if data fetching fails"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Create a new gift pack detail page route that displays comprehensive information about a single gift pack including all images, full description, pricing details, and add-to-cart functionality",
+      "text": "Verify that the useGiftPacks hook is correctly fetching gift pack data from the backend and that the filtered results are being passed to the ProductGrid component on the CatalogPage.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "opens a detail page"
+          "msg-user-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Detail page is accessible via a route with the gift pack ID as a parameter",
-        "Page displays the gift pack's title, full description, price, discount, and category",
-        "All images from the gift pack are displayed in a carousel or gallery",
-        "Page includes an add-to-cart button that functions correctly",
-        "Page shows loading state while fetching gift pack data",
-        "Page shows appropriate error state if gift pack is not found"
+        "useGiftPacks hook successfully fetches data from backend",
+        "Filtered gift packs array is correctly populated",
+        "ProductGrid component receives the filtered gift packs as props",
+        "Console logs or debugging confirms data flow through the component tree"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Register the new detail page route in the router configuration with the pattern '/gift-pack/:id' where :id is the gift pack identifier",
-      "target": "frontend",
+      "text": "Check if the backend main.mo actor is returning gift pack data correctly and that there are gift packs available in the backend storage to display on the browse page.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-user-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Route is added to the router configuration in App.tsx",
-        "Route correctly extracts the gift pack ID from the URL parameter",
-        "Navigation to the route works from the GiftPackCard component"
+        "Backend getAllGiftPacks method returns gift pack data successfully",
+        "Gift pack storage contains entries to display",
+        "Backend responds without errors when queried for gift packs",
+        "Data structure matches what the frontend expects"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the existing GiftPackCard add-to-cart button functionality",
-    "Preserve the image carousel navigation controls in GiftPackCard without triggering page navigation",
-    "Use the existing useGiftPacks hook to fetch individual gift pack data by ID"
+    "Do not modify the cart functionality that was recently fixed",
+    "Maintain existing filter sidebar and search functionality",
+    "Preserve the current layout and styling of the catalog page"
   ],
   "nonGoals": [
+    "Adding new features to the catalog page",
+    "Redesigning the gift pack card layout",
     "Modifying the backend data structure for gift packs",
-    "Adding reviews or ratings to the detail page",
-    "Implementing related products or recommendations",
-    "Adding social sharing functionality"
+    "Changing authentication or cart synchronization logic"
   ],
   "imageRequirements": {
     "required": [],

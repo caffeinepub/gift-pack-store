@@ -22,6 +22,20 @@ export function useFilteredGiftPacks(filters: CatalogFilters) {
     queryKey: ['giftPacks', 'filtered', filters],
     queryFn: async () => {
       if (!actor) return [];
+      
+      // If there's a search term, use searchGiftPacks and then filter by category client-side
+      if (filters.searchTerm) {
+        const searchResults = await actor.searchGiftPacks(filters.searchTerm);
+        
+        // Apply category filter client-side if provided
+        if (filters.category) {
+          return searchResults.filter(pack => pack.category === filters.category);
+        }
+        
+        return searchResults;
+      }
+      
+      // If no search term, use filterGiftPacks which handles category filtering
       return actor.filterGiftPacks(filters);
     },
     enabled: !!actor && !isFetching,

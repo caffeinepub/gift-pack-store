@@ -42,6 +42,27 @@ export function useCart() {
     );
   }, [cart]);
 
+  // Sync cart to backend when authenticated
+  useEffect(() => {
+    if (actor && identity && cart.items.length > 0) {
+      const syncToBackend = async () => {
+        try {
+          await actor.saveCart({
+            items: cart.items,
+            userId: identity.getPrincipal().toString(),
+            basketType: BasketType.wickerBasket,
+            size: Size.medium,
+            packingType: PackType.wrapStyle1,
+            messageCard: undefined,
+          });
+        } catch (error) {
+          console.error('Failed to sync cart to backend:', error);
+        }
+      };
+      syncToBackend();
+    }
+  }, [cart, actor, identity]);
+
   const syncCartFromBackend = async () => {
     if (!actor || !identity) return;
 
@@ -137,13 +158,20 @@ export function useCart() {
       if (pack) {
         const discount = Number(pack.discount);
         const originalPrice = Number(pack.price);
-        const discountedPrice = discount > 0 ? originalPrice * (1 - discount / 100) : originalPrice;
-        subtotal += discountedPrice * Number(item.quantity);
+        const quantity = Number(item.quantity);
+        
+        // Calculate discounted price per item and round it
+        const discountedPrice = discount > 0 
+          ? Math.round(originalPrice * (1 - discount / 100))
+          : originalPrice;
+        
+        // Calculate item total
+        const itemTotal = discountedPrice * quantity;
+        subtotal += itemTotal;
       }
     });
 
-    subtotal = Math.round(subtotal);
-
+    // Subtotal is already rounded from individual item calculations
     const couponDiscount = calculateCouponDiscount(subtotal, coupon);
     const subtotalAfterCoupon = subtotal - couponDiscount;
     const tax = Math.round(subtotalAfterCoupon * 0.18);

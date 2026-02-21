@@ -6,6 +6,7 @@ import { useGiftPacks } from '@/hooks/useGiftPacks';
 import { useCart } from '@/hooks/useCart';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -15,14 +16,23 @@ export default function HomePage() {
 
   const featuredPacks = giftPacks?.slice(0, 3) || [];
 
-  const handleAddToCart = async (packId: string) => {
+  const handleAddToCart = (packId: string) => {
     setAddingToCart(packId);
     try {
+      const pack = giftPacks?.find((p) => p.id === packId);
       addItem({
         packId,
         quantity: 1n,
         customMessage: undefined,
         wrappingOption: undefined,
+      });
+      toast.success('Added to cart!', {
+        description: pack ? `${pack.title} has been added to your cart.` : 'Item added to cart.',
+      });
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      toast.error('Failed to add to cart', {
+        description: 'Please try again.',
       });
     } finally {
       setAddingToCart(null);

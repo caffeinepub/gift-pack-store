@@ -17,7 +17,7 @@ export default function GiftPackDetailPage() {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = () => {
     if (!pack) return;
     
     setIsAddingToCart(true);
@@ -32,6 +32,7 @@ export default function GiftPackDetailPage() {
         description: `${pack.title} has been added to your cart.`,
       });
     } catch (error) {
+      console.error('Failed to add to cart:', error);
       toast.error('Failed to add to cart', {
         description: 'Please try again.',
       });
@@ -211,7 +212,7 @@ export default function GiftPackDetailPage() {
                 <ul className="space-y-2">
                   {pack.items.map((item) => (
                     <li key={item.id} className="flex items-start gap-2">
-                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
+                      <span className="mt-1 text-terracotta">•</span>
                       <div>
                         <p className="font-medium">{item.name}</p>
                         <p className="text-sm text-muted-foreground">{item.description}</p>
@@ -224,10 +225,10 @@ export default function GiftPackDetailPage() {
           )}
 
           <Button
+            size="lg"
+            className="w-full bg-terracotta hover:bg-terracotta/90"
             onClick={handleAddToCart}
             disabled={isAddingToCart}
-            size="lg"
-            className="w-full bg-terracotta text-lg hover:bg-terracotta/90"
           >
             {isAddingToCart ? (
               <>
@@ -242,13 +243,16 @@ export default function GiftPackDetailPage() {
             )}
           </Button>
 
-          <div className="rounded-lg border bg-muted/50 p-4">
-            <h4 className="mb-2 font-semibold">Delivery Information</h4>
-            <p className="text-sm text-muted-foreground">
-              Free delivery on orders above ₹999. Standard delivery takes 3-5 business days.
-              Check pincode serviceability at checkout.
-            </p>
-          </div>
+          <Card className="bg-muted/50">
+            <CardContent className="pt-6">
+              <h3 className="mb-3 font-semibold">Delivery Information</h3>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>• Free delivery on orders above ₹999</li>
+                <li>• Estimated delivery: 3-5 business days</li>
+                <li>• Check pincode serviceability at checkout</li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

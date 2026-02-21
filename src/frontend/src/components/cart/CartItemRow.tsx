@@ -21,10 +21,13 @@ export default function CartItemRow({
   onDecrement,
   onRemove,
 }: CartItemRowProps) {
-  const discountedPrice =
-    Number(pack.discount) > 0
-      ? Number(pack.price) * (1 - Number(pack.discount) / 100)
-      : Number(pack.price);
+  const discount = Number(pack.discount);
+  const originalPrice = Number(pack.price);
+  
+  // Calculate discounted price per item with proper rounding
+  const discountedPrice = discount > 0
+    ? Math.round(originalPrice * (1 - discount / 100))
+    : originalPrice;
 
   const itemTotal = discountedPrice * quantity;
 
@@ -50,10 +53,15 @@ export default function CartItemRow({
             <p className="text-sm font-medium text-terracotta">
               ₹{discountedPrice.toLocaleString('en-IN')}
             </p>
-            {Number(pack.discount) > 0 && (
-              <p className="text-xs text-muted-foreground line-through">
-                ₹{Number(pack.price).toLocaleString('en-IN')}
-              </p>
+            {discount > 0 && (
+              <>
+                <p className="text-xs text-muted-foreground line-through">
+                  ₹{originalPrice.toLocaleString('en-IN')}
+                </p>
+                <span className="text-xs font-medium text-sage">
+                  {discount}% off
+                </span>
+              </>
             )}
           </div>
           {customMessage && (

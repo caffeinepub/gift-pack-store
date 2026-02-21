@@ -1,58 +1,58 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T14:13:51.349Z",
+  "generatedAt": "2026-02-21T16:24:47.968Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 3,
-    "implemented": 3,
+    "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add click navigation to GiftPackCard component so that clicking anywhere on the card navigates to a detail page for that gift pack",
+        "summary": "Debug and fix the issue preventing gift pack tiles from rendering on the catalog/browse page (CatalogPage.tsx). Investigate data fetching, filtering logic, and component rendering to identify why tiles are not displaying.",
         "status": "implemented",
         "plannedFiles": [
+          "frontend/src/pages/CatalogPage.tsx",
+          "frontend/src/hooks/useGiftPacks.ts",
+          "frontend/src/components/product/ProductGrid.tsx",
           "frontend/src/components/product/GiftPackCard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/product/GiftPackCard.tsx"
+          "frontend/src/hooks/useGiftPacks.ts"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Create a new gift pack detail page route that displays comprehensive information about a single gift pack including all images, full description, pricing details, and add-to-cart functionality",
+        "summary": "Verify that the useGiftPacks hook is correctly fetching gift pack data from the backend and that the filtered results are being passed to the ProductGrid component on the CatalogPage.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/GiftPackDetailPage.tsx"
+          "frontend/src/hooks/useGiftPacks.ts",
+          "frontend/src/pages/CatalogPage.tsx",
+          "frontend/src/hooks/useActor.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/GiftPackDetailPage.tsx"
+          "frontend/src/hooks/useGiftPacks.ts"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Register the new detail page route in the router configuration with the pattern '/gift-pack/:id' where :id is the gift pack identifier",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/App.tsx"
-        ]
+        "summary": "Check if the backend main.mo actor is returning gift pack data correctly and that there are gift packs available in the backend storage to display on the browse page.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/components/product/GiftPackCard.tsx",
-    "frontend/src/pages/GiftPackDetailPage.tsx",
+    "frontend/src/hooks/useGiftPacks.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

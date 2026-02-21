@@ -3,6 +3,7 @@ import GiftPackCard from './GiftPackCard';
 import { useCart } from '@/hooks/useCart';
 import type { GiftPack } from '@/backend';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ProductGridProps {
   giftPacks: GiftPack[];
@@ -12,14 +13,23 @@ export default function ProductGrid({ giftPacks }: ProductGridProps) {
   const { addItem } = useCart();
   const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
-  const handleAddToCart = async (packId: string) => {
+  const handleAddToCart = (packId: string) => {
     setAddingToCart(packId);
     try {
+      const pack = giftPacks.find((p) => p.id === packId);
       addItem({
         packId,
         quantity: 1n,
         customMessage: undefined,
         wrappingOption: undefined,
+      });
+      toast.success('Added to cart!', {
+        description: pack ? `${pack.title} has been added to your cart.` : 'Item added to cart.',
+      });
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      toast.error('Failed to add to cart', {
+        description: 'Please try again.',
       });
     } finally {
       setAddingToCart(null);
