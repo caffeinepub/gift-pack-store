@@ -7,15 +7,12 @@ import Runtime "mo:core/Runtime";
 import Storage "blob-storage/Storage";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
-
 import Array "mo:core/Array";
 import Order "mo:core/Order";
-import Migration "migration";
 import MixinStorage "blob-storage/Mixin";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 
-(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -223,6 +220,10 @@ actor {
   include MixinAuthorization(accessControlState);
 
   public shared ({ caller }) func initialize() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can initialize the system");
+    };
+
     if (giftPacks.size() > 0) { return };
 
     let newGiftPacks = [
@@ -366,6 +367,10 @@ actor {
   };
 
   public shared ({ caller }) func validateCoupon(code : Text) : async Coupon {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can validate coupons");
+    };
+
     switch (coupons.get(code)) {
       case (null) {
         Runtime.trap("Coupon code not found or expired");
@@ -383,14 +388,17 @@ actor {
   };
 
   public query ({ caller }) func getAllGiftPacks() : async [GiftPack] {
+    // Public access - catalog browsing allowed for all users including guests
     giftPacks.values().toArray().sort();
   };
 
   public query ({ caller }) func getGiftPackById(id : Text) : async ?GiftPack {
+    // Public access - catalog browsing allowed for all users including guests
     giftPacks.get(id);
   };
 
   public query ({ caller }) func searchGiftPacks(searchTerm : Text) : async [GiftPack] {
+    // Public access - catalog browsing allowed for all users including guests
     let packs = giftPacks.values().toArray().sort();
     packs.filter(
       func(pack) {
@@ -402,6 +410,7 @@ actor {
   };
 
   public query ({ caller }) func filterGiftPacks(filters : CatalogFilters) : async [GiftPack] {
+    // Public access - catalog browsing allowed for all users including guests
     giftPacks.values().toArray().sort().filter(
       func(pack) {
         switch (filters.category) {
@@ -416,9 +425,9 @@ actor {
     switch (coupons.get(code)) {
       case (null) { 0 };
       case (?coupon) {
-        let newQuantity = if (coupon.remainingQuantity > 0) { coupon.remainingQuantity - 1 } else {
-          0 : Nat;
-        };
+        let newQuantity = if (coupon.remainingQuantity > 0) {
+          coupon.remainingQuantity - 1;
+        } else { 0 : Nat };
 
         let updatedCoupon = { coupon with remainingQuantity = newQuantity };
         coupons.add(code, updatedCoupon);
@@ -557,6 +566,7 @@ actor {
   };
 
   public query ({ caller }) func isPincodeServiceable(pincode : Text) : async Bool {
+    // Public access - needed for checkout flow before authentication
     switch (deliveryPincodes.get(pincode)) {
       case (?isServiceable) { isServiceable };
       case (null) { false };
@@ -564,6 +574,10 @@ actor {
   };
 
   public query ({ caller }) func getOrderHistory() : async [Order] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view order history");
+    };
+
     switch (userOrders.get(caller)) {
       case (null) { [] };
       case (?orders) { orders };
@@ -610,6 +624,10 @@ actor {
   };
 
   public query ({ caller }) func getCart() : async ?Cart {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can view carts");
+    };
+
     userCarts.get(caller);
   };
 
@@ -622,10 +640,7 @@ actor {
   };
 
   public shared ({ caller }) func submitContactForm(name : Text, email : Text, phone : Text, message : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can submit contact forms");
-    };
-
+    // Public access - contact form should be accessible to all including guests
     let submission : ContactSubmission = {
       name;
       email;
@@ -659,6 +674,7 @@ actor {
   };
 
   public query ({ caller }) func getAllCategories() : async [Category] {
+    // Public access - category browsing allowed for all users including guests
     categories.values().toArray();
   };
 
@@ -713,10 +729,12 @@ actor {
   };
 
   public query ({ caller }) func getProductById(id : Text) : async ?Product {
+    // Public access - product browsing allowed for all users including guests
     products.get(id);
   };
 
   public query ({ caller }) func getAllProducts() : async [Product] {
+    // Public access - product browsing allowed for all users including guests
     products.values().toArray();
   };
 

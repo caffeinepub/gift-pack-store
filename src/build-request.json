@@ -1,96 +1,52 @@
 {
   "kind": "build_request",
-  "title": "Add username and password authentication to admin dashboard",
+  "title": "Add hardcoded admin user credentials",
   "projectName": "Gift Pack Store",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Create a backend authentication system with username and password validation for admin access",
+      "text": "Add a hardcoded admin user in the backend with username 'admin' and password 'admin' to support authentication",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-current"
         ],
         "quotes": [
-          "please hide admin dashboard behind username and password"
+          "add and admin user with username as admin and password as admin"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores admin credentials securely",
-        "Backend provides a method to validate username and password combinations",
-        "Backend returns authentication success or failure status"
+        "Backend stores admin credentials with username 'admin' and password 'admin'",
+        "Admin login endpoint validates against these credentials",
+        "Authentication returns success when correct credentials are provided"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Create an admin login page at /admin/login with username and password input fields",
+      "text": "Update the frontend admin authentication hook to validate credentials against the backend instead of using hardcoded frontend values",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "please hide admin dashboard behind username and password"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "Login form displays username and password fields",
-        "Form validates that both fields are filled before submission",
-        "Form shows error messages for invalid credentials",
-        "Successful login redirects to /admin dashboard"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Protect the /admin route to require authentication before displaying the admin dashboard",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "please hide admin dashboard behind username and password"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Unauthenticated users accessing /admin are redirected to /admin/login",
-        "Authenticated admin users can access the dashboard",
-        "Authentication state persists across page refreshes",
-        "Admin can log out and return to login page"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-last"
-        ],
-        "quotes": [
-          "please hide admin dashboard behind username and password"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin link only appears in navigation when admin is authenticated",
-        "Regular users do not see admin navigation link",
-        "Admin navigation link functions correctly for authenticated admins"
+        "Admin login form calls backend authentication endpoint",
+        "Frontend receives and stores authentication token or session",
+        "Login succeeds only when backend validates credentials"
       ]
     }
   ],
   "constraints": [
-    "Maintain single-actor backend architecture in backend/main.mo",
-    "Do not modify immutable frontend paths: useInternetIdentity hooks, useActor.ts, main.tsx, and components/ui directory",
-    "Preserve existing Internet Identity authentication for regular users",
-    "Keep all existing admin functionality in AdminPage.tsx intact"
+    "Maintain single-actor architecture in backend/main.mo",
+    "Do not modify immutable frontend paths (useInternetIdentity.ts, useActor.ts, main.tsx, components/ui)"
   ],
   "nonGoals": [
-    "Multi-user admin system with role-based permissions",
-    "Password reset or recovery functionality",
-    "Admin user registration interface",
-    "Integration with external authentication providers",
-    "Two-factor authentication"
+    "Implementing password hashing or encryption",
+    "Adding user registration functionality",
+    "Creating multiple admin users or role-based access control",
+    "Implementing session management with expiration"
   ],
   "imageRequirements": {
     "required": [],

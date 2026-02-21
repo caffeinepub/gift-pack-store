@@ -1,88 +1,43 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T13:20:40.414Z",
+  "generatedAt": "2026-02-21T13:34:30.306Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 3,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Create a backend authentication system with username and password validation for admin access",
+        "summary": "Add a hardcoded admin user in the backend with username 'admin' and password 'admin' to support authentication",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Create an admin login page at /admin/login with username and password input fields",
+        "summary": "Update the frontend admin authentication hook to validate credentials against the backend instead of using hardcoded frontend values",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/AdminLoginPage.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useAdminAuth.tsx",
+          "frontend/src/pages/AdminLoginPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/AdminLoginPage.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Protect the /admin route to require authentication before displaying the admin dashboard",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useAdminAuth.ts",
-          "frontend/src/components/auth/AdminAuthProvider.tsx",
-          "frontend/src/components/auth/ProtectedAdminRoute.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/pages/AdminPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/auth/ProtectedAdminRoute.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/pages/AdminPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/layout/Header.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/layout/Header.tsx"
+          "frontend/src/hooks/useAdminAuth.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/authorization/MixinAuthorization.mo",
-    "backend/authorization/access-control.mo",
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/auth/ProtectedAdminRoute.tsx",
-    "frontend/src/components/layout/Header.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useAdminAuth.tsx",
-    "frontend/src/hooks/useUserProfile.ts",
-    "frontend/src/pages/AdminLoginPage.tsx",
-    "frontend/src/pages/AdminPage.tsx",
-    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

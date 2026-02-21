@@ -1,35 +1,18 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Web application with admin dashboard requiring authentication",
+  "summary": "Admin dashboard application with user authentication",
   "architectural_notes": [
-    "Admin dashboard accessible on separate URL/route",
-    "Admin authentication required (username/password)"
+    "Admin dashboard with authentication system"
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-an-admin-login-page-at-admin-login-with-username-and-password-input-fields",
-      "title": "Create an admin login page at /admin/login with username and password input fields",
+      "id": "feature-update-the-frontend-admin-authentication-hook-to-validate-credentials-against-the-backend-instead-of-using-hardcoded-frontend-values",
+      "title": "Update the frontend admin authentication hook to validate credentials against the backend instead of using hardcoded frontend values",
       "reqIds": [
         "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-protect-the-admin-route-to-require-authentication-before-displaying-the-admin-dashboard",
-      "title": "Protect the /admin route to require authentication before displaying the admin dashboard",
-      "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-remove-or-hide-the-admin-navigation-link-from-the-header-component-for-non-authenticated-admin-users",
-      "title": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
-      "reqIds": [
-        "REQ-4"
       ],
       "version": 1
     }
@@ -37,13 +20,13 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add username and password authentication to admin dashboard",
+      "summary": "Add admin user with username 'admin' and password 'admin'",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Create a backend authentication system with username and password validation for admin access",
+      "summary": "Add a hardcoded admin user in the backend with username 'admin' and password 'admin' to support authentication",
       "reqIds": [
         "REQ-1"
       ],

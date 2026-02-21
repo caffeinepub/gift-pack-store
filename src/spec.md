@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add username and password authentication to protect the admin dashboard.
+**Goal:** Add backend admin authentication with hardcoded credentials.
 
 **Planned changes:**
-- Create backend authentication system with secure credential storage and validation
-- Build admin login page at /admin/login with username and password fields
-- Protect /admin route to require authentication before access
-- Hide admin navigation link from non-authenticated users
+- Add hardcoded admin user (username: 'admin', password: 'admin') in the backend
+- Create admin login endpoint in backend to validate credentials
+- Update frontend admin authentication to call backend endpoint instead of using hardcoded frontend validation
 
-**User-visible outcome:** The admin dashboard is now protected behind a login page. Only users with valid admin credentials can access the dashboard, while regular users cannot see or access admin features.
+**User-visible outcome:** Admin can log in using 'admin'/'admin' credentials, with authentication handled by the backend.

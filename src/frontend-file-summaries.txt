@@ -64,7 +64,7 @@
   "frontend/src/hooks/useGiftPackMutation.ts": "React Query mutation hook providing createGiftPack, updateGiftPack, and deleteGiftPack mutations that convert images array to ExternalBlob instances using fromURL() method for backend submission with proper BigInt conversion and toast notifications.",
   "frontend/src/components/admin/ProductList.tsx": "Grid component displaying all custom products with first image from images array as thumbnail, fallback placeholder icon when images array is empty, and edit/delete action buttons.",
   "frontend/src/hooks/useCustomProducts.ts": "React Query hook that fetches all custom products from the backend using getAllProducts method with proper loading and error states.",
-  "frontend/src/hooks/useAdminAuth.tsx": "React Context provider and hook for admin authentication with username/password login, logout, and session persistence using localStorage with hardcoded credentials (admin/admin123).",
+  "frontend/src/hooks/useAdminAuth.tsx": "React Context provider and hook for admin authentication with username/password login, logout, and session persistence using localStorage with hardcoded credentials (admin/admin).",
   "frontend/src/components/auth/ProtectedAdminRoute.tsx": "Route guard component that checks admin authentication status and redirects unauthenticated users to /admin/login with loading state handling.",
   "frontend/src/pages/AdminLoginPage.tsx": "Admin login page with username and password form fields using react-hook-form validation, error handling, and redirect to admin dashboard on successful authentication."
 }

@@ -10,7 +10,7 @@ interface AdminAuthContextType {
 const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefined);
 
 const ADMIN_USERNAME = 'admin';
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_PASSWORD = 'admin';
 const ADMIN_SESSION_KEY = 'admin_session';
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {

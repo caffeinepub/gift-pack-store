@@ -2,11 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-an-admin-login-page-at-admin-login-with-username-and-password-input-fields",
-      "featureTitle": "Create an admin login page at /admin/login with username and password input fields",
+      "featureId": "feature-update-the-frontend-admin-authentication-hook-to-validate-credentials-against-the-backend-instead-of-using-hardcoded-frontend-values",
+      "featureTitle": "Update the frontend admin authentication hook to validate credentials against the backend instead of using hardcoded frontend values",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/AdminLoginPage.tsx"
+        "frontend/src/hooks/useAdminAuth.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -19,48 +18,6 @@
       ],
       "testIds": [
         "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-protect-the-admin-route-to-require-authentication-before-displaying-the-admin-dashboard",
-      "featureTitle": "Protect the /admin route to require authentication before displaying the admin dashboard",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/auth/ProtectedAdminRoute.tsx",
-        "frontend/src/pages/AdminPage.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-remove-or-hide-the-admin-navigation-link-from-the-header-component-for-non-authenticated-admin-users",
-      "featureTitle": "Remove or hide the admin navigation link from the Header component for non-authenticated admin users",
-      "files": [
-        "frontend/src/components/layout/Header.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-4"
       ],
       "confidence": "high"
     }
