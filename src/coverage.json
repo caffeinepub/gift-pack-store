@@ -1,43 +1,58 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T13:34:30.306Z",
+  "generatedAt": "2026-02-21T14:13:51.349Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 1,
+    "total": 3,
+    "implemented": 3,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a hardcoded admin user in the backend with username 'admin' and password 'admin' to support authentication",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
+        "summary": "Add click navigation to GiftPackCard component so that clicking anywhere on the card navigates to a detail page for that gift pack",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/product/GiftPackCard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/product/GiftPackCard.tsx"
+        ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update the frontend admin authentication hook to validate credentials against the backend instead of using hardcoded frontend values",
+        "summary": "Create a new gift pack detail page route that displays comprehensive information about a single gift pack including all images, full description, pricing details, and add-to-cart functionality",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useAdminAuth.tsx",
-          "frontend/src/pages/AdminLoginPage.tsx"
+          "frontend/src/pages/GiftPackDetailPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useAdminAuth.tsx"
+          "frontend/src/pages/GiftPackDetailPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Register the new detail page route in the router configuration with the pattern '/gift-pack/:id' where :id is the gift pack identifier",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/hooks/useAdminAuth.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/product/GiftPackCard.tsx",
+    "frontend/src/pages/GiftPackDetailPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

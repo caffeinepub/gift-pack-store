@@ -7,6 +7,8 @@ import CategoryManagement from '@/components/admin/CategoryManagement';
 import ProductManagement from '@/components/admin/ProductManagement';
 import CouponManagement from '@/components/admin/CouponManagement';
 import GiftPackManagement from '@/components/admin/GiftPackManagement';
+import OrderManagement from '@/components/admin/OrderManagement';
+import PaymentManagement from '@/components/admin/PaymentManagement';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 export default function AdminPage() {
@@ -32,6 +34,36 @@ export default function AdminPage() {
         </div>
 
         <div className="space-y-8">
+          {/* Order Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif text-2xl">Order Management</CardTitle>
+              <CardDescription>
+                View and manage all customer orders placed via the website
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <OrderManagement />
+            </CardContent>
+          </Card>
+
+          <Separator />
+
+          {/* Payment Management */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif text-2xl">Payment Management</CardTitle>
+              <CardDescription>
+                View and track all payment transactions processed through Razorpay
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PaymentManagement />
+            </CardContent>
+          </Card>
+
+          <Separator />
+
           {/* Product Management for Custom Packages */}
           <Card>
             <CardHeader>

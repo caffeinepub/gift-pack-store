@@ -1,26 +1,56 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add hardcoded admin user credentials",
+  "title": "Make gift pack tiles clickable to open detail page",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Update the frontend admin authentication hook to validate credentials against the backend instead of using hardcoded frontend values",
+      "id": "REQ-1",
+      "summary": "Add click navigation to GiftPackCard component so that clicking anywhere on the card navigates to a detail page for that gift pack",
       "acceptanceCriteria": [
-        "Admin login form calls backend authentication endpoint",
-        "Frontend receives and stores authentication token or session",
-        "Login succeeds only when backend validates credentials"
+        "Clicking on any part of the GiftPackCard navigates to the detail page",
+        "The add-to-cart button remains functional without triggering navigation",
+        "Image carousel navigation controls do not trigger page navigation"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useAdminAuth.tsx",
+          "path": "frontend/src/components/product/GiftPackCard.tsx",
           "operation": "modify",
-          "description": "Replace hardcoded credential validation with a backend call. Remove the hardcoded username/password check and instead call a backend authentication capability that validates credentials against the backend's stored admin user. Update the login function to await the backend response and handle authentication success/failure. Store authentication status in localStorage upon successful backend validation. Maintain the existing context structure and loading states."
-        },
+          "description": "Wrap the card content in a clickable container that navigates to the gift pack detail page using useNavigate from @tanstack/react-router. Add stopPropagation handlers to the add-to-cart button and image carousel navigation controls (Previous/Next buttons) to prevent triggering the card click navigation. The entire card should be clickable except for these interactive elements."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Create a new gift pack detail page route that displays comprehensive information about a single gift pack including all images, full description, pricing details, and add-to-cart functionality",
+      "acceptanceCriteria": [
+        "Detail page is accessible via a route with the gift pack ID as a parameter",
+        "Page displays the gift pack's title, full description, price, discount, and category",
+        "All images from the gift pack are displayed in a carousel or gallery",
+        "Page includes an add-to-cart button that functions correctly",
+        "Page shows loading state while fetching gift pack data",
+        "Page shows appropriate error state if gift pack is not found"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/pages/AdminLoginPage.tsx",
+          "path": "frontend/src/pages/GiftPackDetailPage.tsx",
+          "operation": "create",
+          "description": "Create a new detail page component that fetches a single gift pack by ID using the useGiftPacks hook with getGiftPackById. Extract the gift pack ID from route params using useParams. Display the gift pack's title, full description, price with discount calculation, category badge, and all images in a carousel or gallery component. Include an add-to-cart button that uses the useCart hook to add the pack to cart with toast notification. Show a loading skeleton while data is fetching. Display an error message with navigation back to catalog if the gift pack is not found (null result). Use the existing UI components and styling patterns from the codebase (cards, badges, buttons from shadcn/ui)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Register the new detail page route in the router configuration with the pattern '/gift-pack/:id' where :id is the gift pack identifier",
+      "acceptanceCriteria": [
+        "Route is added to the router configuration in App.tsx",
+        "Route correctly extracts the gift pack ID from the URL parameter",
+        "Navigation to the route works from the GiftPackCard component"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Update error handling to display backend authentication errors appropriately. Ensure the form submission awaits the backend authentication call from useAdminAuth and shows relevant error messages when credentials are invalid or backend calls fail. Maintain existing form validation and redirect logic on successful authentication."
+          "description": "Import the new GiftPackDetailPage component. Add a new Route definition with path '/gift-pack/$id' that renders the GiftPackDetailPage component. Position this route alongside the other main routes (after CatalogPage and before CheckoutPage for logical grouping). Ensure the route is defined within the routeTree structure using createRoute."
         }
       ]
     }

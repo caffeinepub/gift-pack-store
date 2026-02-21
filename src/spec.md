@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add backend admin authentication with hardcoded credentials.
+**Goal:** Make gift pack tiles clickable to navigate to a dedicated detail page for each gift pack.
 
 **Planned changes:**
-- Add hardcoded admin user (username: 'admin', password: 'admin') in the backend
-- Create admin login endpoint in backend to validate credentials
-- Update frontend admin authentication to call backend endpoint instead of using hardcoded frontend validation
+- Add click navigation to GiftPackCard component to open detail page
+- Create a new gift pack detail page displaying full information, images, and add-to-cart functionality
+- Register '/gift-pack/:id' route in the router configuration
 
-**User-visible outcome:** Admin can log in using 'admin'/'admin' credentials, with authentication handled by the backend.
+**User-visible outcome:** Users can click on any gift pack tile to view a detailed page with complete information, full image gallery, and purchasing options for that specific gift pack.

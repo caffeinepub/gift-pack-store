@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ interface GiftPackCardProps {
 }
 
 export default function GiftPackCard({ pack, onAddToCart, isAddingToCart }: GiftPackCardProps) {
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const hasMultipleImages = pack.images && pack.images.length > 1;
 
@@ -25,13 +27,25 @@ export default function GiftPackCard({ pack, onAddToCart, isAddingToCart }: Gift
     setCurrentImageIndex((prev) => (prev === pack.images.length - 1 ? 0 : prev + 1));
   };
 
+  const handleCardClick = () => {
+    navigate({ to: `/gift-pack/${pack.id}` });
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAddToCart(pack.id);
+  };
+
   const discountedPrice =
     Number(pack.discount) > 0
       ? Number(pack.price) * (1 - Number(pack.discount) / 100)
       : Number(pack.price);
 
   return (
-    <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
+    <Card 
+      className="group overflow-hidden transition-shadow hover:shadow-lg cursor-pointer"
+      onClick={handleCardClick}
+    >
       <div className="relative aspect-video w-full overflow-hidden bg-muted">
         {pack.images && pack.images.length > 0 && pack.images[currentImageIndex] ? (
           <>
@@ -106,7 +120,7 @@ export default function GiftPackCard({ pack, onAddToCart, isAddingToCart }: Gift
             )}
           </div>
           <Button
-            onClick={() => onAddToCart(pack.id)}
+            onClick={handleAddToCart}
             disabled={isAddingToCart}
             className="bg-terracotta hover:bg-terracotta/90"
           >

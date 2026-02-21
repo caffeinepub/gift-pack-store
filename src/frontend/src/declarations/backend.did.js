@@ -19,6 +19,59 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const OrderStatus = IDL.Variant({
+  'shipped' : IDL.Null,
+  'cancelled' : IDL.Null,
+  'pending' : IDL.Null,
+  'delivered' : IDL.Null,
+  'confirmed' : IDL.Null,
+});
+export const BasketType = IDL.Variant({
+  'woodenCrate' : IDL.Null,
+  'wickerBasket' : IDL.Null,
+  'giftBox' : IDL.Null,
+});
+export const DeliveryAddress = IDL.Record({
+  'id' : IDL.Text,
+  'street' : IDL.Text,
+  'city' : IDL.Text,
+  'name' : IDL.Text,
+  'state' : IDL.Text,
+  'phone' : IDL.Text,
+  'pincode' : IDL.Text,
+});
+export const PackType = IDL.Variant({
+  'ribbonColor1' : IDL.Null,
+  'ribbonColor2' : IDL.Null,
+  'wrapStyle1' : IDL.Null,
+  'wrapStyle2' : IDL.Null,
+});
+export const Time = IDL.Int;
+export const Size = IDL.Variant({
+  'large' : IDL.Null,
+  'small' : IDL.Null,
+  'medium' : IDL.Null,
+});
+export const CartItem = IDL.Record({
+  'wrappingOption' : IDL.Opt(IDL.Text),
+  'customMessage' : IDL.Opt(IDL.Text),
+  'quantity' : IDL.Nat,
+  'packId' : IDL.Text,
+});
+export const Order = IDL.Record({
+  'id' : IDL.Text,
+  'basketType' : BasketType,
+  'status' : OrderStatus,
+  'deliveryAddress' : DeliveryAddress,
+  'userId' : IDL.Text,
+  'packingType' : PackType,
+  'createdAt' : Time,
+  'size' : Size,
+  'messageCard' : IDL.Opt(IDL.Text),
+  'totalAmount' : IDL.Int,
+  'paymentId' : IDL.Text,
+  'items' : IDL.Vec(CartItem),
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -28,7 +81,6 @@ export const Category = IDL.Record({
   'name' : IDL.Text,
   'description' : IDL.Text,
 });
-export const Time = IDL.Int;
 export const Coupon = IDL.Record({
   'code' : IDL.Text,
   'expirationDate' : Time,
@@ -56,16 +108,6 @@ export const GiftItem = IDL.Record({
   'price' : IDL.Int,
   'images' : IDL.Vec(ExternalBlob),
 });
-export const BasketType = IDL.Variant({
-  'woodenCrate' : IDL.Null,
-  'wickerBasket' : IDL.Null,
-  'giftBox' : IDL.Null,
-});
-export const Size = IDL.Variant({
-  'large' : IDL.Null,
-  'small' : IDL.Null,
-  'medium' : IDL.Null,
-});
 export const GiftPack = IDL.Record({
   'id' : IDL.Text,
   'basketType' : BasketType,
@@ -78,15 +120,6 @@ export const GiftPack = IDL.Record({
   'price' : IDL.Int,
   'images' : IDL.Vec(ExternalBlob),
 });
-export const DeliveryAddress = IDL.Record({
-  'id' : IDL.Text,
-  'street' : IDL.Text,
-  'city' : IDL.Text,
-  'name' : IDL.Text,
-  'state' : IDL.Text,
-  'phone' : IDL.Text,
-  'pincode' : IDL.Text,
-});
 export const UserProfile = IDL.Record({
   'principal' : IDL.Principal,
   'name' : IDL.Text,
@@ -94,39 +127,6 @@ export const UserProfile = IDL.Record({
   'phone' : IDL.Text,
   'pincode' : IDL.Text,
   'defaultAddress' : DeliveryAddress,
-});
-export const CartItem = IDL.Record({
-  'wrappingOption' : IDL.Opt(IDL.Text),
-  'customMessage' : IDL.Opt(IDL.Text),
-  'quantity' : IDL.Nat,
-  'packId' : IDL.Text,
-});
-export const PackType = IDL.Variant({
-  'ribbonColor1' : IDL.Null,
-  'ribbonColor2' : IDL.Null,
-  'wrapStyle1' : IDL.Null,
-  'wrapStyle2' : IDL.Null,
-});
-export const OrderStatus = IDL.Variant({
-  'shipped' : IDL.Null,
-  'cancelled' : IDL.Null,
-  'pending' : IDL.Null,
-  'delivered' : IDL.Null,
-  'confirmed' : IDL.Null,
-});
-export const Order = IDL.Record({
-  'id' : IDL.Text,
-  'basketType' : BasketType,
-  'status' : OrderStatus,
-  'deliveryAddress' : DeliveryAddress,
-  'userId' : IDL.Text,
-  'packingType' : PackType,
-  'createdAt' : Time,
-  'size' : Size,
-  'messageCard' : IDL.Opt(IDL.Text),
-  'totalAmount' : IDL.Int,
-  'paymentId' : IDL.Text,
-  'items' : IDL.Vec(CartItem),
 });
 export const Product = IDL.Record({
   'id' : IDL.Text,
@@ -142,6 +142,12 @@ export const CatalogFilters = IDL.Record({
   'searchTerm' : IDL.Opt(IDL.Text),
   'category' : IDL.Opt(CategoryType),
 });
+export const RazorpayPayment = IDL.Record({
+  'status' : IDL.Text,
+  'paymentId' : IDL.Text,
+  'payer' : IDL.Principal,
+  'amount' : IDL.Int,
+});
 export const Cart = IDL.Record({
   'basketType' : BasketType,
   'userId' : IDL.Text,
@@ -156,12 +162,6 @@ export const ContactSubmission = IDL.Record({
   'message' : IDL.Text,
   'timestamp' : Time,
   'phone' : IDL.Text,
-});
-export const RazorpayPayment = IDL.Record({
-  'status' : IDL.Text,
-  'paymentId' : IDL.Text,
-  'payer' : IDL.Principal,
-  'amount' : IDL.Int,
 });
 
 export const idlService = IDL.Service({
@@ -192,6 +192,8 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'adminUpdateOrderStatus' : IDL.Func([IDL.Text, OrderStatus], [], []),
+  'adminViewAllOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'clearCart' : IDL.Func([], [], []),
   'createCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
@@ -250,6 +252,7 @@ export const idlService = IDL.Service({
     ),
   'getAllCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
   'getAllGiftPacks' : IDL.Func([], [IDL.Vec(GiftPack)], ['query']),
+  'getAllPayments' : IDL.Func([], [IDL.Vec(RazorpayPayment)], ['query']),
   'getAllProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
@@ -327,13 +330,65 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const OrderStatus = IDL.Variant({
+    'shipped' : IDL.Null,
+    'cancelled' : IDL.Null,
+    'pending' : IDL.Null,
+    'delivered' : IDL.Null,
+    'confirmed' : IDL.Null,
+  });
+  const BasketType = IDL.Variant({
+    'woodenCrate' : IDL.Null,
+    'wickerBasket' : IDL.Null,
+    'giftBox' : IDL.Null,
+  });
+  const DeliveryAddress = IDL.Record({
+    'id' : IDL.Text,
+    'street' : IDL.Text,
+    'city' : IDL.Text,
+    'name' : IDL.Text,
+    'state' : IDL.Text,
+    'phone' : IDL.Text,
+    'pincode' : IDL.Text,
+  });
+  const PackType = IDL.Variant({
+    'ribbonColor1' : IDL.Null,
+    'ribbonColor2' : IDL.Null,
+    'wrapStyle1' : IDL.Null,
+    'wrapStyle2' : IDL.Null,
+  });
+  const Time = IDL.Int;
+  const Size = IDL.Variant({
+    'large' : IDL.Null,
+    'small' : IDL.Null,
+    'medium' : IDL.Null,
+  });
+  const CartItem = IDL.Record({
+    'wrappingOption' : IDL.Opt(IDL.Text),
+    'customMessage' : IDL.Opt(IDL.Text),
+    'quantity' : IDL.Nat,
+    'packId' : IDL.Text,
+  });
+  const Order = IDL.Record({
+    'id' : IDL.Text,
+    'basketType' : BasketType,
+    'status' : OrderStatus,
+    'deliveryAddress' : DeliveryAddress,
+    'userId' : IDL.Text,
+    'packingType' : PackType,
+    'createdAt' : Time,
+    'size' : Size,
+    'messageCard' : IDL.Opt(IDL.Text),
+    'totalAmount' : IDL.Int,
+    'paymentId' : IDL.Text,
+    'items' : IDL.Vec(CartItem),
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
   const Category = IDL.Record({ 'name' : IDL.Text, 'description' : IDL.Text });
-  const Time = IDL.Int;
   const Coupon = IDL.Record({
     'code' : IDL.Text,
     'expirationDate' : Time,
@@ -361,16 +416,6 @@ export const idlFactory = ({ IDL }) => {
     'price' : IDL.Int,
     'images' : IDL.Vec(ExternalBlob),
   });
-  const BasketType = IDL.Variant({
-    'woodenCrate' : IDL.Null,
-    'wickerBasket' : IDL.Null,
-    'giftBox' : IDL.Null,
-  });
-  const Size = IDL.Variant({
-    'large' : IDL.Null,
-    'small' : IDL.Null,
-    'medium' : IDL.Null,
-  });
   const GiftPack = IDL.Record({
     'id' : IDL.Text,
     'basketType' : BasketType,
@@ -383,15 +428,6 @@ export const idlFactory = ({ IDL }) => {
     'price' : IDL.Int,
     'images' : IDL.Vec(ExternalBlob),
   });
-  const DeliveryAddress = IDL.Record({
-    'id' : IDL.Text,
-    'street' : IDL.Text,
-    'city' : IDL.Text,
-    'name' : IDL.Text,
-    'state' : IDL.Text,
-    'phone' : IDL.Text,
-    'pincode' : IDL.Text,
-  });
   const UserProfile = IDL.Record({
     'principal' : IDL.Principal,
     'name' : IDL.Text,
@@ -399,39 +435,6 @@ export const idlFactory = ({ IDL }) => {
     'phone' : IDL.Text,
     'pincode' : IDL.Text,
     'defaultAddress' : DeliveryAddress,
-  });
-  const CartItem = IDL.Record({
-    'wrappingOption' : IDL.Opt(IDL.Text),
-    'customMessage' : IDL.Opt(IDL.Text),
-    'quantity' : IDL.Nat,
-    'packId' : IDL.Text,
-  });
-  const PackType = IDL.Variant({
-    'ribbonColor1' : IDL.Null,
-    'ribbonColor2' : IDL.Null,
-    'wrapStyle1' : IDL.Null,
-    'wrapStyle2' : IDL.Null,
-  });
-  const OrderStatus = IDL.Variant({
-    'shipped' : IDL.Null,
-    'cancelled' : IDL.Null,
-    'pending' : IDL.Null,
-    'delivered' : IDL.Null,
-    'confirmed' : IDL.Null,
-  });
-  const Order = IDL.Record({
-    'id' : IDL.Text,
-    'basketType' : BasketType,
-    'status' : OrderStatus,
-    'deliveryAddress' : DeliveryAddress,
-    'userId' : IDL.Text,
-    'packingType' : PackType,
-    'createdAt' : Time,
-    'size' : Size,
-    'messageCard' : IDL.Opt(IDL.Text),
-    'totalAmount' : IDL.Int,
-    'paymentId' : IDL.Text,
-    'items' : IDL.Vec(CartItem),
   });
   const Product = IDL.Record({
     'id' : IDL.Text,
@@ -447,6 +450,12 @@ export const idlFactory = ({ IDL }) => {
     'searchTerm' : IDL.Opt(IDL.Text),
     'category' : IDL.Opt(CategoryType),
   });
+  const RazorpayPayment = IDL.Record({
+    'status' : IDL.Text,
+    'paymentId' : IDL.Text,
+    'payer' : IDL.Principal,
+    'amount' : IDL.Int,
+  });
   const Cart = IDL.Record({
     'basketType' : BasketType,
     'userId' : IDL.Text,
@@ -461,12 +470,6 @@ export const idlFactory = ({ IDL }) => {
     'message' : IDL.Text,
     'timestamp' : Time,
     'phone' : IDL.Text,
-  });
-  const RazorpayPayment = IDL.Record({
-    'status' : IDL.Text,
-    'paymentId' : IDL.Text,
-    'payer' : IDL.Principal,
-    'amount' : IDL.Int,
   });
   
   return IDL.Service({
@@ -497,6 +500,8 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'adminUpdateOrderStatus' : IDL.Func([IDL.Text, OrderStatus], [], []),
+    'adminViewAllOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'clearCart' : IDL.Func([], [], []),
     'createCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
@@ -562,6 +567,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getAllCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
     'getAllGiftPacks' : IDL.Func([], [IDL.Vec(GiftPack)], ['query']),
+    'getAllPayments' : IDL.Func([], [IDL.Vec(RazorpayPayment)], ['query']),
     'getAllProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),

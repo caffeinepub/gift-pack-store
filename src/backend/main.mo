@@ -193,6 +193,7 @@ actor {
   let contactSubmissions = Map.empty<Text, ContactSubmission>();
   let categories = Map.empty<Text, Category>();
   let products = Map.empty<Text, Product>();
+  let orderStatus = Map.empty<Text, OrderStatus>();
 
   let deliveryPincodes = Map.fromIter(
     [
@@ -520,6 +521,18 @@ actor {
     payment;
   };
 
+  public query ({ caller }) func getAllPayments() : async [RazorpayPayment] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view all payments");
+    };
+
+    payments.values().toArray().sort(
+      func(a, b) {
+        Text.compare(b.paymentId, a.paymentId);
+      }
+    );
+  };
+
   public shared ({ caller }) func createOrUpdateUserProfile(
     name : Text,
     email : Text,
@@ -592,6 +605,31 @@ actor {
     switch (userOrders.get(recipient)) {
       case (null) { [] };
       case (?orders) { orders };
+    };
+  };
+
+  public query ({ caller }) func adminViewAllOrders() : async [Order] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view all orders");
+    };
+    orders.values().toArray();
+  };
+
+  public shared ({ caller }) func adminUpdateOrderStatus(orderId : Text, status : OrderStatus) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can update order status");
+    };
+
+    switch (orders.get(orderId)) {
+      case (null) {
+        Runtime.trap("Order with id " # orderId # " does not exist");
+      };
+      case (?order) {
+        let updatedOrder = {
+          order with status;
+        };
+        orders.add(orderId, updatedOrder);
+      };
     };
   };
 

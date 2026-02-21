@@ -10,6 +10,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import ProfilePage from './pages/ProfilePage';
 import ContactPage from './pages/ContactPage';
+import GiftPackDetailPage from './pages/GiftPackDetailPage';
 import AdminPage from './pages/AdminPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import ProtectedAdminRoute from './components/auth/ProtectedAdminRoute';
@@ -34,6 +35,12 @@ const catalogRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/catalog',
   component: CatalogPage,
+});
+
+const giftPackDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/gift-pack/$id',
+  component: GiftPackDetailPage,
 });
 
 const customPackRoute = createRoute({
@@ -91,6 +98,7 @@ const adminRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   catalogRoute,
+  giftPackDetailRoute,
   customPackRoute,
   cartRoute,
   checkoutRoute,

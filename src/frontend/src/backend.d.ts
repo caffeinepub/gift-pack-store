@@ -161,6 +161,8 @@ export enum UserRole {
     guest = "guest"
 }
 export interface backendInterface {
+    adminUpdateOrderStatus(orderId: string, status: OrderStatus): Promise<void>;
+    adminViewAllOrders(): Promise<Array<Order>>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     clearCart(): Promise<void>;
     createCategory(name: string, description: string): Promise<Category>;
@@ -173,6 +175,7 @@ export interface backendInterface {
     filterGiftPacks(filters: CatalogFilters): Promise<Array<GiftPack>>;
     getAllCategories(): Promise<Array<Category>>;
     getAllGiftPacks(): Promise<Array<GiftPack>>;
+    getAllPayments(): Promise<Array<RazorpayPayment>>;
     getAllProducts(): Promise<Array<Product>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
