@@ -1,50 +1,76 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import { ExternalBlob } from '@/backend';
-import type { BasketType, CategoryType, Size } from '@/backend';
+import type { CategoryType } from '@/backend';
 
-interface CreateProductData {
+interface ProductData {
   id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
-  discount: number;
   category: CategoryType;
   imageUrl: string;
-  basketType: BasketType;
-  size: Size;
 }
 
 export function useProductMutation() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (data: CreateProductData) => {
+  const createMutation = useMutation({
+    mutationFn: async (data: ProductData) => {
       if (!actor) throw new Error('Actor not initialized');
 
-      // Convert price and discount to BigInt
       const priceBigInt = BigInt(data.price);
-      const discountBigInt = BigInt(data.discount || 0);
-
-      // Create ExternalBlob array from image URL
-      const images = data.imageUrl ? [ExternalBlob.fromURL(data.imageUrl)] : [];
 
       return actor.createProduct(
         data.id,
-        data.title,
+        data.name,
         data.description,
         priceBigInt,
-        discountBigInt,
         data.category,
-        images,
-        data.basketType,
-        data.size
+        data.imageUrl
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['giftPacks'] });
-      queryClient.invalidateQueries({ queryKey: ['giftPacks', 'filtered'] });
+      queryClient.invalidateQueries({ queryKey: ['customProducts'] });
     },
   });
+
+  const updateMutation = useMutation({
+    mutationFn: async (data: ProductData) => {
+      if (!actor) throw new Error('Actor not initialized');
+
+      const priceBigInt = BigInt(data.price);
+
+      return actor.updateProduct(
+        data.id,
+        data.name,
+        data.description,
+        priceBigInt,
+        data.category,
+        data.imageUrl
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customProducts'] });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (productId: string) => {
+      if (!actor) throw new Error('Actor not initialized');
+      
+      // Note: Backend doesn't have a delete method yet, so this is a placeholder
+      // The backend will need to implement deleteProduct method
+      throw new Error('Delete functionality not yet implemented in backend');
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['customProducts'] });
+    },
+  });
+
+  return {
+    createMutation,
+    updateMutation,
+    deleteMutation,
+  };
 }

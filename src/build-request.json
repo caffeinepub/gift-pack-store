@@ -1,110 +1,93 @@
 {
   "kind": "build_request",
-  "title": "Add edit functionality to admin dashboard",
+  "title": "Add gift pack management to admin panel",
+  "projectName": "Gift Pack Admin",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
+      "text": "Add a GiftPackManagement section to the AdminPage that displays the existing GiftPackManagement component alongside ProductManagement, CategoryManagement, and CouponManagement",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-user-request"
         ],
         "quotes": [
-          "add edit option in admin"
+          "add option in admin to add/edit/delete gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "Each gift pack card displays an edit button or icon",
-        "Clicking edit button opens an edit form with the gift pack's current data pre-populated",
-        "Form allows modification of all gift pack fields (title, description, price, discount, category, image URL, basket type, size)"
+        "The AdminPage displays a fourth card section titled 'Gift Pack Management'",
+        "The GiftPackManagement component is rendered within this new section",
+        "The layout maintains consistency with existing management sections"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement backend mutation for updating existing gift packs by ID",
+      "text": "Implement backend CRUD endpoints for gift packs including createGiftPack, updateGiftPack, and deleteGiftPack methods in the main actor",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-user-request"
         ],
         "quotes": [
-          "add edit option in admin"
+          "add option in admin to add/edit/delete gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "Backend provides an updateGiftPack function that accepts gift pack ID and updated fields",
-        "Function validates that the gift pack exists before updating",
-        "Function returns success response with updated gift pack or error if not found"
+        "createGiftPack accepts GiftPack data and stores it in the giftPacks Map",
+        "updateGiftPack accepts a pack ID and updated GiftPack data and modifies the existing entry",
+        "deleteGiftPack accepts a pack ID and removes it from the giftPacks Map",
+        "All methods return appropriate Result types indicating success or failure"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Create useGiftPackMutation hook with update mutation support",
+      "text": "Update useGiftPackMutation hook to use the new backend gift pack CRUD methods instead of placeholder product methods",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
-        ],
-        "quotes": [
-          "add edit option in admin"
+          "msg-user-request"
         ]
       },
       "acceptanceCriteria": [
-        "Hook provides an updateGiftPack mutation function",
-        "Mutation invalidates gift packs query cache on success",
-        "Hook returns loading state and error handling"
+        "createGiftPackMutation calls actor.createGiftPack with full GiftPack data including basketType and size",
+        "updateGiftPackMutation calls actor.updateGiftPack with the pack ID and updated data",
+        "Both mutations invalidate the giftPacks query cache on success",
+        "Mutations display appropriate toast notifications for success and error states"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
+      "text": "Add delete functionality to GiftPackList component with a delete button on each gift pack card that calls a deleteGiftPack mutation",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-user-request"
         ],
         "quotes": [
-          "add edit option in admin"
+          "add/edit/delete gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "Component displays 'Gift Pack Created' toast on creation success",
-        "Component displays 'Gift Pack Updated' toast on update success",
-        "Form resets after successful creation but closes/returns to list after successful edit"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add edit functionality to category, coupon, and product sections in admin dashboard",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-10"
-        ],
-        "quotes": [
-          "add edit option in admin"
-        ]
-      },
-      "acceptanceCriteria": [
-        "CategoryList displays edit buttons for each category with edit form capability",
-        "CouponList displays edit buttons for each coupon with edit form capability",
-        "Backend provides update functions for categories and coupons",
-        "All edit operations show appropriate success/error feedback"
+        "Each gift pack card displays a delete button alongside the edit button",
+        "Clicking delete triggers a confirmation dialog before deleting",
+        "Successful deletion removes the gift pack from the list and shows a success toast",
+        "Failed deletion shows an error toast with the failure reason"
       ]
     }
   ],
   "constraints": [
-    "Use existing form components (GiftPackForm, CategoryForm, CouponForm) for edit functionality by making them reusable for both create and edit modes",
-    "Maintain single-actor Motoko architecture with all update logic in backend/main.mo",
-    "Follow existing toast notification pattern for user feedback"
+    "Maintain the single-actor architecture with all Motoko logic in backend/main.mo",
+    "Do not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui",
+    "Preserve existing GiftPack type structure with basketType and size fields",
+    "Keep ProductManagement and GiftPackManagement as separate, independent systems"
   ],
   "nonGoals": [
-    "Bulk edit functionality",
-    "Delete functionality for gift packs, categories, or coupons",
-    "Edit history or audit trail",
-    "Permissions or role-based access control for edit operations"
+    "Modifying the existing ProductManagement functionality",
+    "Changing the GiftPack type definition or data structure",
+    "Adding new fields to gift packs beyond what exists in the current GiftPackForm",
+    "Implementing bulk operations or advanced filtering for gift packs"
   ],
   "imageRequirements": {
     "required": [],

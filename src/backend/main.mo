@@ -6,10 +6,9 @@ import Time "mo:core/Time";
 import Array "mo:core/Array";
 import Storage "blob-storage/Storage";
 import Iter "mo:core/Iter";
-import MixinStorage "blob-storage/Mixin";
-
-import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
+import Principal "mo:core/Principal";
+import MixinStorage "blob-storage/Mixin";
 
 actor {
   include MixinStorage();
@@ -169,6 +168,15 @@ actor {
     remainingQuantity : Nat;
   };
 
+  type Product = {
+    id : Text;
+    name : Text;
+    description : Text;
+    price : Int;
+    category : CategoryType;
+    imageUrl : Text;
+  };
+
   let coupons = Map.empty<Text, Coupon>();
   let couponUsage = Map.empty<Text, [Text]>();
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -179,6 +187,7 @@ actor {
   var userCarts = Map.empty<Principal, Cart>();
   let contactSubmissions = Map.empty<Text, ContactSubmission>();
   let categories = Map.empty<Text, Category>();
+  let products = Map.empty<Text, Product>();
 
   let deliveryPincodes = Map.fromIter(
     [
@@ -583,57 +592,121 @@ actor {
 
   public shared ({ caller }) func createProduct(
     id : Text,
-    title : Text,
+    name : Text,
     description : Text,
     price : Int,
-    discount : Nat,
     category : CategoryType,
-    images : [Storage.ExternalBlob],
-    basketType : BasketType,
-    size : Size,
-  ) : async GiftPack {
-    let newGiftPack : GiftPack = {
+    imageUrl : Text,
+  ) : async Product {
+    let product : Product = {
       id;
-      title;
+      name;
       description;
       price;
-      discount;
       category;
-      items = [];
-      images;
-      basketType;
-      size;
+      imageUrl;
     };
 
-    giftPacks.add(id, newGiftPack);
-    newGiftPack;
+    products.add(id, product);
+    product;
   };
 
   public shared ({ caller }) func updateProduct(
+    id : Text,
+    name : Text,
+    description : Text,
+    price : Int,
+    category : CategoryType,
+    imageUrl : Text,
+  ) : async Product {
+    let updatedProduct : Product = {
+      id;
+      name;
+      description;
+      price;
+      category;
+      imageUrl;
+    };
+
+    products.add(id, updatedProduct);
+    updatedProduct;
+  };
+
+  public query ({ caller }) func getProductById(id : Text) : async ?Product {
+    products.get(id);
+  };
+
+  public query ({ caller }) func getAllProducts() : async [Product] {
+    products.values().toArray();
+  };
+
+  // New Gift Pack Backend CRUD Endpoints
+  public shared ({ caller }) func createGiftPack(
     id : Text,
     title : Text,
     description : Text,
     price : Int,
     discount : Nat,
     category : CategoryType,
+    items : [GiftItem],
     images : [Storage.ExternalBlob],
     basketType : BasketType,
     size : Size,
   ) : async GiftPack {
-    let updatedGiftPack : GiftPack = {
+    let pack : GiftPack = {
       id;
       title;
       description;
       price;
       discount;
       category;
-      items = [];
+      items;
       images;
       basketType;
       size;
     };
 
-    giftPacks.add(id, updatedGiftPack);
-    updatedGiftPack;
+    giftPacks.add(id, pack);
+    pack;
+  };
+
+  public shared ({ caller }) func updateGiftPack(
+    id : Text,
+    title : Text,
+    description : Text,
+    price : Int,
+    discount : Nat,
+    category : CategoryType,
+    items : [GiftItem],
+    images : [Storage.ExternalBlob],
+    basketType : BasketType,
+    size : Size,
+  ) : async GiftPack {
+    let updatedPack : GiftPack = {
+      id;
+      title;
+      description;
+      price;
+      discount;
+      category;
+      items;
+      images;
+      basketType;
+      size;
+    };
+
+    giftPacks.add(id, updatedPack);
+    updatedPack;
+  };
+
+  public shared ({ caller }) func deleteGiftPack(id : Text) : async () {
+    switch (giftPacks.get(id)) {
+      case (null) {
+        Runtime.trap("Gift pack with id " # id # " does not exist");
+      };
+      case (?_) {
+        giftPacks.remove(id);
+      };
+    };
   };
 };

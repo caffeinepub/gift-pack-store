@@ -3,12 +3,11 @@ import GiftPackForm from './GiftPackForm';
 import GiftPackList from './GiftPackList';
 import { useGiftPacks } from '@/hooks/useGiftPacks';
 import { useGiftPackMutation } from '@/hooks/useGiftPackMutation';
-import { toast } from 'sonner';
 import type { BasketType, CategoryType, Size, GiftPack } from '@/backend';
 
 export default function GiftPackManagement() {
   const { data: giftPacks, isLoading } = useGiftPacks();
-  const { createGiftPack, updateGiftPack, isCreating, isUpdating } = useGiftPackMutation();
+  const { createGiftPack, updateGiftPack, deleteGiftPack, isCreating, isUpdating, isDeleting } = useGiftPackMutation();
   const [editingGiftPack, setEditingGiftPack] = useState<GiftPack | null>(null);
 
   const handleSubmit = (data: {
@@ -23,37 +22,19 @@ export default function GiftPackManagement() {
     size: Size;
   }) => {
     if (editingGiftPack) {
-      updateGiftPack(data, {
-        onSuccess: () => {
-          toast.success('Gift Pack Updated', {
-            description: 'The gift pack has been updated successfully',
-          });
-          setEditingGiftPack(null);
-        },
-        onError: (error) => {
-          toast.error('Failed to update gift pack', {
-            description: error instanceof Error ? error.message : 'Please try again',
-          });
-        },
-      });
+      updateGiftPack(data);
+      setEditingGiftPack(null);
     } else {
-      createGiftPack(data, {
-        onSuccess: () => {
-          toast.success('Gift Pack Created', {
-            description: 'The new gift pack is now available in the catalog',
-          });
-        },
-        onError: (error) => {
-          toast.error('Failed to create gift pack', {
-            description: error instanceof Error ? error.message : 'Please try again',
-          });
-        },
-      });
+      createGiftPack(data);
     }
   };
 
   const handleEdit = (giftPack: GiftPack) => {
     setEditingGiftPack(giftPack);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteGiftPack(id);
   };
 
   const handleCancelEdit = () => {
@@ -83,6 +64,8 @@ export default function GiftPackManagement() {
           giftPacks={giftPacks || []}
           isLoading={isLoading}
           onEdit={handleEdit}
+          onDelete={handleDelete}
+          isDeleting={isDeleting}
         />
       </div>
     </div>

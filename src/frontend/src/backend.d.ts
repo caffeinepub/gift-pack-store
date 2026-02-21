@@ -14,6 +14,14 @@ export class ExternalBlob {
     static fromBytes(blob: Uint8Array<ArrayBuffer>): ExternalBlob;
     withUploadProgress(onProgress: (percentage: number) => void): ExternalBlob;
 }
+export interface GiftItem {
+    id: string;
+    name: string;
+    description: string;
+    category: CategoryType;
+    price: bigint;
+    images: Array<ExternalBlob>;
+}
 export interface UserProfile {
     principal: Principal;
     name: string;
@@ -28,19 +36,10 @@ export interface RazorpayPayment {
     payer: Principal;
     amount: bigint;
 }
+export type Time = bigint;
 export interface Category {
     name: string;
     description: string;
-}
-export type Time = bigint;
-export interface CatalogFilters {
-    outOfStock?: boolean;
-    priceRange?: {
-        max: bigint;
-        min: bigint;
-    };
-    searchTerm?: string;
-    category?: CategoryType;
 }
 export interface Coupon {
     code: string;
@@ -57,6 +56,15 @@ export interface ContactSubmission {
     message: string;
     timestamp: Time;
     phone: string;
+}
+export interface CatalogFilters {
+    outOfStock?: boolean;
+    priceRange?: {
+        max: bigint;
+        min: bigint;
+    };
+    searchTerm?: string;
+    category?: CategoryType;
 }
 export interface Order {
     id: string;
@@ -107,13 +115,13 @@ export interface CartItem {
     quantity: bigint;
     packId: string;
 }
-export interface GiftItem {
+export interface Product {
     id: string;
     name: string;
     description: string;
+    imageUrl: string;
     category: CategoryType;
     price: bigint;
-    images: Array<ExternalBlob>;
 }
 export enum BasketType {
     woodenCrate = "woodenCrate",
@@ -151,18 +159,22 @@ export interface backendInterface {
     clearCart(): Promise<void>;
     createCategory(name: string, description: string): Promise<Category>;
     createCoupon(code: string, discountPercentage: bigint, minDiscountPercentage: bigint | null, maxDiscountAmount: bigint | null, expirationDate: Time, totalQuantity: bigint): Promise<Coupon>;
+    createGiftPack(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, items: Array<GiftItem>, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
     createOrUpdateUserProfile(name: string, email: string, phone: string, address: DeliveryAddress, pincode: string): Promise<UserProfile>;
     createOrder(userId: string, items: Array<CartItem>, deliveryAddress: DeliveryAddress, totalAmount: bigint, basketType: BasketType, size: Size, packingType: PackType, messageCard: string | null, paymentId: string, couponCode: string | null): Promise<Order>;
-    createProduct(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
+    createProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, imageUrl: string): Promise<Product>;
     decrementCouponQuantity(code: string): Promise<bigint>;
+    deleteGiftPack(id: string): Promise<void>;
     filterGiftPacks(filters: CatalogFilters): Promise<Array<GiftPack>>;
     getAllCategories(): Promise<Array<Category>>;
     getAllGiftPacks(): Promise<Array<GiftPack>>;
+    getAllProducts(): Promise<Array<Product>>;
     getCart(): Promise<Cart | null>;
     getContactSubmissions(): Promise<Array<ContactSubmission>>;
     getGiftPackById(id: string): Promise<GiftPack | null>;
     getOrderHistory(): Promise<Array<Order>>;
     getOrderHistoryForPrincipal(recipient: Principal): Promise<Array<Order>>;
+    getProductById(id: string): Promise<Product | null>;
     getUserProfile(): Promise<UserProfile | null>;
     initialize(): Promise<void>;
     isPincodeServiceable(pincode: string): Promise<boolean>;
@@ -172,6 +184,7 @@ export interface backendInterface {
     storePayment(paymentId: string, amount: bigint, status: string): Promise<RazorpayPayment>;
     submitContactForm(name: string, email: string, phone: string, message: string): Promise<void>;
     updateCartItemQuantity(packId: string, newQuantity: bigint): Promise<Cart | null>;
-    updateProduct(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
+    updateGiftPack(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, items: Array<GiftItem>, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
+    updateProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, imageUrl: string): Promise<Product>;
     validateCoupon(code: string): Promise<Coupon>;
 }

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-edit-button-to-each-gift-pack-card-in-giftpacklist-component-that-opens-an-edit-form-with-pre-filled-data",
-      "featureTitle": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
+      "featureId": "feature-add-a-giftpackmanagement-section-to-the-adminpage-that-displays-the-existing-giftpackmanagement-component-alongside-productmanagement-categorymanagement-and-couponmanagement",
+      "featureTitle": "Add a GiftPackManagement section to the AdminPage that displays the existing GiftPackManagement component alongside ProductManagement, CategoryManagement, and CouponManagement",
       "files": [
-        "frontend/src/components/admin/GiftPackList.tsx"
+        "frontend/src/pages/AdminPage.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -21,8 +21,8 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-usegiftpackmutation-hook-with-update-mutation-support",
-      "featureTitle": "Create useGiftPackMutation hook with update mutation support",
+      "featureId": "feature-update-usegiftpackmutation-hook-to-use-the-new-backend-gift-pack-crud-methods-instead-of-placeholder-product-methods",
+      "featureTitle": "Update useGiftPackMutation hook to use the new backend gift pack CRUD methods instead of placeholder product methods",
       "files": [
         "frontend/src/hooks/useGiftPackMutation.ts"
       ],
@@ -40,11 +40,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-giftpackmanagement-to-handle-both-create-and-edit-modes-with-appropriate-success-messages",
-      "featureTitle": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
+      "featureId": "feature-add-delete-functionality-to-giftpacklist-component-with-a-delete-button-on-each-gift-pack-card-that-calls-a-deletegiftpack-mutation",
+      "featureTitle": "Add delete functionality to GiftPackList component with a delete button on each gift pack card that calls a deleteGiftPack mutation",
       "files": [
-        "frontend/src/components/admin/GiftPackForm.tsx",
-        "frontend/src/components/admin/GiftPackManagement.tsx"
+        "frontend/src/components/admin/GiftPackList.tsx",
+        "frontend/src/hooks/useGiftPackMutation.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -56,32 +56,6 @@
       ],
       "testIds": [
         "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-edit-functionality-to-category-coupon-and-product-sections-in-admin-dashboard",
-      "featureTitle": "Add edit functionality to category, coupon, and product sections in admin dashboard",
-      "files": [
-        "frontend/src/components/admin/CategoryForm.tsx",
-        "frontend/src/components/admin/CategoryList.tsx",
-        "frontend/src/components/admin/CategoryManagement.tsx",
-        "frontend/src/components/admin/CouponForm.tsx",
-        "frontend/src/components/admin/CouponList.tsx",
-        "frontend/src/components/admin/CouponManagement.tsx",
-        "frontend/src/hooks/useCategoryMutation.ts",
-        "frontend/src/hooks/useCouponMutation.ts"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
       ],
       "confidence": "high"
     }

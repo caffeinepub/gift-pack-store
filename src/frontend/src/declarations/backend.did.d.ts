@@ -110,6 +110,14 @@ export type PackType = { 'ribbonColor1' : null } |
   { 'ribbonColor2' : null } |
   { 'wrapStyle1' : null } |
   { 'wrapStyle2' : null };
+export interface Product {
+  'id' : string,
+  'name' : string,
+  'description' : string,
+  'imageUrl' : string,
+  'category' : CategoryType,
+  'price' : bigint,
+}
 export interface RazorpayPayment {
   'status' : string,
   'paymentId' : string,
@@ -161,6 +169,21 @@ export interface _SERVICE {
     [string, bigint, [] | [bigint], [] | [bigint], Time, bigint],
     Coupon
   >,
+  'createGiftPack' : ActorMethod<
+    [
+      string,
+      string,
+      string,
+      bigint,
+      bigint,
+      CategoryType,
+      Array<GiftItem>,
+      Array<ExternalBlob>,
+      BasketType,
+      Size,
+    ],
+    GiftPack
+  >,
   'createOrUpdateUserProfile' : ActorMethod<
     [string, string, string, DeliveryAddress, string],
     UserProfile
@@ -181,28 +204,21 @@ export interface _SERVICE {
     Order
   >,
   'createProduct' : ActorMethod<
-    [
-      string,
-      string,
-      string,
-      bigint,
-      bigint,
-      CategoryType,
-      Array<ExternalBlob>,
-      BasketType,
-      Size,
-    ],
-    GiftPack
+    [string, string, string, bigint, CategoryType, string],
+    Product
   >,
   'decrementCouponQuantity' : ActorMethod<[string], bigint>,
+  'deleteGiftPack' : ActorMethod<[string], undefined>,
   'filterGiftPacks' : ActorMethod<[CatalogFilters], Array<GiftPack>>,
   'getAllCategories' : ActorMethod<[], Array<Category>>,
   'getAllGiftPacks' : ActorMethod<[], Array<GiftPack>>,
+  'getAllProducts' : ActorMethod<[], Array<Product>>,
   'getCart' : ActorMethod<[], [] | [Cart]>,
   'getContactSubmissions' : ActorMethod<[], Array<ContactSubmission>>,
   'getGiftPackById' : ActorMethod<[string], [] | [GiftPack]>,
   'getOrderHistory' : ActorMethod<[], Array<Order>>,
   'getOrderHistoryForPrincipal' : ActorMethod<[Principal], Array<Order>>,
+  'getProductById' : ActorMethod<[string], [] | [Product]>,
   'getUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'initialize' : ActorMethod<[], undefined>,
   'isPincodeServiceable' : ActorMethod<[string], boolean>,
@@ -215,7 +231,7 @@ export interface _SERVICE {
     undefined
   >,
   'updateCartItemQuantity' : ActorMethod<[string, bigint], [] | [Cart]>,
-  'updateProduct' : ActorMethod<
+  'updateGiftPack' : ActorMethod<
     [
       string,
       string,
@@ -223,11 +239,16 @@ export interface _SERVICE {
       bigint,
       bigint,
       CategoryType,
+      Array<GiftItem>,
       Array<ExternalBlob>,
       BasketType,
       Size,
     ],
     GiftPack
+  >,
+  'updateProduct' : ActorMethod<
+    [string, string, string, bigint, CategoryType, string],
+    Product
   >,
   'validateCoupon' : ActorMethod<[string], Coupon>,
 }

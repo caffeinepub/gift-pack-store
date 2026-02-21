@@ -14,6 +14,21 @@ export default function AdminPage() {
         </h1>
 
         <div className="space-y-8">
+          {/* Product Management for Custom Packages */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="font-serif text-2xl">Product Management</CardTitle>
+              <CardDescription>
+                Add, edit, and delete products for custom packages
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ProductManagement />
+            </CardContent>
+          </Card>
+
+          <Separator />
+
           {/* Category Management */}
           <Card>
             <CardHeader>
@@ -24,21 +39,6 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <CategoryManagement />
-            </CardContent>
-          </Card>
-
-          <Separator />
-
-          {/* Product Management */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-serif text-2xl">Product Management</CardTitle>
-              <CardDescription>
-                Add new gift packs to your catalog
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProductManagement />
             </CardContent>
           </Card>
 
@@ -64,7 +64,7 @@ export default function AdminPage() {
             <CardHeader>
               <CardTitle className="font-serif text-2xl">Gift Pack Management</CardTitle>
               <CardDescription>
-                Create and manage gift pack products
+                Add, edit, and delete pre-made gift packs
               </CardDescription>
             </CardHeader>
             <CardContent>

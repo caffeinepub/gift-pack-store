@@ -7,34 +7,26 @@
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-edit-button-to-each-gift-pack-card-in-giftpacklist-component-that-opens-an-edit-form-with-pre-filled-data",
-      "title": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
+      "id": "feature-add-a-giftpackmanagement-section-to-the-adminpage-that-displays-the-existing-giftpackmanagement-component-alongside-productmanagement-categorymanagement-and-couponmanagement",
+      "title": "Add a GiftPackManagement section to the AdminPage that displays the existing GiftPackManagement component alongside ProductManagement, CategoryManagement, and CouponManagement",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-usegiftpackmutation-hook-with-update-mutation-support",
-      "title": "Create useGiftPackMutation hook with update mutation support",
+      "id": "feature-update-usegiftpackmutation-hook-to-use-the-new-backend-gift-pack-crud-methods-instead-of-placeholder-product-methods",
+      "title": "Update useGiftPackMutation hook to use the new backend gift pack CRUD methods instead of placeholder product methods",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-giftpackmanagement-to-handle-both-create-and-edit-modes-with-appropriate-success-messages",
-      "title": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
+      "id": "feature-add-delete-functionality-to-giftpacklist-component-with-a-delete-button-on-each-gift-pack-card-that-calls-a-deletegiftpack-mutation",
+      "title": "Add delete functionality to GiftPackList component with a delete button on each gift pack card that calls a deleteGiftPack mutation",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-edit-functionality-to-category-coupon-and-product-sections-in-admin-dashboard",
-      "title": "Add edit functionality to category, coupon, and product sections in admin dashboard",
-      "reqIds": [
-        "REQ-5"
       ],
       "version": 1
     }
@@ -42,20 +34,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add edit option in admin dashboard",
+      "summary": "Add option in admin to add/edit/delete gift packs",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Implement backend mutation for updating existing gift packs by ID",
+      "summary": "Implement backend CRUD endpoints for gift packs including createGiftPack, updateGiftPack, and deleteGiftPack methods in the main actor",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Add edit functionality to admin dashboard",
+  "projectName": "Gift Pack Admin",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

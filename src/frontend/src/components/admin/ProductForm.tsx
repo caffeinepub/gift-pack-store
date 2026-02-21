@@ -1,4 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,23 +12,22 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
-import { BasketType, CategoryType, Size } from '@/backend';
+import { CategoryType, type Product } from '@/backend';
 
 interface ProductFormData {
   id: string;
-  title: string;
+  name: string;
   description: string;
   price: number;
-  discount: number;
   category: CategoryType;
   imageUrl: string;
-  basketType: BasketType;
-  size: Size;
 }
 
 interface ProductFormProps {
   onSubmit: (data: ProductFormData) => void;
   isLoading?: boolean;
+  initialData?: Product;
+  onCancel?: () => void;
 }
 
 const categoryOptions = [
@@ -40,29 +40,38 @@ const categoryOptions = [
   { value: CategoryType.custom, label: 'Custom' },
 ];
 
-const basketTypeOptions = [
-  { value: BasketType.wickerBasket, label: 'Wicker Basket' },
-  { value: BasketType.woodenCrate, label: 'Wooden Crate' },
-  { value: BasketType.giftBox, label: 'Gift Box' },
-];
-
-const sizeOptions = [
-  { value: Size.small, label: 'Small' },
-  { value: Size.medium, label: 'Medium' },
-  { value: Size.large, label: 'Large' },
-];
-
-export default function ProductForm({ onSubmit, isLoading }: ProductFormProps) {
+export default function ProductForm({ onSubmit, isLoading, initialData, onCancel }: ProductFormProps) {
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<ProductFormData>({
-    defaultValues: {
-      discount: 0,
-    },
+    defaultValues: initialData
+      ? {
+          id: initialData.id,
+          name: initialData.name,
+          description: initialData.description,
+          price: Number(initialData.price),
+          category: initialData.category,
+          imageUrl: initialData.imageUrl,
+        }
+      : undefined,
   });
+
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        id: initialData.id,
+        name: initialData.name,
+        description: initialData.description,
+        price: Number(initialData.price),
+        category: initialData.category,
+        imageUrl: initialData.imageUrl,
+      });
+    }
+  }, [initialData, reset]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -73,25 +82,25 @@ export default function ProductForm({ onSubmit, isLoading }: ProductFormProps) {
           <Input
             id="id"
             {...register('id', { required: 'Product ID is required' })}
-            placeholder="e.g., gift-pack-14"
-            disabled={isLoading}
+            placeholder="e.g., chocolate-box-01"
+            disabled={isLoading || !!initialData}
           />
           {errors.id && (
             <p className="text-sm text-destructive">{errors.id.message}</p>
           )}
         </div>
 
-        {/* Title */}
+        {/* Name */}
         <div className="space-y-2">
-          <Label htmlFor="title">Title *</Label>
+          <Label htmlFor="name">Product Name *</Label>
           <Input
-            id="title"
-            {...register('title', { required: 'Title is required' })}
-            placeholder="e.g., Deluxe Birthday Pack"
+            id="name"
+            {...register('name', { required: 'Product name is required' })}
+            placeholder="e.g., Premium Chocolate Box"
             disabled={isLoading}
           />
-          {errors.title && (
-            <p className="text-sm text-destructive">{errors.title.message}</p>
+          {errors.name && (
+            <p className="text-sm text-destructive">{errors.name.message}</p>
           )}
         </div>
 
@@ -104,46 +113,13 @@ export default function ProductForm({ onSubmit, isLoading }: ProductFormProps) {
             {...register('price', {
               required: 'Price is required',
               min: { value: 0, message: 'Price must be positive' },
+              valueAsNumber: true,
             })}
-            placeholder="e.g., 2999"
+            placeholder="e.g., 499"
             disabled={isLoading}
           />
           {errors.price && (
             <p className="text-sm text-destructive">{errors.price.message}</p>
-          )}
-        </div>
-
-        {/* Discount */}
-        <div className="space-y-2">
-          <Label htmlFor="discount">Discount (%)</Label>
-          <Input
-            id="discount"
-            type="number"
-            {...register('discount', {
-              min: { value: 0, message: 'Discount must be at least 0' },
-              max: { value: 100, message: 'Discount cannot exceed 100' },
-              valueAsNumber: true,
-            })}
-            placeholder="e.g., 10"
-            disabled={isLoading}
-            defaultValue={0}
-          />
-          {errors.discount && (
-            <p className="text-sm text-destructive">{errors.discount.message}</p>
-          )}
-        </div>
-
-        {/* Image URL */}
-        <div className="space-y-2">
-          <Label htmlFor="imageUrl">Image URL *</Label>
-          <Input
-            id="imageUrl"
-            {...register('imageUrl', { required: 'Image URL is required' })}
-            placeholder="https://example.com/image.jpg"
-            disabled={isLoading}
-          />
-          {errors.imageUrl && (
-            <p className="text-sm text-destructive">{errors.imageUrl.message}</p>
           )}
         </div>
 
@@ -178,65 +154,17 @@ export default function ProductForm({ onSubmit, isLoading }: ProductFormProps) {
           )}
         </div>
 
-        {/* Basket Type */}
-        <div className="space-y-2">
-          <Label htmlFor="basketType">Basket Type *</Label>
-          <Controller
-            name="basketType"
-            control={control}
-            rules={{ required: 'Basket type is required' }}
-            render={({ field }) => (
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select basket type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {basketTypeOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+        {/* Image URL */}
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="imageUrl">Image URL *</Label>
+          <Input
+            id="imageUrl"
+            {...register('imageUrl', { required: 'Image URL is required' })}
+            placeholder="https://example.com/image.jpg"
+            disabled={isLoading}
           />
-          {errors.basketType && (
-            <p className="text-sm text-destructive">{errors.basketType.message}</p>
-          )}
-        </div>
-
-        {/* Size */}
-        <div className="space-y-2">
-          <Label htmlFor="size">Size *</Label>
-          <Controller
-            name="size"
-            control={control}
-            rules={{ required: 'Size is required' }}
-            render={({ field }) => (
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select size" />
-                </SelectTrigger>
-                <SelectContent>
-                  {sizeOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.size && (
-            <p className="text-sm text-destructive">{errors.size.message}</p>
+          {errors.imageUrl && (
+            <p className="text-sm text-destructive">{errors.imageUrl.message}</p>
           )}
         </div>
       </div>
@@ -247,7 +175,7 @@ export default function ProductForm({ onSubmit, isLoading }: ProductFormProps) {
         <Textarea
           id="description"
           {...register('description', { required: 'Description is required' })}
-          placeholder="Describe the gift pack..."
+          placeholder="Describe the product..."
           rows={4}
           disabled={isLoading}
         />
@@ -256,20 +184,32 @@ export default function ProductForm({ onSubmit, isLoading }: ProductFormProps) {
         )}
       </div>
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="bg-terracotta hover:bg-terracotta/90"
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Creating Product...
-          </>
-        ) : (
-          'Create Product'
+      <div className="flex gap-3">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="bg-terracotta hover:bg-terracotta/90"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {initialData ? 'Updating...' : 'Creating...'}
+            </>
+          ) : (
+            <>{initialData ? 'Update Product' : 'Create Product'}</>
+          )}
+        </Button>
+        {onCancel && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
         )}
-      </Button>
+      </div>
     </form>
   );
 }

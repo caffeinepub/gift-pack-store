@@ -1,13 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Add edit functionality to admin dashboard for gift packs, categories, and coupons.
+**Goal:** Add full gift pack management capabilities to the admin panel with create, edit, and delete operations.
 
 **Planned changes:**
-- Add edit buttons to gift pack cards that open edit forms with pre-filled data
-- Implement backend update mutations for gift packs, categories, and coupons
-- Create frontend mutation hooks with cache invalidation for update operations
-- Update management components to handle both create and edit modes with appropriate feedback
-- Add edit functionality to category and coupon sections with edit forms
+- Add Gift Pack Management section to AdminPage alongside existing management sections
+- Implement backend CRUD endpoints (createGiftPack, updateGiftPack, deleteGiftPack) in main actor
+- Update useGiftPackMutation hook to use new backend methods instead of placeholder product methods
+- Add delete button with confirmation dialog to each gift pack card in GiftPackList
 
-**User-visible outcome:** Admin users can edit existing gift packs, categories, and coupons directly from the dashboard using edit buttons on each item, with forms pre-populated with current data and success notifications after saving changes.
+**User-visible outcome:** Admins can add, edit, and delete gift packs through a dedicated Gift Pack Management section in the admin panel, with all changes persisted to the backend.
