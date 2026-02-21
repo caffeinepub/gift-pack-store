@@ -11,7 +11,6 @@ import MixinStorage "blob-storage/Mixin";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 
-
 actor {
   include MixinStorage();
 
@@ -608,5 +607,33 @@ actor {
 
     giftPacks.add(id, newGiftPack);
     newGiftPack;
+  };
+
+  public shared ({ caller }) func updateProduct(
+    id : Text,
+    title : Text,
+    description : Text,
+    price : Int,
+    discount : Nat,
+    category : CategoryType,
+    images : [Storage.ExternalBlob],
+    basketType : BasketType,
+    size : Size,
+  ) : async GiftPack {
+    let updatedGiftPack : GiftPack = {
+      id;
+      title;
+      description;
+      price;
+      discount;
+      category;
+      items = [];
+      images;
+      basketType;
+      size;
+    };
+
+    giftPacks.add(id, updatedGiftPack);
+    updatedGiftPack;
   };
 };

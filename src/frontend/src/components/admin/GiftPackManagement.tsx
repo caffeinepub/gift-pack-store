@@ -2,16 +2,16 @@ import { useState } from 'react';
 import GiftPackForm from './GiftPackForm';
 import GiftPackList from './GiftPackList';
 import { useGiftPacks } from '@/hooks/useGiftPacks';
-import { useProductMutation } from '@/hooks/useProductMutation';
+import { useGiftPackMutation } from '@/hooks/useGiftPackMutation';
 import { toast } from 'sonner';
-import type { BasketType, CategoryType, Size } from '@/backend';
+import type { BasketType, CategoryType, Size, GiftPack } from '@/backend';
 
 export default function GiftPackManagement() {
   const { data: giftPacks, isLoading } = useGiftPacks();
-  const { mutate: createGiftPack, isPending } = useProductMutation();
-  const [formKey, setFormKey] = useState(0);
+  const { createGiftPack, updateGiftPack, isCreating, isUpdating } = useGiftPackMutation();
+  const [editingGiftPack, setEditingGiftPack] = useState<GiftPack | null>(null);
 
-  const handleCreateGiftPack = (data: {
+  const handleSubmit = (data: {
     id: string;
     title: string;
     description: string;
@@ -22,37 +22,68 @@ export default function GiftPackManagement() {
     basketType: BasketType;
     size: Size;
   }) => {
-    createGiftPack(data, {
-      onSuccess: () => {
-        toast.success('Gift pack created successfully!', {
-          description: 'The new gift pack is now available in the catalog',
-        });
-        setFormKey((prev) => prev + 1); // Reset form
-      },
-      onError: (error) => {
-        toast.error('Failed to create gift pack', {
-          description: error instanceof Error ? error.message : 'Please try again',
-        });
-      },
-    });
+    if (editingGiftPack) {
+      updateGiftPack(data, {
+        onSuccess: () => {
+          toast.success('Gift Pack Updated', {
+            description: 'The gift pack has been updated successfully',
+          });
+          setEditingGiftPack(null);
+        },
+        onError: (error) => {
+          toast.error('Failed to update gift pack', {
+            description: error instanceof Error ? error.message : 'Please try again',
+          });
+        },
+      });
+    } else {
+      createGiftPack(data, {
+        onSuccess: () => {
+          toast.success('Gift Pack Created', {
+            description: 'The new gift pack is now available in the catalog',
+          });
+        },
+        onError: (error) => {
+          toast.error('Failed to create gift pack', {
+            description: error instanceof Error ? error.message : 'Please try again',
+          });
+        },
+      });
+    }
+  };
+
+  const handleEdit = (giftPack: GiftPack) => {
+    setEditingGiftPack(giftPack);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingGiftPack(null);
   };
 
   return (
     <div className="space-y-8">
-      {/* Create Gift Pack Form */}
+      {/* Create/Edit Gift Pack Form */}
       <div>
-        <h3 className="mb-4 font-serif text-lg font-semibold">Create New Gift Pack</h3>
+        <h3 className="mb-4 font-serif text-lg font-semibold">
+          {editingGiftPack ? 'Edit Gift Pack' : 'Create New Gift Pack'}
+        </h3>
         <GiftPackForm
-          key={formKey}
-          onSubmit={handleCreateGiftPack}
-          isLoading={isPending}
+          onSubmit={handleSubmit}
+          isLoading={isCreating || isUpdating}
+          editingGiftPack={editingGiftPack}
+          mode={editingGiftPack ? 'edit' : 'create'}
+          onCancel={handleCancelEdit}
         />
       </div>
 
       {/* Gift Pack List */}
       <div>
         <h3 className="mb-4 font-serif text-lg font-semibold">Existing Gift Packs</h3>
-        <GiftPackList giftPacks={giftPacks || []} isLoading={isLoading} />
+        <GiftPackList
+          giftPacks={giftPacks || []}
+          isLoading={isLoading}
+          onEdit={handleEdit}
+        />
       </div>
     </div>
   );

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-giftpackform-component-in-frontend-src-components-admin-that-allows-admins-to-create-new-gift-packs-with-fields-for-pack-id-title-description-price-discount-percentage-category-selection-image-url-basket-type-selection-and-size-selection-use-react-hook-form-for-validation-and-shadcn-ui-components-matching-the-existing-productform-pattern",
-      "featureTitle": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
+      "featureId": "feature-add-edit-button-to-each-gift-pack-card-in-giftpacklist-component-that-opens-an-edit-form-with-pre-filled-data",
+      "featureTitle": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
       "files": [
-        "frontend/src/components/admin/GiftPackForm.tsx"
+        "frontend/src/components/admin/GiftPackList.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -21,29 +21,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-giftpacklist-component-in-frontend-src-components-admin-that-displays-all-existing-gift-packs-in-a-grid-layout-showing-image-title-price-discount-category-basket-type-and-size-include-loading-states-and-empty-state-handling",
-      "featureTitle": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
+      "featureId": "feature-create-usegiftpackmutation-hook-with-update-mutation-support",
+      "featureTitle": "Create useGiftPackMutation hook with update mutation support",
       "files": [
-        "frontend/src/components/admin/GiftPackList.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-giftpackmanagement-component-in-frontend-src-components-admin-that-combines-giftpackform-and-giftpacklist-handle-gift-pack-creation-via-the-existing-useproductmutation-hook-display-success-error-toast-notifications-and-reset-the-form-on-successful-creation",
-      "featureTitle": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
-      "files": [
-        "frontend/src/components/admin/GiftPackManagement.tsx"
+        "frontend/src/hooks/useGiftPackMutation.ts"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -59,10 +40,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-adminpage-component-to-add-a-fourth-management-section-for-gift-packs-alongside-the-existing-categories-products-and-coupons-sections-display-the-giftpackmanagement-component-in-a-card-with-appropriate-title-and-description",
-      "featureTitle": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+      "featureId": "feature-update-giftpackmanagement-to-handle-both-create-and-edit-modes-with-appropriate-success-messages",
+      "featureTitle": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
       "files": [
-        "frontend/src/pages/AdminPage.tsx"
+        "frontend/src/components/admin/GiftPackForm.tsx",
+        "frontend/src/components/admin/GiftPackManagement.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -74,6 +56,32 @@
       ],
       "testIds": [
         "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-edit-functionality-to-category-coupon-and-product-sections-in-admin-dashboard",
+      "featureTitle": "Add edit functionality to category, coupon, and product sections in admin dashboard",
+      "files": [
+        "frontend/src/components/admin/CategoryForm.tsx",
+        "frontend/src/components/admin/CategoryList.tsx",
+        "frontend/src/components/admin/CategoryManagement.tsx",
+        "frontend/src/components/admin/CouponForm.tsx",
+        "frontend/src/components/admin/CouponList.tsx",
+        "frontend/src/components/admin/CouponManagement.tsx",
+        "frontend/src/hooks/useCategoryMutation.ts",
+        "frontend/src/hooks/useCouponMutation.ts"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
       ],
       "confidence": "high"
     }

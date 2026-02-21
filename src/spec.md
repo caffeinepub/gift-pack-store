@@ -1,12 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Enable admins to create and view gift packs through the admin dashboard.
+**Goal:** Add edit functionality to admin dashboard for gift packs, categories, and coupons.
 
 **Planned changes:**
-- Add GiftPackForm component with fields for pack ID, title, description, price, discount, category, image URL, basket type, and size
-- Add GiftPackList component to display all existing gift packs in a grid layout
-- Add GiftPackManagement component that combines the form and list with creation handling
-- Update AdminPage to include a fourth management section for Gift Packs
+- Add edit buttons to gift pack cards that open edit forms with pre-filled data
+- Implement backend update mutations for gift packs, categories, and coupons
+- Create frontend mutation hooks with cache invalidation for update operations
+- Update management components to handle both create and edit modes with appropriate feedback
+- Add edit functionality to category and coupon sections with edit forms
 
-**User-visible outcome:** Admins can create new gift packs through a dedicated form and view all existing gift packs in the admin dashboard alongside categories, products, and coupons.
+**User-visible outcome:** Admin users can edit existing gift packs, categories, and coupons directly from the dashboard using edit buttons on each item, with forms pre-populated with current data and success notifications after saving changes.

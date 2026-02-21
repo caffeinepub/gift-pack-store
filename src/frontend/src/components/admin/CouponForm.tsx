@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
+import type { Coupon } from '@/backend';
 
 interface CouponFormData {
   code: string;
@@ -16,9 +18,18 @@ interface CouponFormData {
 interface CouponFormProps {
   onSubmit: (data: CouponFormData) => void;
   isLoading?: boolean;
+  editingCoupon?: Coupon | null;
+  mode?: 'create' | 'edit';
+  onCancel?: () => void;
 }
 
-export default function CouponForm({ onSubmit, isLoading }: CouponFormProps) {
+export default function CouponForm({
+  onSubmit,
+  isLoading,
+  editingCoupon,
+  mode = 'create',
+  onCancel,
+}: CouponFormProps) {
   const {
     register,
     handleSubmit,
@@ -26,12 +37,42 @@ export default function CouponForm({ onSubmit, isLoading }: CouponFormProps) {
     reset,
   } = useForm<CouponFormData>();
 
+  useEffect(() => {
+    if (editingCoupon) {
+      const expirationDateMs = Number(editingCoupon.expirationDate) / 1000000;
+      const expirationDateStr = new Date(expirationDateMs).toISOString().split('T')[0];
+
+      reset({
+        code: editingCoupon.code,
+        discountPercentage: Number(editingCoupon.discountPercentage),
+        minDiscountPercentage: editingCoupon.minDiscountPercentage
+          ? Number(editingCoupon.minDiscountPercentage)
+          : undefined,
+        maxDiscountAmount: editingCoupon.maxDiscountAmount
+          ? Number(editingCoupon.maxDiscountAmount)
+          : undefined,
+        expirationDate: expirationDateStr,
+        totalQuantity: Number(editingCoupon.totalQuantity),
+      });
+    } else {
+      reset({
+        code: '',
+        discountPercentage: undefined,
+        minDiscountPercentage: undefined,
+        maxDiscountAmount: undefined,
+        expirationDate: '',
+        totalQuantity: undefined,
+      });
+    }
+  }, [editingCoupon, reset]);
+
   const handleFormSubmit = (data: CouponFormData) => {
     onSubmit(data);
-    reset();
+    if (mode === 'create') {
+      reset();
+    }
   };
 
-  // Get tomorrow's date as minimum date
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const minDate = tomorrow.toISOString().split('T')[0];
@@ -52,7 +93,7 @@ export default function CouponForm({ onSubmit, isLoading }: CouponFormProps) {
               },
             })}
             placeholder="e.g., SAVE20"
-            disabled={isLoading}
+            disabled={isLoading || mode === 'edit'}
             onChange={(e) => {
               e.target.value = e.target.value.toUpperCase();
             }}
@@ -170,20 +211,34 @@ export default function CouponForm({ onSubmit, isLoading }: CouponFormProps) {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="bg-terracotta hover:bg-terracotta/90"
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Creating Coupon...
-          </>
-        ) : (
-          'Create Coupon'
+      <div className="flex gap-3">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="bg-terracotta hover:bg-terracotta/90"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {mode === 'edit' ? 'Updating...' : 'Creating...'}
+            </>
+          ) : mode === 'edit' ? (
+            'Update Coupon'
+          ) : (
+            'Create Coupon'
+          )}
+        </Button>
+        {mode === 'edit' && onCancel && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onCancel}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
         )}
-      </Button>
+      </div>
     </form>
   );
 }

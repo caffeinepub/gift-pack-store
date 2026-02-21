@@ -215,6 +215,20 @@ export interface _SERVICE {
     undefined
   >,
   'updateCartItemQuantity' : ActorMethod<[string, bigint], [] | [Cart]>,
+  'updateProduct' : ActorMethod<
+    [
+      string,
+      string,
+      string,
+      bigint,
+      bigint,
+      CategoryType,
+      Array<ExternalBlob>,
+      BasketType,
+      Size,
+    ],
+    GiftPack
+  >,
   'validateCoupon' : ActorMethod<[string], Coupon>,
 }
 export declare const idlService: IDL.ServiceClass;

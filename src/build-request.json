@@ -1,101 +1,110 @@
 {
   "kind": "build_request",
-  "title": "Add admin gift pack creation and management",
-  "projectName": "Gift Pack Manager",
+  "title": "Add edit functionality to admin dashboard",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
+      "text": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-10"
         ],
         "quotes": [
-          "add the ability to add gift packs by admin"
+          "add edit option in admin"
         ]
       },
       "acceptanceCriteria": [
-        "Form includes all required fields: ID, title, description, price, discount, category, image URL, basket type, size",
-        "Form validation prevents submission with missing required fields",
-        "Category dropdown is populated from existing categories",
-        "Basket type and size use select components matching existing patterns",
-        "Form styling matches existing admin forms (CategoryForm, CouponForm)"
+        "Each gift pack card displays an edit button or icon",
+        "Clicking edit button opens an edit form with the gift pack's current data pre-populated",
+        "Form allows modification of all gift pack fields (title, description, price, discount, category, image URL, basket type, size)"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
-      "target": "frontend",
+      "text": "Implement backend mutation for updating existing gift packs by ID",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-10"
         ],
         "quotes": [
-          "add the ability to add gift packs by admin"
+          "add edit option in admin"
         ]
       },
       "acceptanceCriteria": [
-        "Displays all gift packs in a responsive grid",
-        "Shows key product details on each card",
-        "Includes loading skeleton during data fetch",
-        "Shows appropriate empty state when no gift packs exist"
+        "Backend provides an updateGiftPack function that accepts gift pack ID and updated fields",
+        "Function validates that the gift pack exists before updating",
+        "Function returns success response with updated gift pack or error if not found"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
+      "text": "Create useGiftPackMutation hook with update mutation support",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-10"
         ],
         "quotes": [
-          "add the ability to add gift packs by admin"
+          "add edit option in admin"
         ]
       },
       "acceptanceCriteria": [
-        "Successfully creates gift packs using existing backend integration",
-        "Shows success toast notification after creation",
-        "Shows error toast if creation fails",
-        "Form resets to empty state after successful submission",
-        "Gift pack list automatically updates after creation"
+        "Hook provides an updateGiftPack mutation function",
+        "Mutation invalidates gift packs query cache on success",
+        "Hook returns loading state and error handling"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+      "text": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-last"
+          "msg-10"
         ],
         "quotes": [
-          "add the ability to add gift packs by admin"
+          "add edit option in admin"
         ]
       },
       "acceptanceCriteria": [
-        "Gift Pack Management section appears on admin dashboard",
-        "Section follows same visual styling as existing sections",
-        "Section includes clear title and description",
-        "Layout remains responsive and organized"
+        "Component displays 'Gift Pack Created' toast on creation success",
+        "Component displays 'Gift Pack Updated' toast on update success",
+        "Form resets after successful creation but closes/returns to list after successful edit"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add edit functionality to category, coupon, and product sections in admin dashboard",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "add edit option in admin"
+        ]
+      },
+      "acceptanceCriteria": [
+        "CategoryList displays edit buttons for each category with edit form capability",
+        "CouponList displays edit buttons for each coupon with edit form capability",
+        "Backend provides update functions for categories and coupons",
+        "All edit operations show appropriate success/error feedback"
       ]
     }
   ],
   "constraints": [
-    "Use existing useProductMutation hook for gift pack creation",
-    "Follow existing admin component patterns (CategoryForm, CouponForm, ProductForm)",
-    "Do not modify backend schema or main.mo actor",
-    "Use shadcn/ui components for form controls",
-    "Match existing Tailwind styling and theme"
+    "Use existing form components (GiftPackForm, CategoryForm, CouponForm) for edit functionality by making them reusable for both create and edit modes",
+    "Maintain single-actor Motoko architecture with all update logic in backend/main.mo",
+    "Follow existing toast notification pattern for user feedback"
   ],
   "nonGoals": [
-    "Editing or deleting existing gift packs",
-    "Bulk import of gift packs",
-    "Gift pack image uploads (use URL input only)",
-    "Advanced inventory management",
-    "Gift pack analytics or reporting"
+    "Bulk edit functionality",
+    "Delete functionality for gift packs, categories, or coupons",
+    "Edit history or audit trail",
+    "Permissions or role-based access control for edit operations"
   ],
   "imageRequirements": {
     "required": [],

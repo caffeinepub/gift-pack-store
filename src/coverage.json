@@ -1,70 +1,106 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-21T11:03:46.084Z",
+  "generatedAt": "2026-02-21T11:33:12.815Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
+    "total": 5,
     "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
+        "summary": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/GiftPackForm.tsx"
+          "frontend/src/components/admin/GiftPackList.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/GiftPackForm.tsx"
+          "frontend/src/components/admin/GiftPackList.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/GiftPackList.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/GiftPackList.tsx"
-        ]
+        "summary": "Implement backend mutation for updating existing gift packs by ID",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
+        "summary": "Create useGiftPackMutation hook with update mutation support",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/GiftPackManagement.tsx"
+          "frontend/src/hooks/useGiftPackMutation.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/GiftPackManagement.tsx"
+          "frontend/src/hooks/useGiftPackMutation.ts"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+        "summary": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/AdminPage.tsx"
+          "frontend/src/components/admin/GiftPackForm.tsx",
+          "frontend/src/components/admin/GiftPackManagement.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/AdminPage.tsx"
+          "frontend/src/components/admin/GiftPackForm.tsx",
+          "frontend/src/components/admin/GiftPackManagement.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Add edit functionality to category, coupon, and product sections in admin dashboard",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/admin/CategoryList.tsx",
+          "frontend/src/components/admin/CategoryForm.tsx",
+          "frontend/src/hooks/useCategoryMutation.ts",
+          "frontend/src/components/admin/CategoryManagement.tsx",
+          "frontend/src/components/admin/CouponList.tsx",
+          "frontend/src/components/admin/CouponForm.tsx",
+          "frontend/src/hooks/useCouponMutation.ts",
+          "frontend/src/components/admin/CouponManagement.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/admin/CategoryList.tsx",
+          "frontend/src/components/admin/CategoryForm.tsx",
+          "frontend/src/hooks/useCategoryMutation.ts",
+          "frontend/src/components/admin/CategoryManagement.tsx",
+          "frontend/src/components/admin/CouponList.tsx",
+          "frontend/src/components/admin/CouponForm.tsx",
+          "frontend/src/hooks/useCouponMutation.ts",
+          "frontend/src/components/admin/CouponManagement.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/admin/CategoryForm.tsx",
+    "frontend/src/components/admin/CategoryList.tsx",
+    "frontend/src/components/admin/CategoryManagement.tsx",
+    "frontend/src/components/admin/CouponForm.tsx",
+    "frontend/src/components/admin/CouponList.tsx",
+    "frontend/src/components/admin/CouponManagement.tsx",
     "frontend/src/components/admin/GiftPackForm.tsx",
     "frontend/src/components/admin/GiftPackList.tsx",
     "frontend/src/components/admin/GiftPackManagement.tsx",
-    "frontend/src/pages/AdminPage.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useCategoryMutation.ts",
+    "frontend/src/hooks/useCouponMutation.ts",
+    "frontend/src/hooks/useGiftPackMutation.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

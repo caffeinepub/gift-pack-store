@@ -1,11 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Pencil } from 'lucide-react';
 import type { GiftPack } from '@/backend';
 
 interface GiftPackListProps {
   giftPacks: GiftPack[];
   isLoading: boolean;
+  onEdit?: (giftPack: GiftPack) => void;
 }
 
 const formatBasketType = (type: string) => {
@@ -25,7 +28,7 @@ const formatCategory = (category: string) => {
   return category.charAt(0).toUpperCase() + category.slice(1);
 };
 
-export default function GiftPackList({ giftPacks, isLoading }: GiftPackListProps) {
+export default function GiftPackList({ giftPacks, isLoading, onEdit }: GiftPackListProps) {
   if (isLoading) {
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -89,7 +92,7 @@ export default function GiftPackList({ giftPacks, isLoading }: GiftPackListProps
                 {pack.description}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-3">
               <div className="flex items-baseline gap-2">
                 <span className="font-serif text-xl font-bold text-terracotta">
                   ₹{discountedPrice.toLocaleString('en-IN')}
@@ -110,6 +113,17 @@ export default function GiftPackList({ giftPacks, isLoading }: GiftPackListProps
                 <span>•</span>
                 <span>{formatSize(pack.size)}</span>
               </div>
+              {onEdit && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(pack)}
+                  className="w-full"
+                >
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit
+                </Button>
+              )}
             </CardContent>
           </Card>
         );

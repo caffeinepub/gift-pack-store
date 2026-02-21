@@ -172,5 +172,6 @@ export interface backendInterface {
     storePayment(paymentId: string, amount: bigint, status: string): Promise<RazorpayPayment>;
     submitContactForm(name: string, email: string, phone: string, message: string): Promise<void>;
     updateCartItemQuantity(packId: string, newQuantity: bigint): Promise<Cart | null>;
+    updateProduct(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
     validateCoupon(code: string): Promise<Coupon>;
 }

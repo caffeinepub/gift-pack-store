@@ -264,6 +264,7 @@ export interface backendInterface {
     storePayment(paymentId: string, amount: bigint, status: string): Promise<RazorpayPayment>;
     submitContactForm(name: string, email: string, phone: string, message: string): Promise<void>;
     updateCartItemQuantity(packId: string, newQuantity: bigint): Promise<Cart | null>;
+    updateProduct(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
     validateCoupon(code: string): Promise<Coupon>;
 }
 import type { BasketType as _BasketType, Cart as _Cart, CartItem as _CartItem, CatalogFilters as _CatalogFilters, CategoryType as _CategoryType, Coupon as _Coupon, DeliveryAddress as _DeliveryAddress, ExternalBlob as _ExternalBlob, GiftItem as _GiftItem, GiftPack as _GiftPack, Order as _Order, OrderStatus as _OrderStatus, PackType as _PackType, Size as _Size, Time as _Time, UserProfile as _UserProfile, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
@@ -687,6 +688,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.updateCartItemQuantity(arg0, arg1);
             return from_candid_opt_n51(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async updateProduct(arg0: string, arg1: string, arg2: string, arg3: bigint, arg4: bigint, arg5: CategoryType, arg6: Array<ExternalBlob>, arg7: BasketType, arg8: Size): Promise<GiftPack> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateProduct(arg0, arg1, arg2, arg3, arg4, to_candid_CategoryType_n35(this._uploadFile, this._downloadFile, arg5), await to_candid_vec_n37(this._uploadFile, this._downloadFile, arg6), to_candid_BasketType_n14(this._uploadFile, this._downloadFile, arg7), to_candid_Size_n16(this._uploadFile, this._downloadFile, arg8));
+                return from_candid_GiftPack_n39(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateProduct(arg0, arg1, arg2, arg3, arg4, to_candid_CategoryType_n35(this._uploadFile, this._downloadFile, arg5), await to_candid_vec_n37(this._uploadFile, this._downloadFile, arg6), to_candid_BasketType_n14(this._uploadFile, this._downloadFile, arg7), to_candid_Size_n16(this._uploadFile, this._downloadFile, arg8));
+            return from_candid_GiftPack_n39(this._uploadFile, this._downloadFile, result);
         }
     }
     async validateCoupon(arg0: string): Promise<Coupon> {

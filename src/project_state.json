@@ -1,40 +1,40 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Admin dashboard for managing gift packs and custom packages",
+  "summary": "New project",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-giftpackform-component-in-frontend-src-components-admin-that-allows-admins-to-create-new-gift-packs-with-fields-for-pack-id-title-description-price-discount-percentage-category-selection-image-url-basket-type-selection-and-size-selection-use-react-hook-form-for-validation-and-shadcn-ui-components-matching-the-existing-productform-pattern",
-      "title": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
+      "id": "feature-add-edit-button-to-each-gift-pack-card-in-giftpacklist-component-that-opens-an-edit-form-with-pre-filled-data",
+      "title": "Add edit button to each gift pack card in GiftPackList component that opens an edit form with pre-filled data",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-giftpacklist-component-in-frontend-src-components-admin-that-displays-all-existing-gift-packs-in-a-grid-layout-showing-image-title-price-discount-category-basket-type-and-size-include-loading-states-and-empty-state-handling",
-      "title": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-a-giftpackmanagement-component-in-frontend-src-components-admin-that-combines-giftpackform-and-giftpacklist-handle-gift-pack-creation-via-the-existing-useproductmutation-hook-display-success-error-toast-notifications-and-reset-the-form-on-successful-creation",
-      "title": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
+      "id": "feature-create-usegiftpackmutation-hook-with-update-mutation-support",
+      "title": "Create useGiftPackMutation hook with update mutation support",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-adminpage-component-to-add-a-fourth-management-section-for-gift-packs-alongside-the-existing-categories-products-and-coupons-sections-display-the-giftpackmanagement-component-in-a-card-with-appropriate-title-and-description",
-      "title": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+      "id": "feature-update-giftpackmanagement-to-handle-both-create-and-edit-modes-with-appropriate-success-messages",
+      "title": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
       "reqIds": [
         "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-edit-functionality-to-category-coupon-and-product-sections-in-admin-dashboard",
+      "title": "Add edit functionality to category, coupon, and product sections in admin dashboard",
+      "reqIds": [
+        "REQ-5"
       ],
       "version": 1
     }
@@ -42,18 +42,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add ability to create/manage custom packages in admin dashboard",
+      "summary": "Add edit option in admin dashboard",
       "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-2",
-      "summary": "Add ability to create/manage gift packs in admin dashboard",
-      "reqIds": [],
+      "id": "AR-3",
+      "summary": "Implement backend mutation for updating existing gift packs by ID",
+      "reqIds": [
+        "REQ-2"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Gift Pack Manager",
+  "projectName": "Add edit functionality to admin dashboard",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -259,6 +259,21 @@ export const idlService = IDL.Service({
       [],
     ),
   'updateCartItemQuantity' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Opt(Cart)], []),
+  'updateProduct' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Int,
+        IDL.Nat,
+        CategoryType,
+        IDL.Vec(ExternalBlob),
+        BasketType,
+        Size,
+      ],
+      [GiftPack],
+      [],
+    ),
   'validateCoupon' : IDL.Func([IDL.Text], [Coupon], []),
 });
 
@@ -515,6 +530,21 @@ export const idlFactory = ({ IDL }) => {
     'updateCartItemQuantity' : IDL.Func(
         [IDL.Text, IDL.Nat],
         [IDL.Opt(Cart)],
+        [],
+      ),
+    'updateProduct' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Int,
+          IDL.Nat,
+          CategoryType,
+          IDL.Vec(ExternalBlob),
+          BasketType,
+          Size,
+        ],
+        [GiftPack],
         [],
       ),
     'validateCoupon' : IDL.Func([IDL.Text], [Coupon], []),

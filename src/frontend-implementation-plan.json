@@ -1,75 +1,110 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add admin gift pack creation and management",
+  "title": "Add edit functionality to admin dashboard",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Create GiftPackForm component for admin gift pack creation with validation and shadcn/ui components",
+      "summary": "Add edit button to each gift pack card that opens an edit form with pre-filled data",
       "acceptanceCriteria": [
-        "Form includes all required fields: ID, title, description, price, discount, category, image URL, basket type, size",
-        "Form validation prevents submission with missing required fields",
-        "Category dropdown is populated from existing categories",
-        "Basket type and size use select components matching existing patterns",
-        "Form styling matches existing admin forms (CategoryForm, CouponForm)"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/GiftPackForm.tsx",
-          "operation": "create",
-          "description": "Create a form component using react-hook-form with validation for gift pack creation. Include fields for: pack ID (text input), title (text input), description (textarea), price (number input), discount percentage (number input 0-100), category (select populated from useCategories hook), image URL (text input), basket type (select with options: wickerBasket, woodenCrate, giftBox), and size (select with options: small, medium, large). Follow the pattern established in ProductForm.tsx with shadcn/ui Input, Textarea, Select, and Button components. Use Zod schema for validation ensuring all fields are required. Include loading state on submit button."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Create GiftPackList component to display all gift packs in a responsive grid with loading and empty states",
-      "acceptanceCriteria": [
-        "Displays all gift packs in a responsive grid",
-        "Shows key product details on each card",
-        "Includes loading skeleton during data fetch",
-        "Shows appropriate empty state when no gift packs exist"
+        "Each gift pack card displays an edit button or icon",
+        "Clicking edit button opens an edit form with the gift pack's current data pre-populated",
+        "Form allows modification of all gift pack fields (title, description, price, discount, category, image URL, basket type, size)"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/admin/GiftPackList.tsx",
-          "operation": "create",
-          "description": "Create a component that fetches all gift packs using the useGiftPacks hook. Display them in a responsive grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3) using Card components. Each card should show: gift pack image (using img tag with images[0]?.getDirectURL() or placeholder), title, price with discount indicator, category badge, basket type, and size. Use Skeleton components from shadcn/ui during loading state (isLoading). Show an empty state message when no gift packs exist (!giftPacks || giftPacks.length === 0). Follow the styling patterns from CategoryList.tsx and CouponList.tsx."
+          "operation": "modify",
+          "description": "Add an edit button (pencil icon) to each gift pack card. When clicked, the button should trigger an onEdit callback that passes the full gift pack data to the parent component for editing."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Create GiftPackManagement component that combines form and list with mutation handling and toast notifications",
+      "summary": "Create useGiftPackMutation hook with update mutation support",
       "acceptanceCriteria": [
-        "Successfully creates gift packs using existing backend integration",
-        "Shows success toast notification after creation",
-        "Shows error toast if creation fails",
-        "Form resets to empty state after successful submission",
-        "Gift pack list automatically updates after creation"
+        "Hook provides an updateGiftPack mutation function",
+        "Mutation invalidates gift packs query cache on success",
+        "Hook returns loading state and error handling"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/GiftPackManagement.tsx",
+          "path": "frontend/src/hooks/useGiftPackMutation.ts",
           "operation": "create",
-          "description": "Create a container component that combines GiftPackForm and GiftPackList. Use the existing useProductMutation hook for gift pack creation. Handle form submission by calling the mutation with gift pack data, converting price and discount to BigInt and image URL to ExternalBlob array. On successful creation, display a success toast using the toast hook from shadcn/ui, reset the form (pass reset function as prop to GiftPackForm), and the list will auto-update via React Query cache invalidation. On error, display an error toast with the error message. Follow the pattern established in CategoryManagement.tsx and CouponManagement.tsx with proper spacing between form and list sections."
+          "description": "Create a new mutation hook that provides both createGiftPack and updateGiftPack mutations. The updateGiftPack mutation should call the backend updateProduct method with the gift pack ID and all updated fields. On success, invalidate the 'giftPacks' query cache to trigger a refetch. Return loading states and error handling for both mutations."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Update AdminPage to add Gift Pack Management section alongside existing management sections",
+      "summary": "Update GiftPackManagement to handle both create and edit modes with appropriate success messages",
       "acceptanceCriteria": [
-        "Gift Pack Management section appears on admin dashboard",
-        "Section follows same visual styling as existing sections",
-        "Section includes clear title and description",
-        "Layout remains responsive and organized"
+        "Component displays 'Gift Pack Created' toast on creation success",
+        "Component displays 'Gift Pack Updated' toast on update success",
+        "Form resets after successful creation but closes/returns to list after successful edit"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/AdminPage.tsx",
+          "path": "frontend/src/components/admin/GiftPackForm.tsx",
           "operation": "modify",
-          "description": "Add a fourth management section for Gift Packs to the existing AdminPage. Import the GiftPackManagement component and add it below the existing Coupon Management section. Wrap it in a Card component with CardHeader containing CardTitle 'Gift Pack Management' and CardDescription 'Create and manage gift pack products'. Maintain consistent spacing (space-y-8) and layout with the existing three sections. Ensure the page remains scrollable and responsive."
+          "description": "Extend the form to support both create and edit modes. Accept an optional editingGiftPack prop of type GiftPack. When provided, pre-fill all form fields with the gift pack's current values using useEffect and form.reset(). Update the form title to show 'Edit Gift Pack' vs 'Create New Gift Pack' based on mode. Add a mode prop ('create' or 'edit') to control submit behavior."
+        },
+        {
+          "path": "frontend/src/components/admin/GiftPackManagement.tsx",
+          "operation": "modify",
+          "description": "Update to manage edit state by tracking the currently editing gift pack. Add an onEdit handler that receives gift pack data from GiftPackList and sets it as the editing target. Use the new useGiftPackMutation hook (replacing useProductMutation) to handle both create and update operations. Show 'Gift Pack Created' toast on successful creation and 'Gift Pack Updated' toast on successful update. Reset the form after creation, but clear the editing state (return to list view) after successful update. Pass the editing gift pack and onEdit handler to child components."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add edit functionality to category, coupon, and product sections in admin dashboard",
+      "acceptanceCriteria": [
+        "CategoryList displays edit buttons for each category with edit form capability",
+        "CouponList displays edit buttons for each coupon with edit form capability",
+        "Backend provides update functions for categories and coupons",
+        "All edit operations show appropriate success/error feedback"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/CategoryList.tsx",
+          "operation": "modify",
+          "description": "Add an edit button (pencil icon) to each category card. When clicked, trigger an onEdit callback that passes the category data (name, description) to the parent component."
+        },
+        {
+          "path": "frontend/src/components/admin/CategoryForm.tsx",
+          "operation": "modify",
+          "description": "Extend the form to support both create and edit modes. Accept optional editingCategory prop and mode prop. When editing, pre-fill the name and description fields using useEffect and form.reset(). Update the form heading to show 'Edit Category' vs 'Create New Category' based on mode."
+        },
+        {
+          "path": "frontend/src/hooks/useCategoryMutation.ts",
+          "operation": "modify",
+          "description": "Add an updateCategory mutation that calls a backend update method for categories (once available). For now, export both createCategory and a placeholder updateCategory mutation that invalidates the categories cache on success. Return loading and error states for both mutations."
+        },
+        {
+          "path": "frontend/src/components/admin/CategoryManagement.tsx",
+          "operation": "modify",
+          "description": "Add state to track the currently editing category. Add an onEdit handler to receive category data from CategoryList. Use the updated useCategoryMutation hook to handle both create and update operations. Show 'Category Created' toast on creation success and 'Category Updated' toast on update success. Pass editing state and onEdit handler to child components. Note: Backend updateCategory capability is required but not yet implemented; the frontend will be ready once the backend method is added."
+        },
+        {
+          "path": "frontend/src/components/admin/CouponList.tsx",
+          "operation": "modify",
+          "description": "Add an edit button (pencil icon) to each coupon card. When clicked, trigger an onEdit callback that passes the full coupon data to the parent component for editing."
+        },
+        {
+          "path": "frontend/src/components/admin/CouponForm.tsx",
+          "operation": "modify",
+          "description": "Extend the form to support both create and edit modes. Accept optional editingCoupon prop and mode prop. When editing, pre-fill all fields (code, discountPercentage, minDiscountPercentage, maxDiscountAmount, expirationDate, totalQuantity) using useEffect and form.reset(). Convert the date field appropriately. Update the form heading to show 'Edit Coupon' vs 'Create New Coupon' based on mode."
+        },
+        {
+          "path": "frontend/src/hooks/useCouponMutation.ts",
+          "operation": "modify",
+          "description": "Add an updateCoupon mutation that calls a backend update method for coupons (once available). Export both createCoupon and a placeholder updateCoupon mutation that invalidates the coupons query cache on success. Return loading and error states for both mutations. Note: Backend updateCoupon capability is required but not yet implemented."
+        },
+        {
+          "path": "frontend/src/components/admin/CouponManagement.tsx",
+          "operation": "modify",
+          "description": "Add state to track the currently editing coupon. Add an onEdit handler to receive coupon data from CouponList. Use the updated useCouponMutation hook to handle both create and update operations. Show 'Coupon Created' toast on creation success and 'Coupon Updated' toast on update success. Pass editing state and onEdit handler to child components. Note: Backend updateCoupon capability is required but not yet implemented; the frontend will be ready once the backend method is added."
         }
       ]
     }

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
 import type { Coupon } from '@/backend';
 
-interface CreateCouponData {
+interface CouponData {
   code: string;
   discountPercentage: number;
   minDiscountPercentage?: number;
@@ -15,8 +15,8 @@ export function useCouponMutation() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (data: CreateCouponData) => {
+  const createCoupon = useMutation({
+    mutationFn: async (data: CouponData) => {
       if (!actor) throw new Error('Actor not initialized');
 
       return actor.createCoupon(
@@ -32,6 +32,32 @@ export function useCouponMutation() {
       queryClient.invalidateQueries({ queryKey: ['coupons'] });
     },
   });
+
+  const updateCoupon = useMutation({
+    mutationFn: async (data: CouponData) => {
+      if (!actor) throw new Error('Actor not initialized');
+      // Backend updateCoupon method not yet implemented
+      // This is a placeholder that will work once backend is updated
+      return actor.createCoupon(
+        data.code,
+        BigInt(data.discountPercentage),
+        data.minDiscountPercentage !== undefined ? BigInt(data.minDiscountPercentage) : null,
+        data.maxDiscountAmount !== undefined ? BigInt(data.maxDiscountAmount) : null,
+        data.expirationDate,
+        BigInt(data.totalQuantity)
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['coupons'] });
+    },
+  });
+
+  return {
+    createCoupon: createCoupon.mutate,
+    updateCoupon: updateCoupon.mutate,
+    isCreating: createCoupon.isPending,
+    isUpdating: updateCoupon.isPending,
+  };
 }
 
 export function useAllCoupons() {

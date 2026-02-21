@@ -1,15 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { Coupon } from '@/backend';
-import { Calendar, Percent, Package, TrendingDown, TrendingUp } from 'lucide-react';
+import { Calendar, Percent, Package, TrendingDown, TrendingUp, Pencil } from 'lucide-react';
 
 interface CouponListProps {
   coupons: Coupon[];
   isLoading?: boolean;
+  onEdit?: (coupon: Coupon) => void;
 }
 
-export default function CouponList({ coupons, isLoading }: CouponListProps) {
+export default function CouponList({ coupons, isLoading, onEdit }: CouponListProps) {
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -31,7 +33,7 @@ export default function CouponList({ coupons, isLoading }: CouponListProps) {
   }
 
   const isExpired = (expirationDate: bigint) => {
-    const now = BigInt(Date.now()) * BigInt(1000000); // Convert to nanoseconds
+    const now = BigInt(Date.now()) * BigInt(1000000);
     return now > expirationDate;
   };
 
@@ -90,6 +92,18 @@ export default function CouponList({ coupons, isLoading }: CouponListProps) {
                 <Calendar className="h-4 w-4" />
                 <span>Expires: {formattedDate}</span>
               </div>
+
+              {onEdit && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => onEdit(coupon)}
+                  className="mt-2 w-full"
+                >
+                  <Pencil className="mr-2 h-4 w-4" />
+                  Edit
+                </Button>
+              )}
             </CardContent>
           </Card>
         );
