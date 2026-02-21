@@ -205,9 +205,9 @@ export interface Product {
     id: string;
     name: string;
     description: string;
-    imageUrl: string;
     category: CategoryType;
     price: bigint;
+    images: Array<string>;
 }
 export enum BasketType {
     woodenCrate = "woodenCrate",
@@ -254,7 +254,7 @@ export interface backendInterface {
     createGiftPack(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, items: Array<GiftItem>, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
     createOrUpdateUserProfile(name: string, email: string, phone: string, address: DeliveryAddress, pincode: string): Promise<UserProfile>;
     createOrder(userId: string, items: Array<CartItem>, deliveryAddress: DeliveryAddress, totalAmount: bigint, basketType: BasketType, size: Size, packingType: PackType, messageCard: string | null, paymentId: string, couponCode: string | null): Promise<Order>;
-    createProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, imageUrl: string): Promise<Product>;
+    createProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, images: Array<string>): Promise<Product>;
     decrementCouponQuantity(code: string): Promise<bigint>;
     deleteGiftPack(id: string): Promise<void>;
     filterGiftPacks(filters: CatalogFilters): Promise<Array<GiftPack>>;
@@ -277,7 +277,7 @@ export interface backendInterface {
     submitContactForm(name: string, email: string, phone: string, message: string): Promise<void>;
     updateCartItemQuantity(packId: string, newQuantity: bigint): Promise<Cart | null>;
     updateGiftPack(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, items: Array<GiftItem>, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
-    updateProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, imageUrl: string): Promise<Product>;
+    updateProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, images: Array<string>): Promise<Product>;
     validateCoupon(code: string): Promise<Coupon>;
 }
 import type { BasketType as _BasketType, Cart as _Cart, CartItem as _CartItem, CatalogFilters as _CatalogFilters, CategoryType as _CategoryType, Coupon as _Coupon, DeliveryAddress as _DeliveryAddress, ExternalBlob as _ExternalBlob, GiftItem as _GiftItem, GiftPack as _GiftPack, Order as _Order, OrderStatus as _OrderStatus, PackType as _PackType, Product as _Product, Size as _Size, Time as _Time, UserProfile as _UserProfile, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
@@ -451,7 +451,7 @@ export class Backend implements backendInterface {
             return from_candid_Order_n41(this._uploadFile, this._downloadFile, result);
         }
     }
-    async createProduct(arg0: string, arg1: string, arg2: string, arg3: bigint, arg4: CategoryType, arg5: string): Promise<Product> {
+    async createProduct(arg0: string, arg1: string, arg2: string, arg3: bigint, arg4: CategoryType, arg5: Array<string>): Promise<Product> {
         if (this.processError) {
             try {
                 const result = await this.actor.createProduct(arg0, arg1, arg2, arg3, to_candid_CategoryType_n11(this._uploadFile, this._downloadFile, arg4), arg5);
@@ -773,7 +773,7 @@ export class Backend implements backendInterface {
             return from_candid_GiftPack_n22(this._uploadFile, this._downloadFile, result);
         }
     }
-    async updateProduct(arg0: string, arg1: string, arg2: string, arg3: bigint, arg4: CategoryType, arg5: string): Promise<Product> {
+    async updateProduct(arg0: string, arg1: string, arg2: string, arg3: bigint, arg4: CategoryType, arg5: Array<string>): Promise<Product> {
         if (this.processError) {
             try {
                 const result = await this.actor.updateProduct(arg0, arg1, arg2, arg3, to_candid_CategoryType_n11(this._uploadFile, this._downloadFile, arg4), arg5);
@@ -1028,24 +1028,24 @@ function from_candid_record_n52(_uploadFile: (file: ExternalBlob) => Promise<Uin
     id: string;
     name: string;
     description: string;
-    imageUrl: string;
     category: _CategoryType;
     price: bigint;
+    images: Array<string>;
 }): {
     id: string;
     name: string;
     description: string;
-    imageUrl: string;
     category: CategoryType;
     price: bigint;
+    images: Array<string>;
 } {
     return {
         id: value.id,
         name: value.name,
         description: value.description,
-        imageUrl: value.imageUrl,
         category: from_candid_CategoryType_n28(_uploadFile, _downloadFile, value.category),
-        price: value.price
+        price: value.price,
+        images: value.images
     };
 }
 function from_candid_record_n59(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {

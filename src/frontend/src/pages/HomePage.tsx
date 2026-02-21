@@ -3,13 +3,31 @@ import { Gift, Sparkles, Truck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import GiftPackCard from '@/components/product/GiftPackCard';
 import { useGiftPacks } from '@/hooks/useGiftPacks';
+import { useCart } from '@/hooks/useCart';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const { data: giftPacks, isLoading } = useGiftPacks();
+  const { addItem } = useCart();
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
 
   const featuredPacks = giftPacks?.slice(0, 3) || [];
+
+  const handleAddToCart = async (packId: string) => {
+    setAddingToCart(packId);
+    try {
+      addItem({
+        packId,
+        quantity: 1n,
+        customMessage: undefined,
+        wrappingOption: undefined,
+      });
+    } finally {
+      setAddingToCart(null);
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -104,7 +122,12 @@ export default function HomePage() {
           ) : featuredPacks.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {featuredPacks.map((pack) => (
-                <GiftPackCard key={pack.id} pack={pack} />
+                <GiftPackCard
+                  key={pack.id}
+                  pack={pack}
+                  onAddToCart={handleAddToCart}
+                  isAddingToCart={addingToCart === pack.id}
+                />
               ))}
             </div>
           ) : (

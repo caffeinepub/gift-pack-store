@@ -1,12 +1,31 @@
 import { Package } from 'lucide-react';
 import GiftPackCard from './GiftPackCard';
+import { useCart } from '@/hooks/useCart';
 import type { GiftPack } from '@/backend';
+import { useState } from 'react';
 
 interface ProductGridProps {
   giftPacks: GiftPack[];
 }
 
 export default function ProductGrid({ giftPacks }: ProductGridProps) {
+  const { addItem } = useCart();
+  const [addingToCart, setAddingToCart] = useState<string | null>(null);
+
+  const handleAddToCart = async (packId: string) => {
+    setAddingToCart(packId);
+    try {
+      addItem({
+        packId,
+        quantity: 1n,
+        customMessage: undefined,
+        wrappingOption: undefined,
+      });
+    } finally {
+      setAddingToCart(null);
+    }
+  };
+
   if (giftPacks.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-12 text-center">
@@ -22,7 +41,12 @@ export default function ProductGrid({ giftPacks }: ProductGridProps) {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {giftPacks.map((pack) => (
-        <GiftPackCard key={pack.id} pack={pack} />
+        <GiftPackCard
+          key={pack.id}
+          pack={pack}
+          onAddToCart={handleAddToCart}
+          isAddingToCart={addingToCart === pack.id}
+        />
       ))}
     </div>
   );

@@ -1,60 +1,103 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add gift pack management to admin panel",
+  "title": "Add multiple image upload support for products and gift packs",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Add GiftPackManagement section to AdminPage alongside existing management sections",
-      "acceptanceCriteria": [
-        "The AdminPage displays a fourth card section titled 'Gift Pack Management'",
-        "The GiftPackManagement component is rendered within this new section",
-        "The layout maintains consistency with existing management sections"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdminPage.tsx",
-          "operation": "modify",
-          "description": "Add a fourth Card section for Gift Pack Management that imports and renders the GiftPackManagement component. Place this section alongside the existing ProductManagement, CategoryManagement, and CouponManagement cards, maintaining consistent styling with terracotta header, matching padding, and responsive grid layout."
-        }
-      ]
-    },
-    {
       "id": "REQ-3",
-      "summary": "Update useGiftPackMutation hook to use backend gift pack CRUD methods instead of placeholder product methods",
+      "summary": "Update ProductForm component to support multiple image URLs with add/remove/reorder functionality",
       "acceptanceCriteria": [
-        "createGiftPackMutation calls actor.createGiftPack with full GiftPack data including basketType and size",
-        "updateGiftPackMutation calls actor.updateGiftPack with the pack ID and updated data",
-        "Both mutations invalidate the giftPacks query cache on success",
-        "Mutations display appropriate toast notifications for success and error states"
+        "Form displays a list of image URL inputs",
+        "Users can add new image URL fields using an 'Add Image' button",
+        "Users can remove individual image URLs",
+        "At least one image URL is required",
+        "Form validation ensures all image URL fields are filled before submission"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useGiftPackMutation.ts",
+          "path": "frontend/src/components/admin/ProductForm.tsx",
           "operation": "modify",
-          "description": "Replace the createProductMutation placeholder with a proper createGiftPackMutation that calls actor.createGiftPack, passing all GiftPack fields including id, title, description, price, discount, category, items (empty array for now), images (empty array for now), basketType, and size. Replace the updateProductMutation placeholder with updateGiftPackMutation that calls actor.updateGiftPack with the same parameters. Both mutations should invalidate the 'giftPacks' query key on success using queryClient.invalidateQueries. Ensure toast notifications display success messages for create/update operations and error messages on failure."
+          "description": "Replace the single imageUrl input field with a dynamic array of image URL inputs. Add state management for the images array using useFieldArray from react-hook-form. Implement 'Add Image' button to append new image URL fields. Add remove buttons for each image URL field (disabled when only one image remains). Update form validation to ensure at least one image URL is present and all fields are filled. Update the form submission to pass the images array to the create/update product mutations."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Add delete functionality to GiftPackList component with confirmation dialog",
+      "summary": "Update GiftPackForm component to support multiple image URLs with add/remove/reorder functionality",
       "acceptanceCriteria": [
-        "Each gift pack card displays a delete button alongside the edit button",
-        "Clicking delete triggers a confirmation dialog before deleting",
-        "Successful deletion removes the gift pack from the list and shows a success toast",
-        "Failed deletion shows an error toast with the failure reason"
+        "Form displays a list of image URL inputs",
+        "Users can add new image URL fields using an 'Add Image' button",
+        "Users can remove individual image URLs",
+        "At least one image URL is required",
+        "Form validation ensures all image URL fields are filled before submission"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useGiftPackMutation.ts",
+          "path": "frontend/src/components/admin/GiftPackForm.tsx",
           "operation": "modify",
-          "description": "Add a deleteGiftPackMutation hook using useMutation that calls actor.deleteGiftPack with the gift pack ID. On success, invalidate the 'giftPacks' query cache and display a success toast notification. On error, display an error toast with the failure message."
-        },
+          "description": "Replace the single imageUrl input field with a dynamic array of ExternalBlob image inputs. Add state management for the images array using useFieldArray from react-hook-form. Implement 'Add Image' button to append new image URL fields. Add remove buttons for each image URL field (disabled when only one image remains). Update form validation to ensure at least one image URL is present and all fields are filled. Convert image URL strings to ExternalBlob instances using ExternalBlob.fromURL() when submitting. Update the form submission to pass the images array to the create/update gift pack mutations. Verify the blob-storage component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Update ProductList component to display the first image from the images array as product thumbnail",
+      "acceptanceCriteria": [
+        "Product cards display the first image from the images array",
+        "Fallback placeholder is shown if images array is empty"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/ProductList.tsx",
+          "operation": "modify",
+          "description": "Update the product card image rendering to use product.images[0] instead of product.imageUrl. Add conditional logic to display a placeholder image or icon when the images array is empty or undefined. Ensure the image element maintains the same styling and aspect ratio as the current implementation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Update GiftPackList component to display the first image from the images array as gift pack thumbnail",
+      "acceptanceCriteria": [
+        "Gift pack cards display the first image from the images array",
+        "Fallback placeholder is shown if images array is empty"
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/admin/GiftPackList.tsx",
           "operation": "modify",
-          "description": "Import and use the deleteGiftPackMutation hook from useGiftPackMutation. Add a delete Button (with Trash2 icon from lucide-react) next to the Edit button on each gift pack card. Wire the delete button to open an AlertDialog (from shadcn/ui) that displays a confirmation message asking 'Are you sure you want to delete this gift pack?' with Cancel and Delete action buttons. When the user confirms deletion, call the deleteGiftPackMutation with the gift pack ID. The AlertDialog should use destructive styling for the delete action button."
+          "description": "Update the gift pack card image rendering to use giftPack.images[0]?.getDirectURL() instead of giftPack.imageUrl. Add conditional logic to display a placeholder image or icon when the images array is empty or undefined. Ensure the ExternalBlob's getDirectURL() method is used for proper image display. Verify the blob-storage component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Update GiftPackCard component to display an image carousel for multiple images with navigation controls",
+      "acceptanceCriteria": [
+        "Gift pack cards show an image carousel when multiple images exist",
+        "Users can navigate between images using previous/next controls",
+        "Single image gift packs display without carousel controls",
+        "Carousel indicators show current image position"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/product/GiftPackCard.tsx",
+          "operation": "modify",
+          "description": "Add state management for tracking the current image index in the carousel. Replace the single image display with a carousel container that shows giftPack.images[currentIndex]?.getDirectURL(). Implement previous/next navigation buttons that increment/decrement the current index with wraparound logic. Add dot indicators at the bottom of the image area showing the total number of images and highlighting the current image. Conditionally render carousel controls only when giftPack.images.length > 1. Add keyboard navigation support for left/right arrow keys. Ensure the ExternalBlob's getDirectURL() method is used for all image URLs. Verify the blob-storage component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Update CartItemRow component to display the first image from the images array for cart items",
+      "acceptanceCriteria": [
+        "Cart items display the first image from the images array",
+        "Fallback placeholder is shown if images array is empty"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/cart/CartItemRow.tsx",
+          "operation": "modify",
+          "description": "Update the cart item image rendering to use pack.images[0]?.getDirectURL() instead of pack.imageUrl. Add conditional logic to display a placeholder image or icon when the images array is empty or undefined. Ensure the ExternalBlob's getDirectURL() method is used for proper image display with streaming and caching. Verify the blob-storage component's usage instructions before implementing."
         }
       ]
     }

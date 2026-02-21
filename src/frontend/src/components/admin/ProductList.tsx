@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Package } from 'lucide-react';
 import type { Product } from '@/backend';
 
 interface ProductListProps {
@@ -38,36 +38,27 @@ export default function ProductList({ onEdit, onDelete, isDeleting }: ProductLis
 
   if (error) {
     return (
-      <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-center">
-        <p className="text-sm text-destructive">
-          Failed to load products. Please try again.
-        </p>
+      <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+        <p className="text-sm text-destructive">Failed to load products. Please try again.</p>
       </div>
     );
   }
 
   if (!products || products.length === 0) {
     return (
-      <div className="rounded-lg border border-dashed p-8 text-center">
-        <p className="text-muted-foreground">
-          No products yet. Add your first product to get started.
-        </p>
+      <div className="space-y-4">
+        <h3 className="font-serif text-lg font-semibold">All Products</h3>
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <Package className="mb-4 h-12 w-12 text-muted-foreground" />
+            <p className="text-center text-muted-foreground">
+              No products yet. Create your first product above.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
-
-  const getCategoryLabel = (category: string) => {
-    const labels: Record<string, string> = {
-      birthday: 'Birthday',
-      anniversary: 'Anniversary',
-      corporate: 'Corporate',
-      festive: 'Festive',
-      sympathy: 'Sympathy',
-      wellness: 'Wellness',
-      custom: 'Custom',
-    };
-    return labels[category] || category;
-  };
 
   return (
     <div className="space-y-4">
@@ -75,51 +66,49 @@ export default function ProductList({ onEdit, onDelete, isDeleting }: ProductLis
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {products.map((product) => (
           <Card key={product.id} className="overflow-hidden">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <CardTitle className="font-serif text-lg">{product.name}</CardTitle>
-                  <CardDescription className="mt-1">
-                    <Badge variant="secondary" className="text-xs">
-                      {getCategoryLabel(product.category)}
-                    </Badge>
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {product.imageUrl && (
-                <div className="aspect-video overflow-hidden rounded-md bg-muted">
-                  <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="h-full w-full object-cover"
-                  />
+            <div className="aspect-video w-full overflow-hidden bg-muted">
+              {product.images && product.images.length > 0 && product.images[0] ? (
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center">
+                  <Package className="h-12 w-12 text-muted-foreground" />
                 </div>
               )}
-              <p className="line-clamp-2 text-sm text-muted-foreground">
-                {product.description}
-              </p>
-              <div className="flex items-center justify-between pt-2">
-                <p className="font-semibold text-terracotta">
+            </div>
+            <CardHeader>
+              <div className="flex items-start justify-between gap-2">
+                <CardTitle className="line-clamp-1 text-lg">{product.name}</CardTitle>
+                <Badge variant="secondary" className="shrink-0">
+                  {product.category}
+                </Badge>
+              </div>
+              <CardDescription className="line-clamp-2">{product.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between">
+                <p className="text-lg font-semibold text-terracotta">
                   ₹{Number(product.price).toLocaleString('en-IN')}
                 </p>
                 <div className="flex gap-2">
                   <Button
-                    size="sm"
                     variant="outline"
+                    size="icon"
                     onClick={() => onEdit(product)}
                     disabled={isDeleting}
                   >
-                    <Edit className="h-3 w-3" />
+                    <Edit className="h-4 w-4" />
                   </Button>
                   <Button
-                    size="sm"
-                    variant="destructive"
+                    variant="outline"
+                    size="icon"
                     onClick={() => onDelete(product.id)}
                     disabled={isDeleting}
                   >
-                    <Trash2 className="h-3 w-3" />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>

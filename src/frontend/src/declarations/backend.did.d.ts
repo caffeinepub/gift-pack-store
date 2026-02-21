@@ -114,9 +114,9 @@ export interface Product {
   'id' : string,
   'name' : string,
   'description' : string,
-  'imageUrl' : string,
   'category' : CategoryType,
   'price' : bigint,
+  'images' : Array<string>,
 }
 export interface RazorpayPayment {
   'status' : string,
@@ -204,7 +204,7 @@ export interface _SERVICE {
     Order
   >,
   'createProduct' : ActorMethod<
-    [string, string, string, bigint, CategoryType, string],
+    [string, string, string, bigint, CategoryType, Array<string>],
     Product
   >,
   'decrementCouponQuantity' : ActorMethod<[string], bigint>,
@@ -247,7 +247,7 @@ export interface _SERVICE {
     GiftPack
   >,
   'updateProduct' : ActorMethod<
-    [string, string, string, bigint, CategoryType, string],
+    [string, string, string, bigint, CategoryType, Array<string>],
     Product
   >,
   'validateCoupon' : ActorMethod<[string], Coupon>,

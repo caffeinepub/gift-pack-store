@@ -11,7 +11,7 @@ interface GiftPackData {
   price: number;
   discount: number;
   category: CategoryType;
-  imageUrl: string;
+  images: { url: string }[];
   basketType: BasketType;
   size: Size;
 }
@@ -26,6 +26,7 @@ export function useGiftPackMutation() {
 
       const priceBigInt = BigInt(data.price);
       const discountBigInt = BigInt(data.discount);
+      const imageBlobs = data.images.map((img) => ExternalBlob.fromURL(img.url));
 
       return actor.createGiftPack(
         data.id,
@@ -35,7 +36,7 @@ export function useGiftPackMutation() {
         discountBigInt,
         data.category,
         [], // items - empty array for now
-        [], // images - empty array for now
+        imageBlobs,
         data.basketType,
         data.size
       );
@@ -60,6 +61,7 @@ export function useGiftPackMutation() {
 
       const priceBigInt = BigInt(data.price);
       const discountBigInt = BigInt(data.discount);
+      const imageBlobs = data.images.map((img) => ExternalBlob.fromURL(img.url));
 
       return actor.updateGiftPack(
         data.id,
@@ -69,7 +71,7 @@ export function useGiftPackMutation() {
         discountBigInt,
         data.category,
         [], // items - empty array for now
-        [], // images - empty array for now
+        imageBlobs,
         data.basketType,
         data.size
       );

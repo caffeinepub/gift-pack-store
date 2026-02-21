@@ -8,7 +8,7 @@ interface ProductData {
   description: string;
   price: number;
   category: CategoryType;
-  imageUrl: string;
+  images: { url: string }[];
 }
 
 export function useProductMutation() {
@@ -20,6 +20,7 @@ export function useProductMutation() {
       if (!actor) throw new Error('Actor not initialized');
 
       const priceBigInt = BigInt(data.price);
+      const imageUrls = data.images.map((img) => img.url);
 
       return actor.createProduct(
         data.id,
@@ -27,7 +28,7 @@ export function useProductMutation() {
         data.description,
         priceBigInt,
         data.category,
-        data.imageUrl
+        imageUrls
       );
     },
     onSuccess: () => {
@@ -40,6 +41,7 @@ export function useProductMutation() {
       if (!actor) throw new Error('Actor not initialized');
 
       const priceBigInt = BigInt(data.price);
+      const imageUrls = data.images.map((img) => img.url);
 
       return actor.updateProduct(
         data.id,
@@ -47,7 +49,7 @@ export function useProductMutation() {
         data.description,
         priceBigInt,
         data.category,
-        data.imageUrl
+        imageUrls
       );
     },
     onSuccess: () => {

@@ -1,12 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Add full gift pack management capabilities to the admin panel with create, edit, and delete operations.
+**Goal:** Enable multiple image support for products and gift packs.
 
 **Planned changes:**
-- Add Gift Pack Management section to AdminPage alongside existing management sections
-- Implement backend CRUD endpoints (createGiftPack, updateGiftPack, deleteGiftPack) in main actor
-- Update useGiftPackMutation hook to use new backend methods instead of placeholder product methods
-- Add delete button with confirmation dialog to each gift pack card in GiftPackList
+- Replace single `imageUrl` field with `images` array in Product and GiftPack types
+- Update ProductForm and GiftPackForm to allow adding, removing, and managing multiple image URLs
+- Display first image as thumbnail in product and gift pack lists
+- Add image carousel to GiftPackCard component for navigating multiple images
+- Update CartItemRow to display first image from images array
+- Include migration logic to convert existing single imageUrl to single-element arrays
 
-**User-visible outcome:** Admins can add, edit, and delete gift packs through a dedicated Gift Pack Management section in the admin panel, with all changes persisted to the backend.
+**User-visible outcome:** Users can add multiple images to products and gift packs, view image carousels on gift pack cards, and see the first image as thumbnails throughout the application.

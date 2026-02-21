@@ -2,29 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-giftpackmanagement-section-to-the-adminpage-that-displays-the-existing-giftpackmanagement-component-alongside-productmanagement-categorymanagement-and-couponmanagement",
-      "featureTitle": "Add a GiftPackManagement section to the AdminPage that displays the existing GiftPackManagement component alongside ProductManagement, CategoryManagement, and CouponManagement",
+      "featureId": "feature-update-productform-component-in-frontend-src-components-admin-productform-tsx-to-allow-adding-multiple-image-urls-replace-the-single-image-url-input-with-a-dynamic-list-where-users-can-add-multiple-urls-remove-individual-urls-and-reorder-them",
+      "featureTitle": "Update ProductForm component in frontend/src/components/admin/ProductForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
       "files": [
-        "frontend/src/pages/AdminPage.tsx"
-      ],
-      "components": [
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-usegiftpackmutation-hook-to-use-the-new-backend-gift-pack-crud-methods-instead-of-placeholder-product-methods",
-      "featureTitle": "Update useGiftPackMutation hook to use the new backend gift pack CRUD methods instead of placeholder product methods",
-      "files": [
-        "frontend/src/hooks/useGiftPackMutation.ts"
+        "frontend/src/components/admin/ProductForm.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -40,11 +21,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-delete-functionality-to-giftpacklist-component-with-a-delete-button-on-each-gift-pack-card-that-calls-a-deletegiftpack-mutation",
-      "featureTitle": "Add delete functionality to GiftPackList component with a delete button on each gift pack card that calls a deleteGiftPack mutation",
+      "featureId": "feature-update-giftpackform-component-in-frontend-src-components-admin-giftpackform-tsx-to-allow-adding-multiple-image-urls-replace-the-single-image-url-input-with-a-dynamic-list-where-users-can-add-multiple-urls-remove-individual-urls-and-reorder-them",
+      "featureTitle": "Update GiftPackForm component in frontend/src/components/admin/GiftPackForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
       "files": [
-        "frontend/src/components/admin/GiftPackList.tsx",
-        "frontend/src/hooks/useGiftPackMutation.ts"
+        "frontend/src/components/admin/GiftPackForm.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -56,6 +36,82 @@
       ],
       "testIds": [
         "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-productlist-component-in-frontend-src-components-admin-productlist-tsx-to-display-the-first-image-from-the-images-array-as-the-product-thumbnail-in-the-card-view",
+      "featureTitle": "Update ProductList component in frontend/src/components/admin/ProductList.tsx to display the first image from the images array as the product thumbnail in the card view.",
+      "files": [
+        "frontend/src/components/admin/ProductList.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-giftpacklist-component-in-frontend-src-components-admin-giftpacklist-tsx-to-display-the-first-image-from-the-images-array-as-the-gift-pack-thumbnail-in-the-card-view",
+      "featureTitle": "Update GiftPackList component in frontend/src/components/admin/GiftPackList.tsx to display the first image from the images array as the gift pack thumbnail in the card view.",
+      "files": [
+        "frontend/src/components/admin/GiftPackList.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-giftpackcard-component-in-frontend-src-components-product-giftpackcard-tsx-to-display-an-image-carousel-or-gallery-when-a-gift-pack-has-multiple-images-allow-users-to-navigate-through-images-using-navigation-arrows-or-dots",
+      "featureTitle": "Update GiftPackCard component in frontend/src/components/product/GiftPackCard.tsx to display an image carousel or gallery when a gift pack has multiple images. Allow users to navigate through images using navigation arrows or dots.",
+      "files": [
+        "frontend/src/components/product/GiftPackCard.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-cartitemrow-component-in-frontend-src-components-cart-cartitemrow-tsx-to-display-the-first-image-from-the-images-array-for-cart-items",
+      "featureTitle": "Update CartItemRow component in frontend/src/components/cart/CartItemRow.tsx to display the first image from the images array for cart items.",
+      "files": [
+        "frontend/src/components/cart/CartItemRow.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
       ],
       "confidence": "high"
     }

@@ -4,10 +4,12 @@ import { Button } from '@/components/ui/button';
 import CartItemRow from '@/components/cart/CartItemRow';
 import CartSummary from '@/components/cart/CartSummary';
 import { useCart } from '@/hooks/useCart';
+import { useGiftPacks } from '@/hooks/useGiftPacks';
 
 export default function CartPage() {
   const navigate = useNavigate();
-  const { items, clearCart } = useCart();
+  const { items, clearCart, updateQuantity, removeItem } = useCart();
+  const { data: giftPacks } = useGiftPacks();
 
   if (items.length === 0) {
     return (
@@ -46,9 +48,27 @@ export default function CartPage() {
 
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-4">
-            {items.map((item, index) => (
-              <CartItemRow key={`${item.packId}-${item.customMessage || 'none'}-${index}`} item={item} />
-            ))}
+            {items.map((item, index) => {
+              const pack = giftPacks?.find((p) => p.id === item.packId);
+              if (!pack) return null;
+
+              return (
+                <CartItemRow
+                  key={`${item.packId}-${item.customMessage || 'none'}-${index}`}
+                  pack={pack}
+                  quantity={Number(item.quantity)}
+                  customMessage={item.customMessage}
+                  wrappingOption={item.wrappingOption}
+                  onIncrement={async () => {
+                    await updateQuantity(item.packId, item.quantity + 1n);
+                  }}
+                  onDecrement={async () => {
+                    await updateQuantity(item.packId, item.quantity - 1n);
+                  }}
+                  onRemove={() => removeItem(item.packId)}
+                />
+              );
+            })}
           </div>
 
           <aside className="lg:sticky lg:top-8 lg:self-start">

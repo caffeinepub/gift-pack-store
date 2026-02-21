@@ -119,9 +119,9 @@ export interface Product {
     id: string;
     name: string;
     description: string;
-    imageUrl: string;
     category: CategoryType;
     price: bigint;
+    images: Array<string>;
 }
 export enum BasketType {
     woodenCrate = "woodenCrate",
@@ -162,7 +162,7 @@ export interface backendInterface {
     createGiftPack(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, items: Array<GiftItem>, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
     createOrUpdateUserProfile(name: string, email: string, phone: string, address: DeliveryAddress, pincode: string): Promise<UserProfile>;
     createOrder(userId: string, items: Array<CartItem>, deliveryAddress: DeliveryAddress, totalAmount: bigint, basketType: BasketType, size: Size, packingType: PackType, messageCard: string | null, paymentId: string, couponCode: string | null): Promise<Order>;
-    createProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, imageUrl: string): Promise<Product>;
+    createProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, images: Array<string>): Promise<Product>;
     decrementCouponQuantity(code: string): Promise<bigint>;
     deleteGiftPack(id: string): Promise<void>;
     filterGiftPacks(filters: CatalogFilters): Promise<Array<GiftPack>>;
@@ -185,6 +185,6 @@ export interface backendInterface {
     submitContactForm(name: string, email: string, phone: string, message: string): Promise<void>;
     updateCartItemQuantity(packId: string, newQuantity: bigint): Promise<Cart | null>;
     updateGiftPack(id: string, title: string, description: string, price: bigint, discount: bigint, category: CategoryType, items: Array<GiftItem>, images: Array<ExternalBlob>, basketType: BasketType, size: Size): Promise<GiftPack>;
-    updateProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, imageUrl: string): Promise<Product>;
+    updateProduct(id: string, name: string, description: string, price: bigint, category: CategoryType, images: Array<string>): Promise<Product>;
     validateCoupon(code: string): Promise<Coupon>;
 }

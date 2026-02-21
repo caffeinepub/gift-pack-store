@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Plus, X } from 'lucide-react';
 import { BasketType, CategoryType, Size, type GiftPack } from '@/backend';
 
 interface GiftPackFormData {
@@ -21,7 +21,7 @@ interface GiftPackFormData {
   price: number;
   discount: number;
   category: CategoryType;
-  imageUrl: string;
+  images: { url: string }[];
   basketType: BasketType;
   size: Size;
 }
@@ -72,12 +72,20 @@ export default function GiftPackForm({
   } = useForm<GiftPackFormData>({
     defaultValues: {
       discount: 0,
+      images: [{ url: '' }],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'images',
   });
 
   useEffect(() => {
     if (editingGiftPack) {
-      const imageUrl = editingGiftPack.images[0]?.getDirectURL() || '';
+      const imageUrls = editingGiftPack.images.map((blob) => ({
+        url: blob.getDirectURL(),
+      }));
       reset({
         id: editingGiftPack.id,
         title: editingGiftPack.title,
@@ -85,7 +93,7 @@ export default function GiftPackForm({
         price: Number(editingGiftPack.price),
         discount: Number(editingGiftPack.discount),
         category: editingGiftPack.category,
-        imageUrl,
+        images: imageUrls.length > 0 ? imageUrls : [{ url: '' }],
         basketType: editingGiftPack.basketType,
         size: editingGiftPack.size,
       });
@@ -97,7 +105,7 @@ export default function GiftPackForm({
         price: 0,
         discount: 0,
         category: undefined,
-        imageUrl: '',
+        images: [{ url: '' }],
         basketType: undefined,
         size: undefined,
       });
@@ -169,20 +177,6 @@ export default function GiftPackForm({
           />
           {errors.discount && (
             <p className="text-sm text-destructive">{errors.discount.message}</p>
-          )}
-        </div>
-
-        {/* Image URL */}
-        <div className="space-y-2">
-          <Label htmlFor="imageUrl">Image URL *</Label>
-          <Input
-            id="imageUrl"
-            {...register('imageUrl', { required: 'Image URL is required' })}
-            placeholder="https://example.com/gift-pack.jpg"
-            disabled={isLoading}
-          />
-          {errors.imageUrl && (
-            <p className="text-sm text-destructive">{errors.imageUrl.message}</p>
           )}
         </div>
 
@@ -292,6 +286,57 @@ export default function GiftPackForm({
         />
         {errors.description && (
           <p className="text-sm text-destructive">{errors.description.message}</p>
+        )}
+      </div>
+
+      {/* Image URLs */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Label>Image URLs *</Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ url: '' })}
+            disabled={isLoading}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Add Image
+          </Button>
+        </div>
+        <div className="space-y-3">
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex gap-2">
+              <div className="flex-1 space-y-1">
+                <Input
+                  {...register(`images.${index}.url`, {
+                    required: 'Image URL is required',
+                  })}
+                  placeholder="https://example.com/gift-pack.jpg"
+                  disabled={isLoading}
+                />
+                {errors.images?.[index]?.url && (
+                  <p className="text-sm text-destructive">
+                    {errors.images[index]?.url?.message}
+                  </p>
+                )}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => remove(index)}
+                disabled={isLoading || fields.length === 1}
+                className="shrink-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+        {errors.images && (
+          <p className="text-sm text-destructive">At least one image is required</p>
         )}
       </div>
 

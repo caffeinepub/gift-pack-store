@@ -1,4 +1,4 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Plus, X } from 'lucide-react';
 import { CategoryType, type Product } from '@/backend';
 
 interface ProductFormData {
@@ -20,7 +20,7 @@ interface ProductFormData {
   description: string;
   price: number;
   category: CategoryType;
-  imageUrl: string;
+  images: { url: string }[];
 }
 
 interface ProductFormProps {
@@ -55,9 +55,16 @@ export default function ProductForm({ onSubmit, isLoading, initialData, onCancel
           description: initialData.description,
           price: Number(initialData.price),
           category: initialData.category,
-          imageUrl: initialData.imageUrl,
+          images: initialData.images.map((url) => ({ url })),
         }
-      : undefined,
+      : {
+          images: [{ url: '' }],
+        },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'images',
   });
 
   useEffect(() => {
@@ -68,7 +75,7 @@ export default function ProductForm({ onSubmit, isLoading, initialData, onCancel
         description: initialData.description,
         price: Number(initialData.price),
         category: initialData.category,
-        imageUrl: initialData.imageUrl,
+        images: initialData.images.map((url) => ({ url })),
       });
     }
   }, [initialData, reset]);
@@ -153,20 +160,6 @@ export default function ProductForm({ onSubmit, isLoading, initialData, onCancel
             <p className="text-sm text-destructive">{errors.category.message}</p>
           )}
         </div>
-
-        {/* Image URL */}
-        <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="imageUrl">Image URL *</Label>
-          <Input
-            id="imageUrl"
-            {...register('imageUrl', { required: 'Image URL is required' })}
-            placeholder="https://example.com/image.jpg"
-            disabled={isLoading}
-          />
-          {errors.imageUrl && (
-            <p className="text-sm text-destructive">{errors.imageUrl.message}</p>
-          )}
-        </div>
       </div>
 
       {/* Description */}
@@ -181,6 +174,57 @@ export default function ProductForm({ onSubmit, isLoading, initialData, onCancel
         />
         {errors.description && (
           <p className="text-sm text-destructive">{errors.description.message}</p>
+        )}
+      </div>
+
+      {/* Image URLs */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Label>Image URLs *</Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ url: '' })}
+            disabled={isLoading}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Add Image
+          </Button>
+        </div>
+        <div className="space-y-3">
+          {fields.map((field, index) => (
+            <div key={field.id} className="flex gap-2">
+              <div className="flex-1 space-y-1">
+                <Input
+                  {...register(`images.${index}.url`, {
+                    required: 'Image URL is required',
+                  })}
+                  placeholder="https://example.com/image.jpg"
+                  disabled={isLoading}
+                />
+                {errors.images?.[index]?.url && (
+                  <p className="text-sm text-destructive">
+                    {errors.images[index]?.url?.message}
+                  </p>
+                )}
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={() => remove(index)}
+                disabled={isLoading || fields.length === 1}
+                className="shrink-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          ))}
+        </div>
+        {errors.images && (
+          <p className="text-sm text-destructive">At least one image is required</p>
         )}
       </div>
 

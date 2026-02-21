@@ -127,9 +127,9 @@ export const Product = IDL.Record({
   'id' : IDL.Text,
   'name' : IDL.Text,
   'description' : IDL.Text,
-  'imageUrl' : IDL.Text,
   'category' : CategoryType,
   'price' : IDL.Int,
+  'images' : IDL.Vec(IDL.Text),
 });
 export const CatalogFilters = IDL.Record({
   'outOfStock' : IDL.Opt(IDL.Bool),
@@ -231,7 +231,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'createProduct' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Int, CategoryType, IDL.Text],
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Int, CategoryType, IDL.Vec(IDL.Text)],
       [Product],
       [],
     ),
@@ -293,7 +293,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'updateProduct' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, IDL.Int, CategoryType, IDL.Text],
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Int, CategoryType, IDL.Vec(IDL.Text)],
       [Product],
       [],
     ),
@@ -419,9 +419,9 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Text,
     'name' : IDL.Text,
     'description' : IDL.Text,
-    'imageUrl' : IDL.Text,
     'category' : CategoryType,
     'price' : IDL.Int,
+    'images' : IDL.Vec(IDL.Text),
   });
   const CatalogFilters = IDL.Record({
     'outOfStock' : IDL.Opt(IDL.Bool),
@@ -523,7 +523,14 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'createProduct' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Int, CategoryType, IDL.Text],
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Int,
+          CategoryType,
+          IDL.Vec(IDL.Text),
+        ],
         [Product],
         [],
       ),
@@ -589,7 +596,14 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'updateProduct' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Int, CategoryType, IDL.Text],
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Int,
+          CategoryType,
+          IDL.Vec(IDL.Text),
+        ],
         [Product],
         [],
       ),

@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import GiftPackForm from './GiftPackForm';
 import GiftPackList from './GiftPackList';
-import { useGiftPacks } from '@/hooks/useGiftPacks';
 import { useGiftPackMutation } from '@/hooks/useGiftPackMutation';
 import type { BasketType, CategoryType, Size, GiftPack } from '@/backend';
 
 export default function GiftPackManagement() {
-  const { data: giftPacks, isLoading } = useGiftPacks();
   const { createGiftPack, updateGiftPack, deleteGiftPack, isCreating, isUpdating, isDeleting } = useGiftPackMutation();
   const [editingGiftPack, setEditingGiftPack] = useState<GiftPack | null>(null);
 
@@ -17,7 +15,7 @@ export default function GiftPackManagement() {
     price: number;
     discount: number;
     category: CategoryType;
-    imageUrl: string;
+    images: { url: string }[];
     basketType: BasketType;
     size: Size;
   }) => {
@@ -61,8 +59,6 @@ export default function GiftPackManagement() {
       <div>
         <h3 className="mb-4 font-serif text-lg font-semibold">Existing Gift Packs</h3>
         <GiftPackList
-          giftPacks={giftPacks || []}
-          isLoading={isLoading}
           onEdit={handleEdit}
           onDelete={handleDelete}
           isDeleting={isDeleting}

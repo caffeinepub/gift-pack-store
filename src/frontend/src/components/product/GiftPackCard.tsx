@@ -1,113 +1,129 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { ShoppingCart } from 'lucide-react';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { ShoppingCart, Loader2, ChevronLeft, ChevronRight, Gift } from 'lucide-react';
 import type { GiftPack } from '@/backend';
-import { useCart } from '@/hooks/useCart';
-import { toast } from 'sonner';
 
 interface GiftPackCardProps {
   pack: GiftPack;
+  onAddToCart: (packId: string) => void;
+  isAddingToCart?: boolean;
 }
 
-export default function GiftPackCard({ pack }: GiftPackCardProps) {
-  const navigate = useNavigate();
-  const { addItem } = useCart();
-  const [isAdding, setIsAdding] = useState(false);
+export default function GiftPackCard({ pack, onAddToCart, isAddingToCart }: GiftPackCardProps) {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const hasMultipleImages = pack.images && pack.images.length > 1;
 
-  const handleAddToCart = async (e: React.MouseEvent) => {
+  const handlePrevImage = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
-    if (!pack || !pack.id) {
-      toast.error('Invalid gift pack');
-      return;
-    }
-
-    try {
-      setIsAdding(true);
-      addItem({
-        packId: pack.id,
-        quantity: BigInt(1),
-      });
-      toast.success(`${pack.title} added to cart!`);
-    } catch (error) {
-      console.error('Failed to add item to cart:', error);
-      toast.error('Failed to add item to cart');
-    } finally {
-      setIsAdding(false);
-    }
+    setCurrentImageIndex((prev) => (prev === 0 ? pack.images.length - 1 : prev - 1));
   };
 
-  const categoryColors: Record<string, string> = {
-    birthday: 'bg-terracotta/10 text-terracotta',
-    anniversary: 'bg-sage/10 text-sage',
-    corporate: 'bg-blue-500/10 text-blue-600',
-    festive: 'bg-purple-500/10 text-purple-600',
-    sympathy: 'bg-rose-500/10 text-rose-600',
-    wellness: 'bg-emerald-500/10 text-emerald-600',
-    custom: 'bg-amber-500/10 text-amber-600',
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === pack.images.length - 1 ? 0 : prev + 1));
   };
 
-  const imageUrl = pack.images[0]?.getDirectURL() || '/assets/generated/gift-icon.dim_128x128.png';
-  
-  const discount = Number(pack.discount);
-  const originalPrice = Number(pack.price);
-  const discountedPrice = discount > 0 ? originalPrice * (1 - discount / 100) : originalPrice;
-  const hasDiscount = discount > 0;
+  const discountedPrice =
+    Number(pack.discount) > 0
+      ? Number(pack.price) * (1 - Number(pack.discount) / 100)
+      : Number(pack.price);
 
   return (
-    <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
-      {hasDiscount && (
-        <div className="absolute right-2 top-2 z-10">
-          <Badge className="bg-destructive text-destructive-foreground">
-            {discount}% OFF
+    <Card className="group overflow-hidden transition-shadow hover:shadow-lg">
+      <div className="relative aspect-video w-full overflow-hidden bg-muted">
+        {pack.images && pack.images.length > 0 && pack.images[currentImageIndex] ? (
+          <>
+            <img
+              src={pack.images[currentImageIndex].getDirectURL()}
+              alt={pack.title}
+              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            />
+            {hasMultipleImages && (
+              <>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute left-2 top-1/2 h-8 w-8 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+                  onClick={handlePrevImage}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute right-2 top-1/2 h-8 w-8 -translate-y-1/2 opacity-0 transition-opacity group-hover:opacity-100"
+                  onClick={handleNextImage}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
+                  {pack.images.map((_, index) => (
+                    <div
+                      key={index}
+                      className={`h-1.5 w-1.5 rounded-full transition-all ${
+                        index === currentImageIndex
+                          ? 'w-4 bg-white'
+                          : 'bg-white/50'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <Gift className="h-12 w-12 text-muted-foreground" />
+          </div>
+        )}
+        {Number(pack.discount) > 0 && (
+          <Badge className="absolute right-2 top-2 bg-sage text-sage-foreground">
+            {Number(pack.discount)}% OFF
           </Badge>
-        </div>
-      )}
-      <div className="aspect-[4/3] overflow-hidden bg-muted">
-        <img
-          src={imageUrl}
-          alt={pack.title}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        )}
       </div>
-      <CardContent className="p-4">
-        <div className="mb-2 flex items-start justify-between gap-2">
-          <h3 className="font-serif text-lg font-semibold leading-tight">{pack.title}</h3>
-          <Badge className={categoryColors[pack.category] || 'bg-muted'}>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-2">
+          <CardTitle className="line-clamp-1 font-serif text-xl">{pack.title}</CardTitle>
+          <Badge variant="secondary" className="shrink-0">
             {pack.category}
           </Badge>
         </div>
-        <p className="line-clamp-2 text-sm text-muted-foreground">{pack.description}</p>
-        <div className="mt-3">
-          {hasDiscount ? (
-            <div className="flex items-center gap-2">
-              <p className="font-serif text-xl font-bold text-terracotta">
-                ₹{Math.round(discountedPrice).toLocaleString('en-IN')}
-              </p>
-              <p className="text-sm text-muted-foreground line-through">
-                ₹{originalPrice.toLocaleString('en-IN')}
-              </p>
-            </div>
-          ) : (
-            <p className="font-serif text-xl font-bold text-terracotta">
-              ₹{originalPrice.toLocaleString('en-IN')}
+        <CardDescription className="line-clamp-2">{pack.description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <div className="flex items-baseline gap-2">
+            <p className="text-2xl font-bold text-terracotta">
+              ₹{discountedPrice.toLocaleString('en-IN')}
             </p>
-          )}
+            {Number(pack.discount) > 0 && (
+              <p className="text-sm text-muted-foreground line-through">
+                ₹{Number(pack.price).toLocaleString('en-IN')}
+              </p>
+            )}
+          </div>
+          <Button
+            onClick={() => onAddToCart(pack.id)}
+            disabled={isAddingToCart}
+            className="bg-terracotta hover:bg-terracotta/90"
+          >
+            {isAddingToCart ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="mr-2 h-4 w-4" />
+                Add to Cart
+              </>
+            )}
+          </Button>
         </div>
       </CardContent>
-      <CardFooter className="p-4 pt-0">
-        <Button 
-          className="w-full" 
-          onClick={handleAddToCart}
-          disabled={isAdding}
-        >
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          {isAdding ? 'Adding...' : 'Add to Cart'}
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

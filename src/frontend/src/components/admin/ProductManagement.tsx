@@ -18,7 +18,7 @@ export default function ProductManagement() {
     description: string;
     price: number;
     category: CategoryType;
-    imageUrl: string;
+    images: { url: string }[];
   }) => {
     createMutation.mutate(data, {
       onSuccess: () => {
@@ -41,7 +41,7 @@ export default function ProductManagement() {
     description: string;
     price: number;
     category: CategoryType;
-    imageUrl: string;
+    images: { url: string }[];
   }) => {
     updateMutation.mutate(data, {
       onSuccess: () => {

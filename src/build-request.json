@@ -1,93 +1,153 @@
 {
   "kind": "build_request",
-  "title": "Add gift pack management to admin panel",
-  "projectName": "Gift Pack Admin",
+  "title": "Add multiple image upload support for products and gift packs",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a GiftPackManagement section to the AdminPage that displays the existing GiftPackManagement component alongside ProductManagement, CategoryManagement, and CouponManagement",
-      "target": "frontend",
+      "text": "Update the Product type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-request"
+          "msg-6"
         ],
         "quotes": [
-          "add option in admin to add/edit/delete gift packs"
+          "allow multiple images to be uploaded for product and gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "The AdminPage displays a fourth card section titled 'Gift Pack Management'",
-        "The GiftPackManagement component is rendered within this new section",
-        "The layout maintains consistency with existing management sections"
+        "Product type has an images array field instead of imageUrl",
+        "Existing CRUD operations for products handle the new images array field",
+        "Migration logic preserves existing single imageUrl data by converting it to a single-element array"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement backend CRUD endpoints for gift packs including createGiftPack, updateGiftPack, and deleteGiftPack methods in the main actor",
+      "text": "Update the GiftPack type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-request"
+          "msg-6"
         ],
         "quotes": [
-          "add option in admin to add/edit/delete gift packs"
+          "allow multiple images to be uploaded for product and gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "createGiftPack accepts GiftPack data and stores it in the giftPacks Map",
-        "updateGiftPack accepts a pack ID and updated GiftPack data and modifies the existing entry",
-        "deleteGiftPack accepts a pack ID and removes it from the giftPacks Map",
-        "All methods return appropriate Result types indicating success or failure"
+        "GiftPack type has an images array field instead of imageUrl",
+        "Existing CRUD operations for gift packs handle the new images array field",
+        "Migration logic preserves existing single imageUrl data by converting it to a single-element array"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update useGiftPackMutation hook to use the new backend gift pack CRUD methods instead of placeholder product methods",
+      "text": "Update ProductForm component in frontend/src/components/admin/ProductForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-request"
+          "msg-6"
+        ],
+        "quotes": [
+          "allow multiple images to be uploaded for product and gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "createGiftPackMutation calls actor.createGiftPack with full GiftPack data including basketType and size",
-        "updateGiftPackMutation calls actor.updateGiftPack with the pack ID and updated data",
-        "Both mutations invalidate the giftPacks query cache on success",
-        "Mutations display appropriate toast notifications for success and error states"
+        "Form displays a list of image URL inputs",
+        "Users can add new image URL fields using an 'Add Image' button",
+        "Users can remove individual image URLs",
+        "At least one image URL is required",
+        "Form validation ensures all image URL fields are filled before submission"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Add delete functionality to GiftPackList component with a delete button on each gift pack card that calls a deleteGiftPack mutation",
+      "text": "Update GiftPackForm component in frontend/src/components/admin/GiftPackForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-request"
+          "msg-6"
         ],
         "quotes": [
-          "add/edit/delete gift packs"
+          "allow multiple images to be uploaded for product and gift packs"
         ]
       },
       "acceptanceCriteria": [
-        "Each gift pack card displays a delete button alongside the edit button",
-        "Clicking delete triggers a confirmation dialog before deleting",
-        "Successful deletion removes the gift pack from the list and shows a success toast",
-        "Failed deletion shows an error toast with the failure reason"
+        "Form displays a list of image URL inputs",
+        "Users can add new image URL fields using an 'Add Image' button",
+        "Users can remove individual image URLs",
+        "At least one image URL is required",
+        "Form validation ensures all image URL fields are filled before submission"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Update ProductList component in frontend/src/components/admin/ProductList.tsx to display the first image from the images array as the product thumbnail in the card view.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Product cards display the first image from the images array",
+        "Fallback placeholder is shown if images array is empty"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Update GiftPackList component in frontend/src/components/admin/GiftPackList.tsx to display the first image from the images array as the gift pack thumbnail in the card view.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Gift pack cards display the first image from the images array",
+        "Fallback placeholder is shown if images array is empty"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Update GiftPackCard component in frontend/src/components/product/GiftPackCard.tsx to display an image carousel or gallery when a gift pack has multiple images. Allow users to navigate through images using navigation arrows or dots.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Gift pack cards show an image carousel when multiple images exist",
+        "Users can navigate between images using previous/next controls",
+        "Single image gift packs display without carousel controls",
+        "Carousel indicators show current image position"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Update CartItemRow component in frontend/src/components/cart/CartItemRow.tsx to display the first image from the images array for cart items.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Cart items display the first image from the images array",
+        "Fallback placeholder is shown if images array is empty"
       ]
     }
   ],
   "constraints": [
-    "Maintain the single-actor architecture with all Motoko logic in backend/main.mo",
-    "Do not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui",
-    "Preserve existing GiftPack type structure with basketType and size fields",
-    "Keep ProductManagement and GiftPackManagement as separate, independent systems"
+    "Preserve all existing product and gift pack data during migration",
+    "Maintain backward compatibility by converting single imageUrl values to single-element arrays",
+    "Ensure at least one image is always required for products and gift packs"
   ],
   "nonGoals": [
-    "Modifying the existing ProductManagement functionality",
-    "Changing the GiftPack type definition or data structure",
-    "Adding new fields to gift packs beyond what exists in the current GiftPackForm",
-    "Implementing bulk operations or advanced filtering for gift packs"
+    "Direct file upload functionality (only URL inputs)",
+    "Image hosting or storage services",
+    "Image editing or cropping features",
+    "Automatic image optimization or resizing"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,32 +1,56 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "E-commerce platform with product and gift pack management",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-giftpackmanagement-section-to-the-adminpage-that-displays-the-existing-giftpackmanagement-component-alongside-productmanagement-categorymanagement-and-couponmanagement",
-      "title": "Add a GiftPackManagement section to the AdminPage that displays the existing GiftPackManagement component alongside ProductManagement, CategoryManagement, and CouponManagement",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-update-usegiftpackmutation-hook-to-use-the-new-backend-gift-pack-crud-methods-instead-of-placeholder-product-methods",
-      "title": "Update useGiftPackMutation hook to use the new backend gift pack CRUD methods instead of placeholder product methods",
+      "id": "feature-update-productform-component-in-frontend-src-components-admin-productform-tsx-to-allow-adding-multiple-image-urls-replace-the-single-image-url-input-with-a-dynamic-list-where-users-can-add-multiple-urls-remove-individual-urls-and-reorder-them",
+      "title": "Update ProductForm component in frontend/src/components/admin/ProductForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-delete-functionality-to-giftpacklist-component-with-a-delete-button-on-each-gift-pack-card-that-calls-a-deletegiftpack-mutation",
-      "title": "Add delete functionality to GiftPackList component with a delete button on each gift pack card that calls a deleteGiftPack mutation",
+      "id": "feature-update-giftpackform-component-in-frontend-src-components-admin-giftpackform-tsx-to-allow-adding-multiple-image-urls-replace-the-single-image-url-input-with-a-dynamic-list-where-users-can-add-multiple-urls-remove-individual-urls-and-reorder-them",
+      "title": "Update GiftPackForm component in frontend/src/components/admin/GiftPackForm.tsx to allow adding multiple image URLs. Replace the single image URL input with a dynamic list where users can add multiple URLs, remove individual URLs, and reorder them.",
       "reqIds": [
         "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-productlist-component-in-frontend-src-components-admin-productlist-tsx-to-display-the-first-image-from-the-images-array-as-the-product-thumbnail-in-the-card-view",
+      "title": "Update ProductList component in frontend/src/components/admin/ProductList.tsx to display the first image from the images array as the product thumbnail in the card view.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-giftpacklist-component-in-frontend-src-components-admin-giftpacklist-tsx-to-display-the-first-image-from-the-images-array-as-the-gift-pack-thumbnail-in-the-card-view",
+      "title": "Update GiftPackList component in frontend/src/components/admin/GiftPackList.tsx to display the first image from the images array as the gift pack thumbnail in the card view.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-giftpackcard-component-in-frontend-src-components-product-giftpackcard-tsx-to-display-an-image-carousel-or-gallery-when-a-gift-pack-has-multiple-images-allow-users-to-navigate-through-images-using-navigation-arrows-or-dots",
+      "title": "Update GiftPackCard component in frontend/src/components/product/GiftPackCard.tsx to display an image carousel or gallery when a gift pack has multiple images. Allow users to navigate through images using navigation arrows or dots.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-cartitemrow-component-in-frontend-src-components-cart-cartitemrow-tsx-to-display-the-first-image-from-the-images-array-for-cart-items",
+      "title": "Update CartItemRow component in frontend/src/components/cart/CartItemRow.tsx to display the first image from the images array for cart items.",
+      "reqIds": [
+        "REQ-8"
       ],
       "version": 1
     }
@@ -34,20 +58,28 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add option in admin to add/edit/delete gift packs",
+      "summary": "Multiple image upload for products and gift packs",
       "reqIds": [],
       "status": "pending"
     },
     {
+      "id": "AR-2",
+      "summary": "Update the Product type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
       "id": "AR-3",
-      "summary": "Implement backend CRUD endpoints for gift packs including createGiftPack, updateGiftPack, and deleteGiftPack methods in the main actor",
+      "summary": "Update the GiftPack type in backend/main.mo to support multiple image URLs instead of a single imageUrl field. Replace the imageUrl field with an images field that is an array of Text values.",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Gift Pack Admin",
+  "projectName": "Add multiple image upload support for products and gift packs",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

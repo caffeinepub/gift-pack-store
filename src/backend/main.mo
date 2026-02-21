@@ -9,7 +9,9 @@ import Iter "mo:core/Iter";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
 import MixinStorage "blob-storage/Mixin";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   include MixinStorage();
 
@@ -174,7 +176,7 @@ actor {
     description : Text;
     price : Int;
     category : CategoryType;
-    imageUrl : Text;
+    images : [Text];
   };
 
   let coupons = Map.empty<Text, Coupon>();
@@ -596,7 +598,7 @@ actor {
     description : Text,
     price : Int,
     category : CategoryType,
-    imageUrl : Text,
+    images : [Text],
   ) : async Product {
     let product : Product = {
       id;
@@ -604,7 +606,7 @@ actor {
       description;
       price;
       category;
-      imageUrl;
+      images;
     };
 
     products.add(id, product);
@@ -617,7 +619,7 @@ actor {
     description : Text,
     price : Int,
     category : CategoryType,
-    imageUrl : Text,
+    images : [Text],
   ) : async Product {
     let updatedProduct : Product = {
       id;
@@ -625,7 +627,7 @@ actor {
       description;
       price;
       category;
-      imageUrl;
+      images;
     };
 
     products.add(id, updatedProduct);
