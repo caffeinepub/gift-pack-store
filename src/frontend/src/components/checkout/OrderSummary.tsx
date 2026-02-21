@@ -3,8 +3,13 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/hooks/useCart';
 import { useGiftPacks } from '@/hooks/useGiftPacks';
 import { Skeleton } from '@/components/ui/skeleton';
+import type { Coupon } from '@/backend';
 
-export default function OrderSummary() {
+interface OrderSummaryProps {
+  coupon?: Coupon | null;
+}
+
+export default function OrderSummary({ coupon = null }: OrderSummaryProps) {
   const { items, calculateTotals } = useCart();
   const { data: giftPacks, isLoading } = useGiftPacks();
 
@@ -25,7 +30,7 @@ export default function OrderSummary() {
     );
   }
 
-  const { subtotal, tax, total } = calculateTotals(giftPacks || []);
+  const { subtotal, couponDiscount, tax, total } = calculateTotals(giftPacks || [], coupon);
 
   return (
     <Card>
@@ -53,6 +58,18 @@ export default function OrderSummary() {
             <span className="text-muted-foreground">Subtotal</span>
             <span className="font-medium">₹{subtotal.toLocaleString('en-IN')}</span>
           </div>
+          
+          {coupon && couponDiscount > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">
+                Coupon ({coupon.code})
+              </span>
+              <span className="font-medium text-sage">
+                -₹{couponDiscount.toLocaleString('en-IN')}
+              </span>
+            </div>
+          )}
+          
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">GST (18%)</span>
             <span className="font-medium">₹{tax.toLocaleString('en-IN')}</span>

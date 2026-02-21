@@ -1,54 +1,101 @@
 {
   "kind": "build_request",
-  "title": "Fetch cart on login and clear cart on logout",
+  "title": "Add admin gift pack creation and management",
+  "projectName": "Gift Pack Manager",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-2",
-      "text": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
-      "target": "both",
+      "id": "REQ-1",
+      "text": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-latest"
+          "msg-last"
         ],
         "quotes": [
-          "on login, cart status should be fetched"
+          "add the ability to add gift packs by admin"
         ]
       },
       "acceptanceCriteria": [
-        "Cart data is fetched from backend immediately after successful login",
-        "Fetched cart items replace any local cart state",
-        "Cart icon badge updates to show correct item count after login"
+        "Form includes all required fields: ID, title, description, price, discount, category, image URL, basket type, size",
+        "Form validation prevents submission with missing required fields",
+        "Category dropdown is populated from existing categories",
+        "Basket type and size use select components matching existing patterns",
+        "Form styling matches existing admin forms (CategoryForm, CouponForm)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ],
+        "quotes": [
+          "add the ability to add gift packs by admin"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Displays all gift packs in a responsive grid",
+        "Shows key product details on each card",
+        "Includes loading skeleton during data fetch",
+        "Shows appropriate empty state when no gift packs exist"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "When a user logs out, clear the cart state completely",
+      "text": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-latest"
+          "msg-last"
         ],
         "quotes": [
-          "while logout cart should be cleared"
+          "add the ability to add gift packs by admin"
         ]
       },
       "acceptanceCriteria": [
-        "Cart is emptied when user logs out",
-        "Cart icon badge shows 0 items after logout",
-        "localStorage cart data is cleared on logout"
+        "Successfully creates gift packs using existing backend integration",
+        "Shows success toast notification after creation",
+        "Shows error toast if creation fails",
+        "Form resets to empty state after successful submission",
+        "Gift pack list automatically updates after creation"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-last"
+        ],
+        "quotes": [
+          "add the ability to add gift packs by admin"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Gift Pack Management section appears on admin dashboard",
+        "Section follows same visual styling as existing sections",
+        "Section includes clear title and description",
+        "Layout remains responsive and organized"
       ]
     }
   ],
   "constraints": [
-    "Do not modify frontend/src/hooks/useInternetIdentity.ts",
-    "Maintain existing localStorage persistence pattern from useCart hook",
-    "Preserve current cart data structure with BigInt serialization"
+    "Use existing useProductMutation hook for gift pack creation",
+    "Follow existing admin component patterns (CategoryForm, CouponForm, ProductForm)",
+    "Do not modify backend schema or main.mo actor",
+    "Use shadcn/ui components for form controls",
+    "Match existing Tailwind styling and theme"
   ],
   "nonGoals": [
-    "Syncing cart to backend during browsing (only on login)",
-    "Implementing cart persistence across sessions for anonymous users",
-    "Adding server-side cart merge logic for multiple devices"
+    "Editing or deleting existing gift packs",
+    "Bulk import of gift packs",
+    "Gift pack image uploads (use URL input only)",
+    "Advanced inventory management",
+    "Gift pack analytics or reporting"
   ],
   "imageRequirements": {
     "required": [],

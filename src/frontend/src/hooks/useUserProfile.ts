@@ -8,6 +8,7 @@ interface UpdateProfileParams {
   email: string;
   phone: string;
   address: DeliveryAddress;
+  pincode: string;
 }
 
 export function useUserProfile() {
@@ -25,9 +26,9 @@ export function useUserProfile() {
   });
 
   const updateProfile = useMutation<UserProfile, Error, UpdateProfileParams>({
-    mutationFn: async ({ name, email, phone, address }) => {
+    mutationFn: async ({ name, email, phone, address, pincode }) => {
       if (!actor) throw new Error('Actor not initialized');
-      return actor.createOrUpdateUserProfile(name, email, phone, address);
+      return actor.createOrUpdateUserProfile(name, email, phone, address, pincode);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userProfile'] });

@@ -1,5 +1,6 @@
 import { Heart } from 'lucide-react';
 import { SiFacebook, SiInstagram, SiX } from 'react-icons/si';
+import { Link } from '@tanstack/react-router';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,19 +24,24 @@ export default function Footer() {
             <h3 className="mb-4 font-serif text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/" className="text-muted-foreground transition-colors hover:text-foreground">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/catalog" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/catalog" className="text-muted-foreground transition-colors hover:text-foreground">
                   Browse Gifts
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/custom" className="text-muted-foreground transition-colors hover:text-foreground">
+                <Link to="/custom" className="text-muted-foreground transition-colors hover:text-foreground">
                   Custom Pack
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-muted-foreground transition-colors hover:text-foreground">
+                  Contact Us
+                </Link>
               </li>
             </ul>
           </div>

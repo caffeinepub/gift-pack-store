@@ -8,25 +8,25 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import type { CatalogFilters } from '@/backend';
-import { Category } from '@/backend';
+import { CategoryType } from '@/backend';
 
 interface FilterSidebarProps {
   filters: CatalogFilters;
   onFiltersChange: (filters: CatalogFilters) => void;
 }
 
-const categories: { value: Category; label: string }[] = [
-  { value: Category.birthday, label: 'Birthday' },
-  { value: Category.anniversary, label: 'Anniversary' },
-  { value: Category.corporate, label: 'Corporate' },
-  { value: Category.festive, label: 'Festive' },
-  { value: Category.custom, label: 'Custom' },
+const categories: { value: CategoryType; label: string }[] = [
+  { value: CategoryType.birthday, label: 'Birthday' },
+  { value: CategoryType.anniversary, label: 'Anniversary' },
+  { value: CategoryType.corporate, label: 'Corporate' },
+  { value: CategoryType.festive, label: 'Festive' },
+  { value: CategoryType.custom, label: 'Custom' },
 ];
 
 function FilterContent({ filters, onFiltersChange }: FilterSidebarProps) {
   const [priceRange, setPriceRange] = useState([0, 10000]);
 
-  const handleCategoryChange = (category: Category) => {
+  const handleCategoryChange = (category: CategoryType) => {
     onFiltersChange({
       ...filters,
       category: filters.category === category ? undefined : category,

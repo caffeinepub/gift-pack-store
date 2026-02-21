@@ -9,6 +9,8 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import ProfilePage from './pages/ProfilePage';
+import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
 import { Toaster } from '@/components/ui/sonner';
 import { useInitializeData } from './hooks/useQueries';
 import { useActor } from './hooks/useActor';
@@ -61,6 +63,18 @@ const profileRoute = createRoute({
   component: ProfilePage,
 });
 
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contact',
+  component: ContactPage,
+});
+
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: AdminPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   catalogRoute,
@@ -69,6 +83,8 @@ const routeTree = rootRoute.addChildren([
   checkoutRoute,
   orderConfirmationRoute,
   profileRoute,
+  contactRoute,
+  adminRoute,
 ]);
 
 const router = createRouter({ routeTree });

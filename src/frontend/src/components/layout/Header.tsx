@@ -1,27 +1,64 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Gift, Menu, Search, ShoppingCart, User } from 'lucide-react';
+import { Gift, Menu, Search, ShoppingCart, User, MapPin, Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Input } from '@/components/ui/input';
 import { useCart } from '@/hooks/useCart';
 import { useInternetIdentity } from '@/hooks/useInternetIdentity';
+import { validatePincode } from '@/utils/validation';
+import { useActor } from '@/hooks/useActor';
 
 export default function Header() {
   const navigate = useNavigate();
   const { itemCount } = useCart();
   const { identity, login, clear, isLoggingIn } = useInternetIdentity();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pincode, setPincode] = useState('');
+  const [isChecking, setIsChecking] = useState(false);
+  const [result, setResult] = useState<{ isServiceable: boolean; checked: boolean } | null>(null);
+  const { actor } = useActor();
 
   const navItems = [
     { label: 'Home', path: '/' },
     { label: 'Browse', path: '/catalog' },
     { label: 'Custom Pack', path: '/custom' },
+    { label: 'Admin', path: '/admin' },
   ];
 
   const handleNavigation = (path: string) => {
     navigate({ to: path });
     setMobileMenuOpen(false);
+  };
+
+  const handleCheckPincode = async () => {
+    if (!validatePincode(pincode)) {
+      setResult({ isServiceable: false, checked: true });
+      return;
+    }
+
+    if (!actor) return;
+
+    setIsChecking(true);
+    setResult(null);
+
+    try {
+      const isServiceable = await actor.isPincodeServiceable(pincode);
+      setResult({ isServiceable, checked: true });
+    } catch (error) {
+      console.error('Error checking pincode:', error);
+      setResult({ isServiceable: false, checked: true });
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleCheckPincode();
+    }
   };
 
   return (
@@ -51,6 +88,90 @@ export default function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {/* Pincode Checker - Desktop */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden sm:flex"
+                title="Check Delivery"
+              >
+                <MapPin className="h-5 w-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80" align="end">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-terracotta" />
+                  <h3 className="font-serif text-base font-semibold">Check Delivery</h3>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Enter your pincode to see if we deliver to your area
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="6-digit pincode"
+                    value={pincode}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '');
+                      if (value.length <= 6) {
+                        setPincode(value);
+                        setResult(null);
+                      }
+                    }}
+                    onKeyPress={handleKeyPress}
+                    maxLength={6}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={handleCheckPincode}
+                    disabled={pincode.length !== 6 || isChecking}
+                    size="sm"
+                    className="bg-terracotta hover:bg-terracotta/90"
+                  >
+                    {isChecking ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      'Check'
+                    )}
+                  </Button>
+                </div>
+
+                {result?.checked && (
+                  <div>
+                    {!validatePincode(pincode) ? (
+                      <div className="flex items-start gap-2 rounded-lg bg-destructive/10 p-3 text-sm">
+                        <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
+                        <div>
+                          <p className="font-medium text-destructive">Invalid Pincode</p>
+                          <p className="text-xs text-destructive/80">Enter a valid 6-digit pincode</p>
+                        </div>
+                      </div>
+                    ) : result.isServiceable ? (
+                      <div className="flex items-start gap-2 rounded-lg bg-sage/10 p-3 text-sm">
+                        <CheckCircle2 className="mt-0.5 h-4 w-4 flex-shrink-0 text-sage" />
+                        <div>
+                          <p className="font-medium text-sage">We deliver to your area!</p>
+                          <p className="text-xs text-sage/80">Start browsing our collections</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-start gap-2 rounded-lg bg-destructive/10 p-3 text-sm">
+                        <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-destructive" />
+                        <div>
+                          <p className="font-medium text-destructive">Not available yet</p>
+                          <p className="text-xs text-destructive/80">We're expanding soon!</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </PopoverContent>
+          </Popover>
+
           {/* Search Button */}
           <Button
             variant="ghost"

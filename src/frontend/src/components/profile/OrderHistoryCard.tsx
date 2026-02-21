@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { Package, ChevronDown, ChevronUp } from 'lucide-react';
+import { Package, ChevronDown, ChevronUp, CreditCard } from 'lucide-react';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,12 +19,22 @@ const statusConfig: Record<OrderStatus, { label: string; className: string }> = 
   cancelled: { label: 'Cancelled', className: 'bg-red-500/10 text-red-600' },
 };
 
+const paymentStatusConfig = {
+  paid: { label: 'Paid', className: 'bg-green-500/10 text-green-600' },
+  pending: { label: 'Pending', className: 'bg-yellow-500/10 text-yellow-600' },
+  failed: { label: 'Failed', className: 'bg-red-500/10 text-red-600' },
+};
+
 export default function OrderHistoryCard({ order }: OrderHistoryCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const orderDate = new Date(Number(order.createdAt) / 1000000); // Convert nanoseconds to milliseconds
   const formattedDate = format(orderDate, 'MMM dd, yyyy');
   const statusInfo = statusConfig[order.status];
+  
+  // Determine payment status based on paymentId
+  const paymentStatus = order.paymentId && order.paymentId !== '' ? 'paid' : 'pending';
+  const paymentInfo = paymentStatusConfig[paymentStatus];
 
   return (
     <Card>
@@ -37,7 +47,10 @@ export default function OrderHistoryCard({ order }: OrderHistoryCardProps) {
               <p className="text-sm text-muted-foreground">{formattedDate}</p>
             </div>
           </div>
-          <Badge className={statusInfo.className}>{statusInfo.label}</Badge>
+          <div className="flex flex-col gap-2 items-end">
+            <Badge className={statusInfo.className}>{statusInfo.label}</Badge>
+            <Badge className={paymentInfo.className}>{paymentInfo.label}</Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
@@ -69,7 +82,7 @@ export default function OrderHistoryCard({ order }: OrderHistoryCardProps) {
             </Button>
 
             {isExpanded && (
-              <div className="mt-3 space-y-2 rounded-md bg-muted/50 p-3">
+              <div className="mt-3 space-y-3 rounded-md bg-muted/50 p-3">
                 {order.items.map((item, index) => (
                   <div key={index} className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">
@@ -82,6 +95,16 @@ export default function OrderHistoryCard({ order }: OrderHistoryCardProps) {
                   <div className="mt-2 pt-2 border-t border-border">
                     <p className="text-xs text-muted-foreground">Message Card:</p>
                     <p className="text-sm italic">&quot;{order.messageCard}&quot;</p>
+                  </div>
+                )}
+                
+                {order.paymentId && order.paymentId !== '' && (
+                  <div className="mt-2 pt-2 border-t border-border">
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-3 w-3 text-muted-foreground" />
+                      <p className="text-xs text-muted-foreground">Payment ID:</p>
+                    </div>
+                    <p className="font-mono text-xs mt-1">{order.paymentId}</p>
                   </div>
                 )}
               </div>

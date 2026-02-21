@@ -31,15 +31,32 @@ export interface CatalogFilters {
   'outOfStock' : [] | [boolean],
   'priceRange' : [] | [{ 'max' : bigint, 'min' : bigint }],
   'searchTerm' : [] | [string],
-  'category' : [] | [Category],
+  'category' : [] | [CategoryType],
 }
-export type Category = { 'anniversary' : null } |
+export interface Category { 'name' : string, 'description' : string }
+export type CategoryType = { 'anniversary' : null } |
   { 'custom' : null } |
   { 'festive' : null } |
   { 'birthday' : null } |
   { 'wellness' : null } |
   { 'sympathy' : null } |
   { 'corporate' : null };
+export interface ContactSubmission {
+  'name' : string,
+  'email' : string,
+  'message' : string,
+  'timestamp' : Time,
+  'phone' : string,
+}
+export interface Coupon {
+  'code' : string,
+  'expirationDate' : Time,
+  'discountPercentage' : bigint,
+  'minDiscountPercentage' : [] | [bigint],
+  'remainingQuantity' : bigint,
+  'totalQuantity' : bigint,
+  'maxDiscountAmount' : [] | [bigint],
+}
 export interface DeliveryAddress {
   'id' : string,
   'street' : string,
@@ -54,7 +71,7 @@ export interface GiftItem {
   'id' : string,
   'name' : string,
   'description' : string,
-  'category' : Category,
+  'category' : CategoryType,
   'price' : bigint,
   'images' : Array<ExternalBlob>,
 }
@@ -64,7 +81,8 @@ export interface GiftPack {
   'title' : string,
   'size' : Size,
   'description' : string,
-  'category' : Category,
+  'discount' : bigint,
+  'category' : CategoryType,
   'items' : Array<GiftItem>,
   'price' : bigint,
   'images' : Array<ExternalBlob>,
@@ -80,6 +98,7 @@ export interface Order {
   'size' : Size,
   'messageCard' : [] | [string],
   'totalAmount' : bigint,
+  'paymentId' : string,
   'items' : Array<CartItem>,
 }
 export type OrderStatus = { 'shipped' : null } |
@@ -91,6 +110,12 @@ export type PackType = { 'ribbonColor1' : null } |
   { 'ribbonColor2' : null } |
   { 'wrapStyle1' : null } |
   { 'wrapStyle2' : null };
+export interface RazorpayPayment {
+  'status' : string,
+  'paymentId' : string,
+  'payer' : Principal,
+  'amount' : bigint,
+}
 export type Size = { 'large' : null } |
   { 'small' : null } |
   { 'medium' : null };
@@ -100,6 +125,7 @@ export interface UserProfile {
   'name' : string,
   'email' : string,
   'phone' : string,
+  'pincode' : string,
   'defaultAddress' : DeliveryAddress,
 }
 export interface _CaffeineStorageCreateCertificateResult {
@@ -130,8 +156,13 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   'clearCart' : ActorMethod<[], undefined>,
+  'createCategory' : ActorMethod<[string, string], Category>,
+  'createCoupon' : ActorMethod<
+    [string, bigint, [] | [bigint], [] | [bigint], Time, bigint],
+    Coupon
+  >,
   'createOrUpdateUserProfile' : ActorMethod<
-    [string, string, string, DeliveryAddress],
+    [string, string, string, DeliveryAddress, string],
     UserProfile
   >,
   'createOrder' : ActorMethod<
@@ -144,19 +175,47 @@ export interface _SERVICE {
       Size,
       PackType,
       [] | [string],
+      string,
+      [] | [string],
     ],
     Order
   >,
+  'createProduct' : ActorMethod<
+    [
+      string,
+      string,
+      string,
+      bigint,
+      bigint,
+      CategoryType,
+      Array<ExternalBlob>,
+      BasketType,
+      Size,
+    ],
+    GiftPack
+  >,
+  'decrementCouponQuantity' : ActorMethod<[string], bigint>,
   'filterGiftPacks' : ActorMethod<[CatalogFilters], Array<GiftPack>>,
+  'getAllCategories' : ActorMethod<[], Array<Category>>,
   'getAllGiftPacks' : ActorMethod<[], Array<GiftPack>>,
   'getCart' : ActorMethod<[], [] | [Cart]>,
+  'getContactSubmissions' : ActorMethod<[], Array<ContactSubmission>>,
   'getGiftPackById' : ActorMethod<[string], [] | [GiftPack]>,
   'getOrderHistory' : ActorMethod<[], Array<Order>>,
   'getOrderHistoryForPrincipal' : ActorMethod<[Principal], Array<Order>>,
   'getUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'initialize' : ActorMethod<[], undefined>,
+  'isPincodeServiceable' : ActorMethod<[string], boolean>,
+  'recordCouponUsage' : ActorMethod<[string, string], undefined>,
   'saveCart' : ActorMethod<[Cart], undefined>,
   'searchGiftPacks' : ActorMethod<[string], Array<GiftPack>>,
+  'storePayment' : ActorMethod<[string, bigint, string], RazorpayPayment>,
+  'submitContactForm' : ActorMethod<
+    [string, string, string, string],
+    undefined
+  >,
+  'updateCartItemQuantity' : ActorMethod<[string, bigint], [] | [Cart]>,
+  'validateCoupon' : ActorMethod<[string], Coupon>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

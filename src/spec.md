@@ -1,12 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Sync cart state with backend on login and clear cart on logout.
+**Goal:** Enable admins to create and view gift packs through the admin dashboard.
 
 **Planned changes:**
-- Fetch cart data from backend immediately after successful Internet Identity login
-- Replace local cart state with backend cart data after login
-- Clear cart state completely when user logs out
-- Update cart icon badge to reflect correct item count after login/logout
+- Add GiftPackForm component with fields for pack ID, title, description, price, discount, category, image URL, basket type, and size
+- Add GiftPackList component to display all existing gift packs in a grid layout
+- Add GiftPackManagement component that combines the form and list with creation handling
+- Update AdminPage to include a fourth management section for Gift Packs
 
-**User-visible outcome:** When users log in, their cart automatically syncs with saved items from the backend. When they log out, the cart is cleared and shows 0 items.
+**User-visible outcome:** Admins can create new gift packs through a dedicated form and view all existing gift packs in the admin dashboard alongside categories, products, and coupons.

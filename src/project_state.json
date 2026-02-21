@@ -1,24 +1,40 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Admin dashboard for managing gift packs and custom packages",
   "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-when-a-user-logs-in-via-internet-identity-automatically-fetch-and-sync-their-cart-status-from-the-backend",
-      "title": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
+      "id": "feature-add-a-giftpackform-component-in-frontend-src-components-admin-that-allows-admins-to-create-new-gift-packs-with-fields-for-pack-id-title-description-price-discount-percentage-category-selection-image-url-basket-type-selection-and-size-selection-use-react-hook-form-for-validation-and-shadcn-ui-components-matching-the-existing-productform-pattern",
+      "title": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-giftpacklist-component-in-frontend-src-components-admin-that-displays-all-existing-gift-packs-in-a-grid-layout-showing-image-title-price-discount-category-basket-type-and-size-include-loading-states-and-empty-state-handling",
+      "title": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-when-a-user-logs-out-clear-the-cart-state-completely",
-      "title": "When a user logs out, clear the cart state completely",
+      "id": "feature-add-a-giftpackmanagement-component-in-frontend-src-components-admin-that-combines-giftpackform-and-giftpacklist-handle-gift-pack-creation-via-the-existing-useproductmutation-hook-display-success-error-toast-notifications-and-reset-the-form-on-successful-creation",
+      "title": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
       "reqIds": [
         "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-adminpage-component-to-add-a-fourth-management-section-for-gift-packs-alongside-the-existing-categories-products-and-coupons-sections-display-the-giftpackmanagement-component-in-a-card-with-appropriate-title-and-description",
+      "title": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+      "reqIds": [
+        "REQ-4"
       ],
       "version": 1
     }
@@ -26,18 +42,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Fetch cart status on login",
+      "summary": "Add ability to create/manage custom packages in admin dashboard",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Clear cart on logout",
+      "summary": "Add ability to create/manage gift packs in admin dashboard",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Fetch cart on login and clear cart on logout",
+  "projectName": "Gift Pack Manager",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

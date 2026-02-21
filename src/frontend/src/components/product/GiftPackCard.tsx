@@ -51,9 +51,21 @@ export default function GiftPackCard({ pack }: GiftPackCardProps) {
   };
 
   const imageUrl = pack.images[0]?.getDirectURL() || '/assets/generated/gift-icon.dim_128x128.png';
+  
+  const discount = Number(pack.discount);
+  const originalPrice = Number(pack.price);
+  const discountedPrice = discount > 0 ? originalPrice * (1 - discount / 100) : originalPrice;
+  const hasDiscount = discount > 0;
 
   return (
-    <Card className="group overflow-hidden transition-all hover:shadow-lg">
+    <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
+      {hasDiscount && (
+        <div className="absolute right-2 top-2 z-10">
+          <Badge className="bg-destructive text-destructive-foreground">
+            {discount}% OFF
+          </Badge>
+        </div>
+      )}
       <div className="aspect-[4/3] overflow-hidden bg-muted">
         <img
           src={imageUrl}
@@ -69,9 +81,22 @@ export default function GiftPackCard({ pack }: GiftPackCardProps) {
           </Badge>
         </div>
         <p className="line-clamp-2 text-sm text-muted-foreground">{pack.description}</p>
-        <p className="mt-3 font-serif text-xl font-bold text-terracotta">
-          ₹{Number(pack.price).toLocaleString('en-IN')}
-        </p>
+        <div className="mt-3">
+          {hasDiscount ? (
+            <div className="flex items-center gap-2">
+              <p className="font-serif text-xl font-bold text-terracotta">
+                ₹{Math.round(discountedPrice).toLocaleString('en-IN')}
+              </p>
+              <p className="text-sm text-muted-foreground line-through">
+                ₹{originalPrice.toLocaleString('en-IN')}
+              </p>
+            </div>
+          ) : (
+            <p className="font-serif text-xl font-bold text-terracotta">
+              ₹{originalPrice.toLocaleString('en-IN')}
+            </p>
+          )}
+        </div>
       </CardContent>
       <CardFooter className="p-4 pt-0">
         <Button 

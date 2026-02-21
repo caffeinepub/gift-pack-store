@@ -2,11 +2,29 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-when-a-user-logs-in-via-internet-identity-automatically-fetch-and-sync-their-cart-status-from-the-backend",
-      "featureTitle": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
+      "featureId": "feature-add-a-giftpackform-component-in-frontend-src-components-admin-that-allows-admins-to-create-new-gift-packs-with-fields-for-pack-id-title-description-price-discount-percentage-category-selection-image-url-basket-type-selection-and-size-selection-use-react-hook-form-for-validation-and-shadcn-ui-components-matching-the-existing-productform-pattern",
+      "featureTitle": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useCart.ts"
+        "frontend/src/components/admin/GiftPackForm.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-giftpacklist-component-in-frontend-src-components-admin-that-displays-all-existing-gift-packs-in-a-grid-layout-showing-image-title-price-discount-category-basket-type-and-size-include-loading-states-and-empty-state-handling",
+      "featureTitle": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
+      "files": [
+        "frontend/src/components/admin/GiftPackList.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -22,11 +40,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-when-a-user-logs-out-clear-the-cart-state-completely",
-      "featureTitle": "When a user logs out, clear the cart state completely",
+      "featureId": "feature-add-a-giftpackmanagement-component-in-frontend-src-components-admin-that-combines-giftpackform-and-giftpacklist-handle-gift-pack-creation-via-the-existing-useproductmutation-hook-display-success-error-toast-notifications-and-reset-the-form-on-successful-creation",
+      "featureTitle": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/hooks/useCart.ts"
+        "frontend/src/components/admin/GiftPackManagement.tsx"
       ],
       "components": [
         "blob-storage@4.0.0",
@@ -38,6 +55,25 @@
       ],
       "testIds": [
         "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-adminpage-component-to-add-a-fourth-management-section-for-gift-packs-alongside-the-existing-categories-products-and-coupons-sections-display-the-giftpackmanagement-component-in-a-card-with-appropriate-title-and-description",
+      "featureTitle": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+      "files": [
+        "frontend/src/pages/AdminPage.tsx"
+      ],
+      "components": [
+        "blob-storage@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
       ],
       "confidence": "high"
     }

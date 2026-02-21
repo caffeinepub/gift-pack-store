@@ -1,7 +1,7 @@
 import { Check, AlertCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Category } from '@/backend';
+import { CategoryType } from '@/backend';
 import type { GiftItem } from '@/backend';
 
 interface ItemSelectorProps {
@@ -17,7 +17,7 @@ const mockItems: GiftItem[] = [
     name: 'Premium Chocolate Box',
     description: 'Assorted Belgian chocolates',
     price: BigInt(599),
-    category: Category.birthday,
+    category: CategoryType.birthday,
     images: [],
   },
   {
@@ -25,7 +25,7 @@ const mockItems: GiftItem[] = [
     name: 'Scented Candle Set',
     description: 'Lavender and vanilla scented',
     price: BigInt(399),
-    category: Category.anniversary,
+    category: CategoryType.anniversary,
     images: [],
   },
   {
@@ -33,7 +33,7 @@ const mockItems: GiftItem[] = [
     name: 'Gourmet Coffee',
     description: 'Premium Arabica blend',
     price: BigInt(499),
-    category: Category.corporate,
+    category: CategoryType.corporate,
     images: [],
   },
   {
@@ -41,7 +41,7 @@ const mockItems: GiftItem[] = [
     name: 'Handmade Soap Set',
     description: 'Natural ingredients',
     price: BigInt(299),
-    category: Category.festive,
+    category: CategoryType.festive,
     images: [],
   },
   {
@@ -49,7 +49,7 @@ const mockItems: GiftItem[] = [
     name: 'Tea Collection',
     description: 'Assorted premium teas',
     price: BigInt(449),
-    category: Category.corporate,
+    category: CategoryType.corporate,
     images: [],
   },
   {
@@ -57,7 +57,7 @@ const mockItems: GiftItem[] = [
     name: 'Dried Fruit Box',
     description: 'Healthy and delicious',
     price: BigInt(699),
-    category: Category.festive,
+    category: CategoryType.festive,
     images: [],
   },
   {
@@ -65,7 +65,7 @@ const mockItems: GiftItem[] = [
     name: 'Artisan Cookies',
     description: 'Handmade butter cookies',
     price: BigInt(349),
-    category: Category.birthday,
+    category: CategoryType.birthday,
     images: [],
   },
   {
@@ -73,7 +73,7 @@ const mockItems: GiftItem[] = [
     name: 'Honey Jar Set',
     description: 'Pure organic honey',
     price: BigInt(549),
-    category: Category.festive,
+    category: CategoryType.festive,
     images: [],
   },
 ];

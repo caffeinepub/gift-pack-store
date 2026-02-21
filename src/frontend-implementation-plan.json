@@ -1,47 +1,75 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fetch cart on login and clear cart on logout",
+  "title": "Add admin gift pack creation and management",
   "requirements": [
     {
-      "id": "REQ-2",
-      "summary": "Automatically fetch and sync cart from backend when user logs in via Internet Identity",
+      "id": "REQ-1",
+      "summary": "Create GiftPackForm component for admin gift pack creation with validation and shadcn/ui components",
       "acceptanceCriteria": [
-        "Cart data is fetched from backend immediately after successful login",
-        "Fetched cart items replace any local cart state",
-        "Cart icon badge updates to show correct item count after login"
+        "Form includes all required fields: ID, title, description, price, discount, category, image URL, basket type, size",
+        "Form validation prevents submission with missing required fields",
+        "Category dropdown is populated from existing categories",
+        "Basket type and size use select components matching existing patterns",
+        "Form styling matches existing admin forms (CategoryForm, CouponForm)"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useCart.ts",
-          "operation": "modify",
-          "description": "Add a syncCartFromBackend function that fetches cart data from the backend using the getCart() method and updates local state. This function should handle BigInt serialization for quantities, merge backend cart items with the existing cart structure, update localStorage, and return the synced cart. The function will be called from App.tsx after successful login."
-        },
+          "path": "frontend/src/components/admin/GiftPackForm.tsx",
+          "operation": "create",
+          "description": "Create a form component using react-hook-form with validation for gift pack creation. Include fields for: pack ID (text input), title (text input), description (textarea), price (number input), discount percentage (number input 0-100), category (select populated from useCategories hook), image URL (text input), basket type (select with options: wickerBasket, woodenCrate, giftBox), and size (select with options: small, medium, large). Follow the pattern established in ProductForm.tsx with shadcn/ui Input, Textarea, Select, and Button components. Use Zod schema for validation ensuring all fields are required. Include loading state on submit button."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Create GiftPackList component to display all gift packs in a responsive grid with loading and empty states",
+      "acceptanceCriteria": [
+        "Displays all gift packs in a responsive grid",
+        "Shows key product details on each card",
+        "Includes loading skeleton during data fetch",
+        "Shows appropriate empty state when no gift packs exist"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add logic to detect when a user successfully logs in (when identity becomes available and isAuthenticated changes from false to true). When login is detected, call the syncCartFromBackend function from useCart hook to fetch and sync cart data from the backend. Ensure this happens after the actor is ready and before any route navigation."
+          "path": "frontend/src/components/admin/GiftPackList.tsx",
+          "operation": "create",
+          "description": "Create a component that fetches all gift packs using the useGiftPacks hook. Display them in a responsive grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3) using Card components. Each card should show: gift pack image (using img tag with images[0]?.getDirectURL() or placeholder), title, price with discount indicator, category badge, basket type, and size. Use Skeleton components from shadcn/ui during loading state (isLoading). Show an empty state message when no gift packs exist (!giftPacks || giftPacks.length === 0). Follow the styling patterns from CategoryList.tsx and CouponList.tsx."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Clear cart state completely when user logs out",
+      "summary": "Create GiftPackManagement component that combines form and list with mutation handling and toast notifications",
       "acceptanceCriteria": [
-        "Cart is emptied when user logs out",
-        "Cart icon badge shows 0 items after logout",
-        "localStorage cart data is cleared on logout"
+        "Successfully creates gift packs using existing backend integration",
+        "Shows success toast notification after creation",
+        "Shows error toast if creation fails",
+        "Form resets to empty state after successful submission",
+        "Gift pack list automatically updates after creation"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useCart.ts",
-          "operation": "modify",
-          "description": "Add a clearCartCompletely function that resets the cart state to an empty array, removes all cart data from localStorage (including any BigInt-serialized data), and ensures the cart count returns to 0. This function should be exported from the hook for use during logout."
-        },
+          "path": "frontend/src/components/admin/GiftPackManagement.tsx",
+          "operation": "create",
+          "description": "Create a container component that combines GiftPackForm and GiftPackList. Use the existing useProductMutation hook for gift pack creation. Handle form submission by calling the mutation with gift pack data, converting price and discount to BigInt and image URL to ExternalBlob array. On successful creation, display a success toast using the toast hook from shadcn/ui, reset the form (pass reset function as prop to GiftPackForm), and the list will auto-update via React Query cache invalidation. On error, display an error toast with the error message. Follow the pattern established in CategoryManagement.tsx and CouponManagement.tsx with proper spacing between form and list sections."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Update AdminPage to add Gift Pack Management section alongside existing management sections",
+      "acceptanceCriteria": [
+        "Gift Pack Management section appears on admin dashboard",
+        "Section follows same visual styling as existing sections",
+        "Section includes clear title and description",
+        "Layout remains responsive and organized"
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/AdminPage.tsx",
           "operation": "modify",
-          "description": "Add logic to detect when a user logs out (when identity becomes null and isAuthenticated changes from true to false). When logout is detected, call the clearCartCompletely function from useCart hook to remove all cart items and clear localStorage. Ensure the Header component's cart badge reflects 0 items after logout."
+          "description": "Add a fourth management section for Gift Packs to the existing AdminPage. Import the GiftPackManagement component and add it below the existing Coupon Management section. Wrap it in a Card component with CardHeader containing CardTitle 'Gift Pack Management' and CardDescription 'Create and manage gift pack products'. Maintain consistent spacing (space-y-8) and layout with the existing three sections. Ensure the page remains scrollable and responsive."
         }
       ]
     }

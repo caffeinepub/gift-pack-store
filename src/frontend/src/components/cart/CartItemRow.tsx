@@ -15,10 +15,21 @@ export default function CartItemRow({ item }: CartItemRowProps) {
   const { updateQuantity, removeItem } = useCart();
   const { data: pack, isLoading } = useGiftPackById(item.packId);
 
-  const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity > 0) {
-      updateQuantity(item.packId, BigInt(newQuantity));
+  const handleIncrement = async () => {
+    const newQuantity = Number(item.quantity) + 1;
+    await updateQuantity(item.packId, BigInt(newQuantity));
+  };
+
+  const handleDecrement = async () => {
+    const currentQuantity = Number(item.quantity);
+    if (currentQuantity > 1) {
+      const newQuantity = currentQuantity - 1;
+      await updateQuantity(item.packId, BigInt(newQuantity));
     }
+  };
+
+  const handleRemove = () => {
+    removeItem(item.packId);
   };
 
   if (isLoading) {
@@ -37,12 +48,22 @@ export default function CartItemRow({ item }: CartItemRowProps) {
     );
   }
 
-  if (!pack) {
-    return null;
+  // For custom packs or when pack data is not available, show a fallback
+  const isCustomPack = item.packId.startsWith('custom-');
+  const displayTitle = pack?.title || (isCustomPack ? 'Custom Gift Pack' : 'Gift Pack');
+  const displayCategory = pack?.category || 'custom';
+  
+  // Calculate price with discount if applicable
+  let displayPrice = 1999;
+  if (pack) {
+    const discount = Number(pack.discount);
+    const originalPrice = Number(pack.price);
+    displayPrice = discount > 0 ? Math.round(originalPrice * (1 - discount / 100)) : originalPrice;
   }
-
-  const imageUrl = pack.images[0]?.getDirectURL() || '/assets/generated/gift-icon.dim_128x128.png';
-  const itemTotal = Number(pack.price) * Number(item.quantity);
+  
+  const imageUrl = pack?.images[0]?.getDirectURL() || '/assets/generated/gift-icon.dim_128x128.png';
+  
+  const itemTotal = displayPrice * Number(item.quantity);
 
   return (
     <Card>
@@ -50,7 +71,7 @@ export default function CartItemRow({ item }: CartItemRowProps) {
         <div className="flex gap-4">
           {/* Image */}
           <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-muted">
-            <img src={imageUrl} alt={pack.title} className="h-full w-full object-cover" />
+            <img src={imageUrl} alt={displayTitle} className="h-full w-full object-cover" />
           </div>
 
           {/* Details */}
@@ -58,16 +79,16 @@ export default function CartItemRow({ item }: CartItemRowProps) {
             <div>
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="font-semibold">{pack.title}</h3>
+                  <h3 className="font-semibold">{displayTitle}</h3>
                   <Badge variant="secondary" className="mt-1 text-xs">
-                    {pack.category}
+                    {displayCategory}
                   </Badge>
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-destructive"
-                  onClick={() => removeItem(item.packId)}
+                  onClick={handleRemove}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -95,7 +116,7 @@ export default function CartItemRow({ item }: CartItemRowProps) {
                   variant="outline"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => handleQuantityChange(Number(item.quantity) - 1)}
+                  onClick={handleDecrement}
                   disabled={Number(item.quantity) <= 1}
                 >
                   <Minus className="h-3 w-3" />
@@ -105,7 +126,7 @@ export default function CartItemRow({ item }: CartItemRowProps) {
                   variant="outline"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => handleQuantityChange(Number(item.quantity) + 1)}
+                  onClick={handleIncrement}
                 >
                   <Plus className="h-3 w-3" />
                 </Button>

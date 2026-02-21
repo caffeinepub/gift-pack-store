@@ -1,56 +1,70 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-20T14:17:24.060Z",
+  "generatedAt": "2026-02-21T11:03:46.084Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-2",
-        "summary": "When a user logs in via Internet Identity, automatically fetch and sync their cart status from the backend",
+        "id": "REQ-1",
+        "summary": "Add a GiftPackForm component in frontend/src/components/admin that allows admins to create new gift packs with fields for: pack ID, title, description, price, discount percentage, category selection, image URL, basket type selection, and size selection. Use react-hook-form for validation and shadcn/ui components matching the existing ProductForm pattern.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useCart.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/GiftPackForm.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useCart.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/GiftPackForm.tsx"
+        ]
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Add a GiftPackList component in frontend/src/components/admin that displays all existing gift packs in a grid layout showing: image, title, price, discount, category, basket type, and size. Include loading states and empty state handling.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/admin/GiftPackList.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/admin/GiftPackList.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "When a user logs out, clear the cart state completely",
+        "summary": "Add a GiftPackManagement component in frontend/src/components/admin that combines GiftPackForm and GiftPackList. Handle gift pack creation via the existing useProductMutation hook, display success/error toast notifications, and reset the form on successful creation.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useCart.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/GiftPackManagement.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useCart.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/GiftPackManagement.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Update the AdminPage component to add a fourth management section for Gift Packs alongside the existing Categories, Products, and Coupons sections. Display the GiftPackManagement component in a Card with appropriate title and description.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/AdminPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/AdminPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useCart.ts",
+    "frontend/src/components/admin/GiftPackForm.tsx",
+    "frontend/src/components/admin/GiftPackList.tsx",
+    "frontend/src/components/admin/GiftPackManagement.tsx",
+    "frontend/src/pages/AdminPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

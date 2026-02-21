@@ -19,6 +19,20 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const Category = IDL.Record({
+  'name' : IDL.Text,
+  'description' : IDL.Text,
+});
+export const Time = IDL.Int;
+export const Coupon = IDL.Record({
+  'code' : IDL.Text,
+  'expirationDate' : Time,
+  'discountPercentage' : IDL.Nat,
+  'minDiscountPercentage' : IDL.Opt(IDL.Nat),
+  'remainingQuantity' : IDL.Nat,
+  'totalQuantity' : IDL.Nat,
+  'maxDiscountAmount' : IDL.Opt(IDL.Nat),
+});
 export const DeliveryAddress = IDL.Record({
   'id' : IDL.Text,
   'street' : IDL.Text,
@@ -33,6 +47,7 @@ export const UserProfile = IDL.Record({
   'name' : IDL.Text,
   'email' : IDL.Text,
   'phone' : IDL.Text,
+  'pincode' : IDL.Text,
   'defaultAddress' : DeliveryAddress,
 });
 export const CartItem = IDL.Record({
@@ -64,7 +79,6 @@ export const OrderStatus = IDL.Variant({
   'delivered' : IDL.Null,
   'confirmed' : IDL.Null,
 });
-export const Time = IDL.Int;
 export const Order = IDL.Record({
   'id' : IDL.Text,
   'basketType' : BasketType,
@@ -76,9 +90,10 @@ export const Order = IDL.Record({
   'size' : Size,
   'messageCard' : IDL.Opt(IDL.Text),
   'totalAmount' : IDL.Int,
+  'paymentId' : IDL.Text,
   'items' : IDL.Vec(CartItem),
 });
-export const Category = IDL.Variant({
+export const CategoryType = IDL.Variant({
   'anniversary' : IDL.Null,
   'custom' : IDL.Null,
   'festive' : IDL.Null,
@@ -87,18 +102,12 @@ export const Category = IDL.Variant({
   'sympathy' : IDL.Null,
   'corporate' : IDL.Null,
 });
-export const CatalogFilters = IDL.Record({
-  'outOfStock' : IDL.Opt(IDL.Bool),
-  'priceRange' : IDL.Opt(IDL.Record({ 'max' : IDL.Int, 'min' : IDL.Int })),
-  'searchTerm' : IDL.Opt(IDL.Text),
-  'category' : IDL.Opt(Category),
-});
 export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const GiftItem = IDL.Record({
   'id' : IDL.Text,
   'name' : IDL.Text,
   'description' : IDL.Text,
-  'category' : Category,
+  'category' : CategoryType,
   'price' : IDL.Int,
   'images' : IDL.Vec(ExternalBlob),
 });
@@ -108,10 +117,17 @@ export const GiftPack = IDL.Record({
   'title' : IDL.Text,
   'size' : Size,
   'description' : IDL.Text,
-  'category' : Category,
+  'discount' : IDL.Nat,
+  'category' : CategoryType,
   'items' : IDL.Vec(GiftItem),
   'price' : IDL.Int,
   'images' : IDL.Vec(ExternalBlob),
+});
+export const CatalogFilters = IDL.Record({
+  'outOfStock' : IDL.Opt(IDL.Bool),
+  'priceRange' : IDL.Opt(IDL.Record({ 'max' : IDL.Int, 'min' : IDL.Int })),
+  'searchTerm' : IDL.Opt(IDL.Text),
+  'category' : IDL.Opt(CategoryType),
 });
 export const Cart = IDL.Record({
   'basketType' : BasketType,
@@ -120,6 +136,19 @@ export const Cart = IDL.Record({
   'size' : Size,
   'messageCard' : IDL.Opt(IDL.Text),
   'items' : IDL.Vec(CartItem),
+});
+export const ContactSubmission = IDL.Record({
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+  'timestamp' : Time,
+  'phone' : IDL.Text,
+});
+export const RazorpayPayment = IDL.Record({
+  'status' : IDL.Text,
+  'paymentId' : IDL.Text,
+  'payer' : IDL.Principal,
+  'amount' : IDL.Int,
 });
 
 export const idlService = IDL.Service({
@@ -150,8 +179,14 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   'clearCart' : IDL.Func([], [], []),
+  'createCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
+  'createCoupon' : IDL.Func(
+      [IDL.Text, IDL.Nat, IDL.Opt(IDL.Nat), IDL.Opt(IDL.Nat), Time, IDL.Nat],
+      [Coupon],
+      [],
+    ),
   'createOrUpdateUserProfile' : IDL.Func(
-      [IDL.Text, IDL.Text, IDL.Text, DeliveryAddress],
+      [IDL.Text, IDL.Text, IDL.Text, DeliveryAddress, IDL.Text],
       [UserProfile],
       [],
     ),
@@ -165,17 +200,41 @@ export const idlService = IDL.Service({
         Size,
         PackType,
         IDL.Opt(IDL.Text),
+        IDL.Text,
+        IDL.Opt(IDL.Text),
       ],
       [Order],
       [],
     ),
+  'createProduct' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Int,
+        IDL.Nat,
+        CategoryType,
+        IDL.Vec(ExternalBlob),
+        BasketType,
+        Size,
+      ],
+      [GiftPack],
+      [],
+    ),
+  'decrementCouponQuantity' : IDL.Func([IDL.Text], [IDL.Nat], []),
   'filterGiftPacks' : IDL.Func(
       [CatalogFilters],
       [IDL.Vec(GiftPack)],
       ['query'],
     ),
+  'getAllCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
   'getAllGiftPacks' : IDL.Func([], [IDL.Vec(GiftPack)], ['query']),
   'getCart' : IDL.Func([], [IDL.Opt(Cart)], ['query']),
+  'getContactSubmissions' : IDL.Func(
+      [],
+      [IDL.Vec(ContactSubmission)],
+      ['query'],
+    ),
   'getGiftPackById' : IDL.Func([IDL.Text], [IDL.Opt(GiftPack)], ['query']),
   'getOrderHistory' : IDL.Func([], [IDL.Vec(Order)], ['query']),
   'getOrderHistoryForPrincipal' : IDL.Func(
@@ -185,8 +244,22 @@ export const idlService = IDL.Service({
     ),
   'getUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'initialize' : IDL.Func([], [], []),
+  'isPincodeServiceable' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+  'recordCouponUsage' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'saveCart' : IDL.Func([Cart], [], []),
   'searchGiftPacks' : IDL.Func([IDL.Text], [IDL.Vec(GiftPack)], ['query']),
+  'storePayment' : IDL.Func(
+      [IDL.Text, IDL.Int, IDL.Text],
+      [RazorpayPayment],
+      [],
+    ),
+  'submitContactForm' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
+  'updateCartItemQuantity' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Opt(Cart)], []),
+  'validateCoupon' : IDL.Func([IDL.Text], [Coupon], []),
 });
 
 export const idlInitArgs = [];
@@ -203,6 +276,17 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const Category = IDL.Record({ 'name' : IDL.Text, 'description' : IDL.Text });
+  const Time = IDL.Int;
+  const Coupon = IDL.Record({
+    'code' : IDL.Text,
+    'expirationDate' : Time,
+    'discountPercentage' : IDL.Nat,
+    'minDiscountPercentage' : IDL.Opt(IDL.Nat),
+    'remainingQuantity' : IDL.Nat,
+    'totalQuantity' : IDL.Nat,
+    'maxDiscountAmount' : IDL.Opt(IDL.Nat),
+  });
   const DeliveryAddress = IDL.Record({
     'id' : IDL.Text,
     'street' : IDL.Text,
@@ -217,6 +301,7 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'email' : IDL.Text,
     'phone' : IDL.Text,
+    'pincode' : IDL.Text,
     'defaultAddress' : DeliveryAddress,
   });
   const CartItem = IDL.Record({
@@ -248,7 +333,6 @@ export const idlFactory = ({ IDL }) => {
     'delivered' : IDL.Null,
     'confirmed' : IDL.Null,
   });
-  const Time = IDL.Int;
   const Order = IDL.Record({
     'id' : IDL.Text,
     'basketType' : BasketType,
@@ -260,9 +344,10 @@ export const idlFactory = ({ IDL }) => {
     'size' : Size,
     'messageCard' : IDL.Opt(IDL.Text),
     'totalAmount' : IDL.Int,
+    'paymentId' : IDL.Text,
     'items' : IDL.Vec(CartItem),
   });
-  const Category = IDL.Variant({
+  const CategoryType = IDL.Variant({
     'anniversary' : IDL.Null,
     'custom' : IDL.Null,
     'festive' : IDL.Null,
@@ -271,18 +356,12 @@ export const idlFactory = ({ IDL }) => {
     'sympathy' : IDL.Null,
     'corporate' : IDL.Null,
   });
-  const CatalogFilters = IDL.Record({
-    'outOfStock' : IDL.Opt(IDL.Bool),
-    'priceRange' : IDL.Opt(IDL.Record({ 'max' : IDL.Int, 'min' : IDL.Int })),
-    'searchTerm' : IDL.Opt(IDL.Text),
-    'category' : IDL.Opt(Category),
-  });
   const ExternalBlob = IDL.Vec(IDL.Nat8);
   const GiftItem = IDL.Record({
     'id' : IDL.Text,
     'name' : IDL.Text,
     'description' : IDL.Text,
-    'category' : Category,
+    'category' : CategoryType,
     'price' : IDL.Int,
     'images' : IDL.Vec(ExternalBlob),
   });
@@ -292,10 +371,17 @@ export const idlFactory = ({ IDL }) => {
     'title' : IDL.Text,
     'size' : Size,
     'description' : IDL.Text,
-    'category' : Category,
+    'discount' : IDL.Nat,
+    'category' : CategoryType,
     'items' : IDL.Vec(GiftItem),
     'price' : IDL.Int,
     'images' : IDL.Vec(ExternalBlob),
+  });
+  const CatalogFilters = IDL.Record({
+    'outOfStock' : IDL.Opt(IDL.Bool),
+    'priceRange' : IDL.Opt(IDL.Record({ 'max' : IDL.Int, 'min' : IDL.Int })),
+    'searchTerm' : IDL.Opt(IDL.Text),
+    'category' : IDL.Opt(CategoryType),
   });
   const Cart = IDL.Record({
     'basketType' : BasketType,
@@ -304,6 +390,19 @@ export const idlFactory = ({ IDL }) => {
     'size' : Size,
     'messageCard' : IDL.Opt(IDL.Text),
     'items' : IDL.Vec(CartItem),
+  });
+  const ContactSubmission = IDL.Record({
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+    'timestamp' : Time,
+    'phone' : IDL.Text,
+  });
+  const RazorpayPayment = IDL.Record({
+    'status' : IDL.Text,
+    'paymentId' : IDL.Text,
+    'payer' : IDL.Principal,
+    'amount' : IDL.Int,
   });
   
   return IDL.Service({
@@ -334,8 +433,14 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     'clearCart' : IDL.Func([], [], []),
+    'createCategory' : IDL.Func([IDL.Text, IDL.Text], [Category], []),
+    'createCoupon' : IDL.Func(
+        [IDL.Text, IDL.Nat, IDL.Opt(IDL.Nat), IDL.Opt(IDL.Nat), Time, IDL.Nat],
+        [Coupon],
+        [],
+      ),
     'createOrUpdateUserProfile' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, DeliveryAddress],
+        [IDL.Text, IDL.Text, IDL.Text, DeliveryAddress, IDL.Text],
         [UserProfile],
         [],
       ),
@@ -349,17 +454,41 @@ export const idlFactory = ({ IDL }) => {
           Size,
           PackType,
           IDL.Opt(IDL.Text),
+          IDL.Text,
+          IDL.Opt(IDL.Text),
         ],
         [Order],
         [],
       ),
+    'createProduct' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Int,
+          IDL.Nat,
+          CategoryType,
+          IDL.Vec(ExternalBlob),
+          BasketType,
+          Size,
+        ],
+        [GiftPack],
+        [],
+      ),
+    'decrementCouponQuantity' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'filterGiftPacks' : IDL.Func(
         [CatalogFilters],
         [IDL.Vec(GiftPack)],
         ['query'],
       ),
+    'getAllCategories' : IDL.Func([], [IDL.Vec(Category)], ['query']),
     'getAllGiftPacks' : IDL.Func([], [IDL.Vec(GiftPack)], ['query']),
     'getCart' : IDL.Func([], [IDL.Opt(Cart)], ['query']),
+    'getContactSubmissions' : IDL.Func(
+        [],
+        [IDL.Vec(ContactSubmission)],
+        ['query'],
+      ),
     'getGiftPackById' : IDL.Func([IDL.Text], [IDL.Opt(GiftPack)], ['query']),
     'getOrderHistory' : IDL.Func([], [IDL.Vec(Order)], ['query']),
     'getOrderHistoryForPrincipal' : IDL.Func(
@@ -369,8 +498,26 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'initialize' : IDL.Func([], [], []),
+    'isPincodeServiceable' : IDL.Func([IDL.Text], [IDL.Bool], ['query']),
+    'recordCouponUsage' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'saveCart' : IDL.Func([Cart], [], []),
     'searchGiftPacks' : IDL.Func([IDL.Text], [IDL.Vec(GiftPack)], ['query']),
+    'storePayment' : IDL.Func(
+        [IDL.Text, IDL.Int, IDL.Text],
+        [RazorpayPayment],
+        [],
+      ),
+    'submitContactForm' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
+    'updateCartItemQuantity' : IDL.Func(
+        [IDL.Text, IDL.Nat],
+        [IDL.Opt(Cart)],
+        [],
+      ),
+    'validateCoupon' : IDL.Func([IDL.Text], [Coupon], []),
   });
 };
 
