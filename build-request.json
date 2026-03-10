@@ -1,0 +1,72 @@
+{
+  "kind": "build_request",
+  "title": "Fix cart summary display issues",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Debug and fix the CartSummary component to correctly display the item count and total price when cart items are present",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ],
+        "quotes": [
+          "cart sumarry still has issues"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Cart summary displays the correct number of items in the cart",
+        "Subtotal calculation accurately reflects all cart item prices and quantities",
+        "GST calculation (18% of subtotal) is accurate",
+        "Total price (subtotal + GST - discount) is calculated correctly",
+        "Cart summary updates immediately when items are added, removed, or quantities are changed"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Verify that the useCart hook correctly manages cart state and provides accurate data to the CartSummary component",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Cart state updates correctly when items are added or removed",
+        "Cart data persists across page refreshes via localStorage",
+        "Backend synchronization works properly when user is authenticated",
+        "Cart totals are calculated correctly in the hook"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Ensure CartItemRow components correctly pass pricing and quantity data that feeds into the cart summary calculations",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Item prices reflect any discounts correctly",
+        "Quantity updates trigger recalculation of item totals",
+        "Price data from gift packs is correctly retrieved and displayed"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify the backend schema or main.mo",
+    "Maintain existing cart state management patterns in useCart hook",
+    "Preserve localStorage synchronization behavior"
+  ],
+  "nonGoals": [
+    "Adding new cart features beyond fixing the summary display",
+    "Changing the cart UI layout or styling",
+    "Modifying checkout flow or payment integration"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

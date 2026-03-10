@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Shopping cart application with item management and cart summary functionality",
+  "architectural_notes": [],
+  "known_issues": [
+    "Cart summary displaying incorrect item count or total"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-debug-and-fix-the-cartsummary-component-to-correctly-display-the-item-count-and-total-price-when-cart-items-are-present",
+      "title": "Debug and fix the CartSummary component to correctly display the item count and total price when cart items are present",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-2",
+      "summary": "Verify that the useCart hook correctly manages cart state and provides accurate data to the CartSummary component",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Ensure CartItemRow components correctly pass pricing and quantity data that feeds into the cart summary calculations",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Fix cart summary display issues",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

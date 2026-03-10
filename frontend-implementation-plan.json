@@ -1,0 +1,58 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Fix cart summary display issues",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Debug and fix the CartSummary component to correctly display item count and total price when cart items are present",
+      "acceptanceCriteria": [
+        "Cart summary displays the correct number of items in the cart",
+        "Subtotal calculation accurately reflects all cart item prices and quantities",
+        "GST calculation (18% of subtotal) is accurate",
+        "Total price (subtotal + GST - discount) is calculated correctly",
+        "Cart summary updates immediately when items are added, removed, or quantities are changed"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/cart/CartSummary.tsx",
+          "operation": "modify",
+          "description": "Fix cart summary calculations to correctly compute item count, subtotal, GST (18%), and total price. Ensure the component properly handles the cart state from useCart hook and gift pack data from useGiftPacks. Verify that discount from coupons is applied correctly in the total calculation. Fix any issues with displaying zero items or incorrect totals when cart items are present."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Verify that the useCart hook correctly manages cart state and provides accurate data to the CartSummary component",
+      "acceptanceCriteria": [
+        "Cart state updates correctly when items are added or removed",
+        "Cart data persists across page refreshes via localStorage",
+        "Backend synchronization works properly when user is authenticated",
+        "Cart totals are calculated correctly in the hook"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCart.ts",
+          "operation": "modify",
+          "description": "Review and fix cart state management logic to ensure cart items are properly tracked with correct quantities and packIds. Verify localStorage persistence works correctly and that backend synchronization via saveCart and getCart properly updates local state when user is authenticated. Ensure addToCart, updateQuantity, and removeItem functions correctly update the cart state and trigger re-renders in dependent components."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Ensure CartItemRow components correctly pass pricing and quantity data that feeds into cart summary calculations",
+      "acceptanceCriteria": [
+        "Item prices reflect any discounts correctly",
+        "Quantity updates trigger recalculation of item totals",
+        "Price data from gift packs is correctly retrieved and displayed"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/cart/CartItemRow.tsx",
+          "operation": "modify",
+          "description": "Review and fix how CartItemRow retrieves gift pack data using the packId from cart items. Ensure the component correctly calculates discounted prices (price - (price * discount / 100)) and displays them accurately. Verify that quantity changes via the quantity controls properly trigger cart state updates through the useCart hook's updateQuantity function. Fix any issues where gift pack data is not being fetched or pricing calculations are incorrect."
+        }
+      ]
+    }
+  ]
+}
